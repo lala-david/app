@@ -5,6 +5,10 @@ import { isAudioUnlocked } from './audioUnlock';
 
 const players = new Map<AudioSource, AudioPlayer>();
 let current: AudioPlayer | null = null;
+let currentStartedAt = 0;
+
+/** 재생이 시작되기 전에 끊으면 브라우저가 오류를 낸다. 그만큼은 겹쳐 두고 기다린다 */
+const MIN_PLAY_MS = 250;
 
 export async function initAudio(): Promise<void> {
   await setAudioModeAsync({ playsInSilentMode: true }).catch(() => undefined);
@@ -19,10 +23,11 @@ export function playSound(source: AudioSource, { interrupt = true }: { interrupt
       player = createAudioPlayer(source);
       players.set(source, player);
     }
-    if (interrupt && current && current !== player) current.pause();
+    if (interrupt && current && current !== player && Date.now() - currentStartedAt > MIN_PLAY_MS) current.pause();
     player.seekTo(0);
     player.play();
     current = player;
+    currentStartedAt = Date.now();
   } catch {
     // 소리는 부가 기능이라 실패해도 흐름을 막지 않는다
   }
