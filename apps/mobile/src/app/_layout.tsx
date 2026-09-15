@@ -1,4 +1,4 @@
-import { Jua_400Regular, useFonts } from '@expo-google-fonts/jua';
+import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -18,11 +18,13 @@ import { colors } from '@/shared/theme/tokens';
 void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({ Jua_400Regular });
+  // 글꼴은 프로젝트 자산으로 두고 불러온다 (node_modules 경로는 배포에서 빠질 수 있다)
+  const [fontsLoaded, fontError] = useFonts({ Jua_400Regular: require('@/assets/fonts/Jua-Regular.ttf') });
   const hydrated = useStoresHydrated();
   const signedIn = useSession((s) => !!s.userId);
   const onboarded = !!useChild()?.onboardingDone;
-  const ready = fontsLoaded && hydrated;
+  // 글꼴을 못 불러와도 기본 글꼴로 앱을 띄운다
+  const ready = (fontsLoaded || !!fontError) && hydrated;
   usePwaHead();
 
   useEffect(() => {
