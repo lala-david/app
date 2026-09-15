@@ -1,0 +1,34 @@
+{
+  "outputRoot": "../../apps/mobile/assets/audio",
+  "voices": {
+    "en": { "voice": "en-US-AnaNeural", "rate": "-12%", "pitch": "+0Hz" },
+    "enSentence": { "voice": "en-US-AnaNeural", "rate": "-18%", "pitch": "+0Hz" },
+    "ko": { "voice": "ko-KR-SunHiNeural", "rate": "+0%", "pitch": "+12Hz" }
+  },
+  "sources": {
+    "words": { "file": "../../apps/mobile/src/content/words.json", "voice": "en", "folder": "words", "text": "id" },
+    "sentences": { "file": "../../apps/mobile/src/content/weeks/week1.json", "voice": "enSentence", "folder": "sentences" }
+  },
+  "lines": [
+    { "id": "mascot/hello", "voice": "ko", "text": "안녕! 나는 소리야." },
+    { "id": "mascot/tap-glowing", "voice": "ko", "text": "반짝이는 동그라미를 눌러봐!" },
+    { "id": "mascot/stars-intro", "voice": "ko", "text": "별이 모였어! 매일 하면 불꽃이 커져." },
+    { "id": "mascot/quiz-intro", "voice": "ko", "text": "소리를 듣고 맞는 그림을 눌러봐." },
+    { "id": "mascot/match-intro", "voice": "ko", "text": "소리랑 그림을 짝지어 봐." },
+    { "id": "mascot/speak-intro", "voice": "ko", "text": "잘 듣고 따라 말해봐. 마이크를 누르고 말해." },
+    { "id": "mascot/correct", "voice": "ko", "text": "좋아!" },
+    { "id": "mascot/wrong", "voice": "ko", "text": "괜찮아, 이거야!" },
+    { "id": "mascot/speak-pass", "voice": "ko", "text": "멋져요!" },
+    { "id": "mascot/speak-retry", "voice": "ko", "text": "한 번 더 해볼까?" },
+    { "id": "mascot/speak-given", "voice": "ko", "text": "잘 들었어요!" },
+    { "id": "mascot/locked", "voice": "ko", "text": "내일 열려요." },
+    { "id": "mascot/missed", "voice": "ko", "text": "지난 건 부모님이 표시해 줄 수 있어요." },
+    { "id": "mascot/timer-reached", "voice": "ko", "text": "다 들었어! 체크를 눌러줘." },
+    { "id": "mascot/lesson-done", "voice": "ko", "text": "오늘도 해냈어! 스티커를 받았어." },
+    { "id": "mascot/day-done", "voice": "ko", "text": "오늘 루틴 다 했어! 최고야!" },
+    { "id": "mascot/week-done", "voice": "ko", "text": "일주일을 다 해냈어! 트로피를 받았어!" },
+    { "id": "mascot/avatar-saved", "voice": "ko", "text": "멋진데!" },
+    { "id": "mascot/listen-start", "voice": "ko", "text": "노래를 틀고 신나게 들어봐!" },
+    { "id": "prompts/what-color", "voice": "enSentence", "text": "What color is it?" }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "partOrder": ["skinColor", "hair", "hairColor", "eyes", "eyebrows", "mouth", "glasses", "earrings", "features", "backgroundColor"],
+  "excludedOptions": {
+    "features": ["mustache", "birthmark"]
+  },
+  "backgroundColors": ["ffe6dd", "fff4c7", "e3f2e6", "e6e7fa", "e2f2fd", "f1e8fb", "fde2ef", "f6f0e6"],
+  "photoFrames": ["none", "cloud", "star", "flower"],
+  "photoBackdrops": ["#FFE6DD", "#FFF4C7", "#E3F2E6", "#E6E7FA", "#E2F2FD", "#F1E8FB"],
+  "optionalChance": 0.3
+}

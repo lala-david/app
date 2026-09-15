@@ -1,0 +1,149 @@
+{
+  "id": "y1-w01",
+  "week": 1,
+  "theme": "Colors",
+  "themeKo": "색깔",
+  "days": 7,
+  "routines": [
+    {
+      "key": "morning",
+      "kind": "listen",
+      "order": 1,
+      "tone": "sun",
+      "icon": "routines/routine-morning",
+      "sticker": "stickers/sticker-sun",
+      "targetMinutes": 20,
+      "titleKo": "아침송",
+      "shortKo": "아침",
+      "video": {
+        "provider": "youtube",
+        "videoId": "CCClRXsYiik",
+        "title": "Good Morning Mr. Rooster + More",
+        "channel": "Super Simple Songs",
+        "durationSec": 3944
+      },
+      "parentTip": "등원 준비하면서 틀어주세요. 화면을 안 봐도 괜찮아요.",
+      "phrases": ["Good morning.", "It's time to wake up.", "Let's get dressed.", "Put on your shoes."]
+    },
+    {
+      "key": "theme",
+      "kind": "play",
+      "order": 2,
+      "tone": "coral",
+      "icon": "routines/routine-theme",
+      "sticker": "stickers/sticker-palette",
+      "targetMinutes": 30,
+      "titleKo": "주제 집중듣기",
+      "shortKo": "주제",
+      "video": {
+        "provider": "youtube",
+        "videoId": "v-BvRlsbUiU",
+        "title": "Red Yellow Green Blue + More",
+        "channel": "Super Simple Songs",
+        "durationSec": 3120
+      },
+      "parentTip": "함께 보고, 끝나면 놀이를 해요.",
+      "phrases": ["What color is it?", "It's red.", "I see blue.", "Find something yellow."],
+      "words": ["red", "yellow", "green", "blue", "apple", "sun", "clover", "sky"],
+      "sentences": [
+        { "text": "It's red.", "answer": "red", "audio": "sentences/its-red" },
+        { "text": "It's yellow.", "answer": "yellow", "audio": "sentences/its-yellow" },
+        { "text": "It's green.", "answer": "green", "audio": "sentences/its-green" },
+        { "text": "It's blue.", "answer": "blue", "audio": "sentences/its-blue" }
+      ],
+      "quiz": {
+        "mix": { "pickImage": 3, "pickWord": 2, "match": 1, "sentenceColor": 2 },
+        "optionsByAge": {
+          "6": { "pickImage": 3, "pickWord": 2, "match": 3, "sentenceColor": 3 },
+          "7": { "pickImage": 4, "pickWord": 2, "match": 4, "sentenceColor": 4 },
+          "8": { "pickImage": 4, "pickWord": 3, "match": 4, "sentenceColor": 4 },
+          "9-10": { "pickImage": 4, "pickWord": 3, "match": 4, "sentenceColor": 4 }
+        },
+        "hideWordTextFor": ["6"]
+      },
+      "speakWords": ["red", "yellow", "green", "blue"]
+    },
+    {
+      "key": "dinner",
+      "kind": "listen",
+      "order": 3,
+      "tone": "leaf",
+      "icon": "routines/routine-dinner",
+      "sticker": "stickers/sticker-plate",
+      "targetMinutes": 20,
+      "titleKo": "저녁송",
+      "shortKo": "저녁",
+      "video": {
+        "provider": "youtube",
+        "videoId": "nY6j2LB6QSk",
+        "title": "This is the Way Song (Dinner Time)",
+        "channel": "CoComelon",
+        "durationSec": 2731
+      },
+      "parentTip": "저녁 식사하면서 틀어주세요.",
+      "phrases": ["Let's get ready for dinner time.", "This is the way we make our food.", "This is the way we eat our meal."]
+    },
+    {
+      "key": "bedtime",
+      "kind": "listen",
+      "order": 4,
+      "tone": "night",
+      "icon": "routines/routine-bedtime",
+      "sticker": "stickers/sticker-moon",
+      "targetMinutes": 20,
+      "titleKo": "잠자리 스토리",
+      "shortKo": "잠자리",
+      "video": {
+        "provider": "youtube",
+        "videoId": "S8vcDXuZvmE",
+        "title": "Color Stories for Kids!",
+        "channel": "Vooks",
+        "durationSec": 2396
+      },
+      "parentTip": "불을 줄이고 소리만 들려줘도 좋아요.",
+      "phrases": ["What color did you hear?", "Which color do you like?"]
+    }
+  ],
+  "weekendExtras": [
+    {
+      "key": "faithSong",
+      "kind": "listen",
+      "order": 5,
+      "tone": "sky",
+      "icon": "routines/routine-faith-song",
+      "sticker": "stickers/sticker-note",
+      "targetMinutes": 20,
+      "titleKo": "주말 찬양",
+      "shortKo": "찬양",
+      "requiresFaith": true,
+      "video": {
+        "provider": "youtube",
+        "playlistId": "PLpw2Kv-fs8gAlxnJNsnflxx0wSzJIFG1a",
+        "title": "하잉RTA 찬양율동",
+        "channel": "하잉RTA"
+      },
+      "parentTip": "율동을 따라 하며 들어요.",
+      "phrases": []
+    },
+    {
+      "key": "faithStory",
+      "kind": "listen",
+      "order": 6,
+      "tone": "lilac",
+      "icon": "routines/routine-faith-story",
+      "sticker": "stickers/sticker-book",
+      "targetMinutes": 20,
+      "titleKo": "주말 바이블 스토리",
+      "shortKo": "바이블",
+      "requiresFaith": true,
+      "video": {
+        "provider": "youtube",
+        "playlistId": "PLpw2Kv-fs8gBfxMi6pToFPD9HuwyaDT_i",
+        "title": "하잉RTA 바이블스토리",
+        "channel": "하잉RTA"
+      },
+      "parentTip": "잠들기 전에 이야기로 들려주세요.",
+      "phrases": []
+    }
+  ]
+}

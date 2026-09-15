@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>데이터·API 명세서</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Jua&display=swap">
+<style>
+:root{--bg:#F3F6F4;--sf:#fff;--sf2:#E9EFEB;--ink:#1B2B25;--mut:#5E6E67;--ln:#D5DED9;--ac:#1F7A5C;--ac2:#DDEFE6;--co:#E8603F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+main{max-width:1000px;margin:0 auto;padding:24px 20px 80px}
+.docnav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln);padding:0 20px}
+.docnav ul{list-style:none;margin:0 auto;padding:0;max-width:1000px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.docnav a{display:block;padding:10px 9px;font-size:.82rem;color:var(--mut);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent}
+.docnav a.cur,.docnav a:hover{color:var(--ac);border-color:var(--ac)}
+.docmeta{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:600;margin-top:18px}
+h1,h2,h3,h4{font-family:"Jua","IBM Plex Sans KR",sans-serif;font-weight:400;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:2.3rem;line-height:1.15;margin:6px 0 10px}
+h2{font-size:1.6rem;margin-top:48px;padding-top:16px;border-top:1px solid var(--ln)}
+h3{font-size:1.2rem;margin-top:28px;color:#145A43}
+h4{font-size:1rem;margin-top:18px;font-family:inherit;font-weight:600}
+p{margin:10px 0;max-width:72ch}
+a{color:var(--ac)}
+ul,ol{margin:8px 0;padding-left:22px;max-width:76ch}li{margin:3px 0}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--sf2);padding:1px 5px;border-radius:4px}
+pre{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:.82rem;line-height:1.55}
+pre code{background:none;padding:0}
+pre.mermaid{text-align:center}
+.diagram{max-width:none;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+.diagram img{max-width:100%;height:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--sf);margin:14px 0}
+.tw{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:14px 0}
+.tw table{margin:0}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--ln)}
+th{background:var(--sf2);font-weight:600;font-size:.8rem;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+blockquote{margin:14px 0;padding:10px 16px;border-left:3px solid var(--co);background:var(--sf);border-radius:0 10px 10px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--ln);margin:32px 0}
+strong{font-weight:600}
+@media print{.docnav{display:none}body{background:#fff}main{padding:0}}
+</style>
+</head>
+<body>
+<nav class="docnav"><ul><li><a class="" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-팝업-가이드-명세서.html">05 팝업·가이드 명세서</a></li><li><a class="cur" href="06-데이터-API-명세서.html">06 데이터·API 명세서</a></li><li><a class="" href="07-아키텍처-코드규칙.html">07 아키텍처·코드 규칙</a></li><li><a class="" href="08-디자인-가이드.html">08 디자인 가이드</a></li><li><a class="" href="09-테스트-계획.html">09 테스트 계획</a></li><li><a class="" href="10-결정기록-오픈이슈.html">10 결정 기록·오픈 이슈</a></li></ul></nav>
+<main>
+<div class="docmeta">SoundsFun Bridge · MVP 문서 · 06</div>
+<h1 id="api">데이터·API 명세서</h1>
+<p>MVP는 <strong>기기 저장(local-first)</strong> 으로 동작하고, 서버는 같은 모양의 API로 동기화한다. 앱 코드는 <code>ProgressRepository</code> 인터페이스만 보며, 로컬 구현과 서버 구현을 바꿔 끼운다.</p>
+<h2 id="erd">ERD</h2>
+<p class="diagram"><img src="../assets/diagrams/7fcb1f75e405.png" alt="다이어그램"></p>
+
+<h2 id="_1">값 정의</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>필드</th>
+<th>값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>age_band</code></td>
+<td><code>6</code> <code>7</code> <code>8</code> <code>9-10</code></td>
+</tr>
+<tr>
+<td><code>avatar_kind</code></td>
+<td><code>builder</code> (부위 옵션) · <code>photo</code></td>
+</tr>
+<tr>
+<td><code>routine_key</code></td>
+<td><code>morning</code> <code>theme</code> <code>dinner</code> <code>bedtime</code> · 주말 선택: <code>faith_song</code> <code>faith_story</code></td>
+</tr>
+<tr>
+<td><code>video_status</code></td>
+<td><code>none</code> · <code>auto</code> (타이머 완료) · <code>manual</code> (부모 확인)</td>
+</tr>
+<tr>
+<td><code>speak result</code></td>
+<td><code>pass</code> · <code>pass_after_retry</code> · <code>pass_by_parent</code> · <code>skipped</code> · <code>given</code> (2회 미달 통과)</td>
+</tr>
+<tr>
+<td><code>reward kind</code></td>
+<td><code>sticker</code> · <code>day_badge</code> · <code>week_trophy</code></td>
+</tr>
+<tr>
+<td><code>run</code></td>
+<td>같은 Week 반복 회차. 1부터</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="entities">상태 계산 (순수 함수, <code>entities/</code>)</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>함수</th>
+<th>입력</th>
+<th>출력</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dayIndexOf(startDate, today)</code></td>
+<td>시작일, 오늘</td>
+<td>1~7 또는 범위 밖</td>
+</tr>
+<tr>
+<td><code>nodeState(progress, dayIndex, todayIndex)</code></td>
+<td>진행, Day, 오늘</td>
+<td><code>locked</code> <code>open</code> <code>inProgress</code> <code>done</code> <code>missed</code></td>
+</tr>
+<tr>
+<td><code>todayMinutes(progressList)</code></td>
+<td>오늘 진행</td>
+<td>합계 분</td>
+</tr>
+<tr>
+<td><code>streak(progressByDate, today)</code></td>
+<td>날짜별 완료 여부</td>
+<td>연속 일수 (오늘 미완료면 어제까지)</td>
+</tr>
+<tr>
+<td><code>buildQuiz(words, ageBand, seed)</code></td>
+<td>단어, 연령, 시드</td>
+<td>문항 8개</td>
+</tr>
+<tr>
+<td><code>judgeSpeech(target, heard)</code></td>
+<td>목표, 인식 결과</td>
+<td>0~1 점수, 통과 여부(≥0.7)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="json">콘텐츠 JSON</h2>
+<p>파일: <code>content/weeks/week1.json</code>. 컴포넌트는 이 구조만 안다.</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;y1-w01&quot;, &quot;week&quot;: 1, &quot;theme&quot;: &quot;Colors&quot;, &quot;themeKo&quot;: &quot;색깔&quot;,
+  &quot;routines&quot;: [
+    {
+      &quot;key&quot;: &quot;morning&quot;, &quot;kind&quot;: &quot;listen&quot;, &quot;targetMinutes&quot;: 20, &quot;order&quot;: 1,
+      &quot;video&quot;: { &quot;provider&quot;: &quot;youtube&quot;, &quot;id&quot;: &quot;CCClRXsYiik&quot;,
+                 &quot;title&quot;: &quot;Good Morning Mr. Rooster + More&quot;, &quot;channel&quot;: &quot;Super Simple Songs&quot;, &quot;durationSec&quot;: 3944 },
+      &quot;parentTip&quot;: &quot;등원 준비하면서 틀어주세요. 화면을 안 봐도 괜찮아요.&quot;,
+      &quot;phrases&quot;: [&quot;Good morning.&quot;, &quot;Let's get dressed.&quot;, &quot;Put on your shoes.&quot;],
+      &quot;sticker&quot;: &quot;sticker-sun&quot;
+    },
+    {
+      &quot;key&quot;: &quot;theme&quot;, &quot;kind&quot;: &quot;play&quot;, &quot;targetMinutes&quot;: 30, &quot;order&quot;: 2,
+      &quot;video&quot;: { &quot;provider&quot;: &quot;youtube&quot;, &quot;id&quot;: &quot;v-BvRlsbUiU&quot;,
+                 &quot;title&quot;: &quot;Red Yellow Green Blue + More&quot;, &quot;channel&quot;: &quot;Super Simple Songs&quot;, &quot;durationSec&quot;: 3120 },
+      &quot;parentTip&quot;: &quot;함께 보고, 끝나면 놀이를 해요.&quot;,
+      &quot;words&quot;: [&quot;red&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;apple&quot;, &quot;sun&quot;, &quot;clover&quot;, &quot;sky&quot;],
+      &quot;sentences&quot;: [
+        { &quot;text&quot;: &quot;It's red.&quot;,    &quot;answer&quot;: &quot;red&quot; },
+        { &quot;text&quot;: &quot;It's blue.&quot;,   &quot;answer&quot;: &quot;blue&quot; },
+        { &quot;text&quot;: &quot;It's yellow.&quot;, &quot;answer&quot;: &quot;yellow&quot; },
+        { &quot;text&quot;: &quot;It's green.&quot;,  &quot;answer&quot;: &quot;green&quot; }
+      ],
+      &quot;quiz&quot;: { &quot;count&quot;: 8, &quot;mix&quot;: { &quot;pickImage&quot;: 3, &quot;pickWord&quot;: 2, &quot;match&quot;: 1, &quot;sentenceColor&quot;: 2 } },
+      &quot;speak&quot;: { &quot;words&quot;: [&quot;red&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;] },
+      &quot;sticker&quot;: &quot;sticker-palette&quot;
+    }
+  ],
+  &quot;weekend&quot;: {
+    &quot;faith_song&quot;:  { &quot;kind&quot;: &quot;listen&quot;, &quot;targetMinutes&quot;: 20, &quot;playlist&quot;: &quot;PLpw2Kv-fs8gAlxnJNsnflxx0wSzJIFG1a&quot;, &quot;sticker&quot;: &quot;sticker-note&quot; },
+    &quot;faith_story&quot;: { &quot;kind&quot;: &quot;listen&quot;, &quot;targetMinutes&quot;: 20, &quot;playlist&quot;: &quot;PLpw2Kv-fs8gBfxMi6pToFPD9HuwyaDT_i&quot;, &quot;sticker&quot;: &quot;sticker-book&quot; }
+  }
+}
+</code></pre>
+<p>단어 사전: <code>content/words.json</code></p>
+<pre><code class="language-json">{
+  &quot;red&quot;:   { &quot;ko&quot;: &quot;빨강&quot;, &quot;image&quot;: &quot;words/red.png&quot;,   &quot;audio&quot;: &quot;words/red.mp3&quot;,   &quot;color&quot;: &quot;#E53935&quot;, &quot;group&quot;: &quot;color&quot; },
+  &quot;apple&quot;: { &quot;ko&quot;: &quot;사과&quot;, &quot;image&quot;: &quot;words/apple.png&quot;, &quot;audio&quot;: &quot;words/apple.mp3&quot;, &quot;group&quot;: &quot;thing&quot; }
+}
+</code></pre>
+<h2 id="api-fastapi">API (FastAPI)</h2>
+<p>기본 경로 <code>/api/v1</code>. 인증은 <code>Authorization: Bearer &lt;access&gt;</code>.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>메서드</th>
+<th>경로</th>
+<th>설명</th>
+<th>요청 → 응답</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/auth/signup</code></td>
+<td>가입</td>
+<td>email, password, consents → tokens</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/login</code></td>
+<td>로그인</td>
+<td>email, password → tokens</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/refresh</code></td>
+<td>토큰 갱신</td>
+<td>refresh → tokens</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/password-reset</code></td>
+<td>재설정 메일</td>
+<td>email → 204</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/me</code></td>
+<td>탈퇴 (즉시 삭제)</td>
+<td>→ 204</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/children</code></td>
+<td>아이 목록</td>
+<td>→ Child[]</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/children</code></td>
+<td>아이 생성</td>
+<td>nickname, ageBand, avatar… → Child</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td><code>/children/{id}</code></td>
+<td>수정</td>
+<td>부분 → Child</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td><code>/children/{id}/photo</code></td>
+<td>사진 업로드 (multipart, 256px)</td>
+<td>→ photoUrl</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td><code>/children/{id}/schedule</code></td>
+<td>루틴 시각 4개</td>
+<td>RoutineSchedule[] → 204</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/content/weeks/{week}</code></td>
+<td>콘텐츠 JSON</td>
+<td>→ Week</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/children/{id}/progress?from&amp;to</code></td>
+<td>진행 조회</td>
+<td>→ LessonProgress[]</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td><code>/children/{id}/progress/{lessonKey}</code></td>
+<td>진행 저장 (멱등, 클라이언트 id)</td>
+<td>LessonProgress → 200</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/children/{id}/manual-check</code></td>
+<td>수동 체크·해제</td>
+<td>date, routineKey, checked → 200</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/children/{id}/summary?week</code></td>
+<td>대시보드 요약</td>
+<td>→ Summary</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/push/subscriptions</code></td>
+<td>웹 푸시 구독</td>
+<td>subscription → 201</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/push/subscriptions</code></td>
+<td>구독 해제</td>
+<td>endpoint → 204</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/push/test</code></td>
+<td>테스트 알림</td>
+<td>→ 202</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/events</code></td>
+<td>이벤트 배치</td>
+<td>Event[] → 202</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>lessonKey</code> = <code>{week}-{run}-{day}-{routineKey}</code> 예: <code>1-1-3-theme</code></p>
+<h2 id="_2">동기화</h2>
+<ul>
+<li>진행은 기기에 먼저 쓰고 큐에 넣는다. 온라인이면 <code>PUT progress</code> 로 올린다 (멱등)</li>
+<li>충돌: 서버는 <code>completed_at</code> 이 더 이른 쪽을 유지. 수동 체크는 마지막 요청 우선</li>
+<li>콘텐츠 JSON은 앱에 번들, 서버 버전이 높으면 교체</li>
+</ul>
+<h2 id="_3">이벤트</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>이름</th>
+<th>페이로드</th>
+<th>시점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lesson_open</code></td>
+<td>lessonKey, from(<code>node</code> <code>now_card</code> <code>notification</code>)</td>
+<td>L0 열림</td>
+</tr>
+<tr>
+<td><code>video_open</code></td>
+<td>lessonKey</td>
+<td>유튜브 열기</td>
+</tr>
+<tr>
+<td><code>video_done</code></td>
+<td>lessonKey, status(auto/manual), minutes</td>
+<td>✓ 또는 수동</td>
+</tr>
+<tr>
+<td><code>quiz_answer</code></td>
+<td>lessonKey, word, type, correct, ms</td>
+<td>문항마다</td>
+</tr>
+<tr>
+<td><code>speak_result</code></td>
+<td>lessonKey, word, result, score</td>
+<td>단어마다</td>
+</tr>
+<tr>
+<td><code>lesson_done</code></td>
+<td>lessonKey, stars, durationSec</td>
+<td>L4</td>
+</tr>
+<tr>
+<td><code>day_done</code></td>
+<td>date</td>
+<td>4개 완료</td>
+</tr>
+<tr>
+<td><code>manual_check</code></td>
+<td>date, routineKey, checked</td>
+<td>대시보드</td>
+</tr>
+<tr>
+<td><code>notification_open</code></td>
+<td>kind, routineKey</td>
+<td>알림 탭</td>
+</tr>
+<tr>
+<td><code>guide_seen</code></td>
+<td>guideId</td>
+<td>가이드 닫힘</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_4">파일럿 지표 산출</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>지표</th>
+<th>계산</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>루틴 완료율</td>
+<td><code>lesson_done</code> 수 / (활성 아이 수 × 4 × 일수)</td>
+</tr>
+<tr>
+<td>하루 90분 달성률</td>
+<td><code>day_done</code> 일수 / 활성 일수</td>
+</tr>
+<tr>
+<td>4주 잔존율</td>
+<td>28일째 주에 1회 이상 <code>lesson_done</code> 한 아이 / 시작 아이</td>
+</tr>
+<tr>
+<td>단어 정답률</td>
+<td><code>quiz_answer.correct</code> 평균, 단어별</td>
+</tr>
+<tr>
+<td>말하기 시도율</td>
+<td>result ≠ skipped 비율</td>
+</tr>
+<tr>
+<td>수동 비율</td>
+<td>video_status manual / 전체</td>
+</tr>
+</tbody>
+</table></div>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "neutral", fontFamily: "IBM Plex Sans KR, sans-serif" });
+</script>
+</body>
+</html>

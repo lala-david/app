@@ -1,0 +1,21 @@
+{
+  "name": "@soundsfun/content-tools",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Generate illustration assets (Recraft) and word audio for SoundsFun Bridge",
+  "scripts": {
+    "images": "node src/generate-images.mjs",
+    "images:group": "node src/generate-images.mjs --group",
+    "optimize": "node src/optimize-images.mjs",
+    "brand": "node src/build-brand.mjs",
+    "voice": "python src/generate_voice.py",
+    "sfx": "node src/generate-sfx.mjs",
+    "registry": "node src/build-registry.mjs",
+    "contact": "node src/contact-sheet.mjs",
+    "assets": "npm run brand && npm run optimize && npm run voice && npm run sfx && npm run registry"
+  },
+  "dependencies": {
+    "sharp": "^0.34.0"
+  }
+}

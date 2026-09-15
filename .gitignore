@@ -1,0 +1,20 @@
+# secrets
+.env
+
+# dependencies & builds
+node_modules/
+.expo/
+dist/
+web-build/
+.venv/
+__pycache__/
+*.pyc
+*.db
+.pytest_cache/
+
+# private source documents (contact / corporate info)
+reference/
+
+# local tooling
+.claude/
+.DS_Store

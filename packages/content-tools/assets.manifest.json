@@ -1,0 +1,158 @@
+{
+  "outputRoot": "../../apps/mobile/assets/images",
+  "model": "recraftv3",
+  "style": "digital_illustration",
+  "negativePrompt": "text, letters, words, typography, signature, watermark, logo, extra people, humans",
+  "stylePrompt": "flat vector children's book illustration, soft rounded shapes, warm pastel palette, gentle shading, no text, no letters, centered single subject, plain white background",
+  "mascotPrompt": "a cute small cream-colored bunny character with long ears, pink inner ears, rosy cheeks, round black eyes, wearing big bright yellow over-ear headphones",
+  "groups": [
+    {
+      "name": "words",
+      "size": "1024x1024",
+      "resize": 512,
+      "removeBackground": true,
+      "items": [
+        { "id": "rooster", "prompt": "a single friendly cartoon rooster standing, side view, simple" },
+        { "id": "shoes", "prompt": "a pair of small colorful kids sneakers" },
+        { "id": "breakfast", "prompt": "a breakfast plate with toast, egg and a glass of milk" },
+        { "id": "wash", "prompt": "a child's hands washing with soap bubbles at a sink" },
+        { "id": "red", "prompt": "a big glossy red paint splash blob" },
+        { "id": "yellow", "prompt": "a big glossy yellow paint splash blob" },
+        { "id": "green", "prompt": "a big glossy green paint splash blob" },
+        { "id": "blue", "prompt": "a big glossy blue paint splash blob" },
+        { "id": "apple", "prompt": "a shiny red apple with a green leaf" },
+        { "id": "sun", "prompt": "a smiling yellow sun with rays" },
+        { "id": "clover", "prompt": "a green four-leaf clover" },
+        { "id": "sky", "prompt": "a round patch of blue sky with a small white cloud" },
+        { "id": "dinner", "prompt": "a small round table set for dinner with a bowl of soup, a plate and a cup, no people" },
+        { "id": "food", "prompt": "a colorful bowl of rice with vegetables" },
+        { "id": "plate", "prompt": "an empty round dinner plate with fork and spoon" },
+        { "id": "chop", "prompt": "a cutting board with a carrot being chopped" },
+        { "id": "bear", "prompt": "a cute brown teddy bear sitting" },
+        { "id": "train", "prompt": "a colorful toy train engine" },
+        { "id": "unicorn", "prompt": "a cute white unicorn with a rainbow mane" },
+        { "id": "purple", "prompt": "a big glossy purple paint splash blob" },
+        { "id": "orange", "prompt": "a big glossy orange paint splash blob" },
+        { "id": "white", "prompt": "a big fluffy white cloud shape with soft grey shading" },
+        { "id": "banana", "prompt": "a ripe yellow banana" },
+        { "id": "frog", "prompt": "a cute green frog sitting" },
+        { "id": "fish", "prompt": "a cute blue fish" },
+        { "id": "strawberry", "prompt": "a red strawberry" },
+        { "id": "leaf", "prompt": "a single simple green leaf, nothing else" },
+        { "id": "whale", "prompt": "a cute blue whale" },
+        { "id": "lemon", "prompt": "a yellow lemon" },
+        { "id": "firetruck", "prompt": "a plain red toy fire truck with a ladder, no writing on it" }
+      ]
+    },
+    {
+      "name": "mascot",
+      "size": "1024x1024",
+      "resize": 512,
+      "removeBackground": true,
+      "useMascot": true,
+      "items": [
+        { "id": "sori-idle", "prompt": "standing and smiling, full body, facing the viewer" },
+        { "id": "sori-wave", "prompt": "waving hello with one paw, full body, happy" },
+        { "id": "sori-clap", "prompt": "clapping paws happily, eyes closed with joy, full body" },
+        { "id": "sori-cheer", "prompt": "jumping in the air with both arms up, confetti around, full body" },
+        { "id": "sori-sleep", "prompt": "sleeping curled up on a small pillow with a tiny nightcap, peaceful" },
+        { "id": "sori-listen", "prompt": "holding the headphones with both paws, eyes closed, enjoying music, small music notes around" },
+        { "id": "sori-hmm", "prompt": "tilting head curiously with one paw on chin, full body" },
+        { "id": "sori-trophy", "prompt": "holding up a shiny golden trophy proudly, full body" },
+        { "id": "sori-point", "prompt": "pointing forward with one paw, cheerful, full body" },
+        { "id": "sori-speak", "prompt": "speaking into a small cute microphone, happy, full body" }
+      ]
+    },
+    {
+      "name": "stickers",
+      "size": "1024x1024",
+      "resize": 256,
+      "removeBackground": true,
+      "items": [
+        { "id": "sticker-sun", "prompt": "a round sticker of a smiling morning sun with a thick white sticker border" },
+        { "id": "sticker-palette", "prompt": "a round sticker of a painter's color palette with red yellow green blue paint, thick white sticker border" },
+        { "id": "sticker-plate", "prompt": "a round sticker of a cute dinner plate with a smiling face, thick white sticker border" },
+        { "id": "sticker-moon", "prompt": "a round sticker of a sleepy crescent moon with a nightcap and stars, thick white sticker border" },
+        { "id": "sticker-note", "prompt": "a round sticker of cheerful music notes, thick white sticker border" },
+        { "id": "sticker-book", "prompt": "a round sticker of an open picture book with stars, thick white sticker border" },
+        { "id": "badge-day", "prompt": "a round gold medal badge with a big shining star in the middle and a coral ribbon" },
+        { "id": "badge-week", "prompt": "a shiny golden trophy cup with a star on it" }
+      ]
+    },
+    {
+      "name": "routines",
+      "size": "1024x1024",
+      "resize": 256,
+      "removeBackground": true,
+      "items": [
+        { "id": "routine-morning", "prompt": "a simple icon of a smiling sun rising, bold simple shapes" },
+        { "id": "routine-theme", "prompt": "a simple icon of a color palette with a paint brush, bold simple shapes" },
+        { "id": "routine-dinner", "prompt": "a simple icon of a bowl with a spoon and steam, bold simple shapes" },
+        { "id": "routine-bedtime", "prompt": "a simple icon of a crescent moon with a small star, bold simple shapes" },
+        { "id": "routine-faith-song", "prompt": "a simple icon of music notes with a small heart, bold simple shapes" },
+        { "id": "routine-faith-story", "prompt": "a simple icon of an open storybook with a small heart, bold simple shapes" }
+      ]
+    },
+    {
+      "name": "onboarding",
+      "size": "1365x1024",
+      "resize": 1024,
+      "removeBackground": false,
+      "useMascot": true,
+      "items": [
+        { "id": "intro-1", "prompt": "listening to music at home in a cozy living room with floating colorful music notes, a warm morning scene" },
+        { "id": "intro-2", "prompt": "four small scenes in a row showing morning sunrise, a color palette, a dinner table, and a moonlit bed, connected by a dotted path" },
+        { "id": "intro-3", "prompt": "a happy child and parent sitting together on a sofa looking at a phone, the bunny cheering beside them" }
+      ]
+    },
+    {
+      "name": "guides",
+      "size": "1024x1024",
+      "resize": 800,
+      "removeBackground": false,
+      "useMascot": true,
+      "items": [
+        { "id": "notify", "prompt": "holding a big phone showing a notification bell, friendly" },
+        { "id": "add-to-home", "prompt": "next to a big smartphone home screen with a new app icon being added, a plus sign" },
+        { "id": "parent-hold", "prompt": "an adult hand pressing and holding a round button on a phone screen, a circular progress ring around the button, the bunny watching" },
+        { "id": "youtube-go", "prompt": "a phone screen with a big red play button and an arrow pointing out, a small clock timer next to it" },
+        { "id": "mic", "prompt": "a child speaking happily into a phone with a microphone icon and sound waves" }
+      ]
+    },
+    {
+      "name": "celebrate",
+      "size": "1024x1024",
+      "resize": 1024,
+      "removeBackground": true,
+      "useMascot": true,
+      "items": [
+        { "id": "day-done", "prompt": "celebrating with confetti and a big gold star medal" },
+        { "id": "week-trophy", "prompt": "standing on a small podium holding a giant golden trophy, balloons and confetti" },
+        { "id": "streak", "prompt": "holding a friendly cute orange flame character, both smiling" },
+        { "id": "empty", "prompt": "sitting and reading a small picture book calmly" }
+      ]
+    },
+    {
+      "name": "frames",
+      "size": "1024x1024",
+      "resize": 512,
+      "removeBackground": true,
+      "items": [
+        { "id": "frame-cloud", "prompt": "a round decorative frame made of fluffy white and pastel blue clouds, empty transparent center" },
+        { "id": "frame-star", "prompt": "a round decorative frame made of small yellow stars, empty center" },
+        { "id": "frame-flower", "prompt": "a round decorative wreath frame made of small pastel flowers, empty center" }
+      ]
+    },
+    {
+      "name": "brand",
+      "size": "1024x1024",
+      "resize": 1024,
+      "removeBackground": false,
+      "useMascot": true,
+      "items": [
+        { "id": "app-icon", "prompt": "only the bunny head with headphones, close-up, on a solid warm coral background, app icon style, centered" },
+        { "id": "splash", "prompt": "centered, waving, on a solid cream background, lots of empty space" }
+      ]
+    }
+  ]
+}
