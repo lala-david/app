@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>디자인 가이드</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Jua&display=swap">
+<style>
+:root{--bg:#F3F6F4;--sf:#fff;--sf2:#E9EFEB;--ink:#1B2B25;--mut:#5E6E67;--ln:#D5DED9;--ac:#1F7A5C;--ac2:#DDEFE6;--co:#E8603F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+main{max-width:1000px;margin:0 auto;padding:24px 20px 80px}
+.docnav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln);padding:0 20px}
+.docnav ul{list-style:none;margin:0 auto;padding:0;max-width:1000px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.docnav a{display:block;padding:10px 9px;font-size:.82rem;color:var(--mut);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent}
+.docnav a.cur,.docnav a:hover{color:var(--ac);border-color:var(--ac)}
+.docmeta{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:600;margin-top:18px}
+h1,h2,h3,h4{font-family:"Jua","IBM Plex Sans KR",sans-serif;font-weight:400;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:2.3rem;line-height:1.15;margin:6px 0 10px}
+h2{font-size:1.6rem;margin-top:48px;padding-top:16px;border-top:1px solid var(--ln)}
+h3{font-size:1.2rem;margin-top:28px;color:#145A43}
+h4{font-size:1rem;margin-top:18px;font-family:inherit;font-weight:600}
+p{margin:10px 0;max-width:72ch}
+a{color:var(--ac)}
+ul,ol{margin:8px 0;padding-left:22px;max-width:76ch}li{margin:3px 0}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--sf2);padding:1px 5px;border-radius:4px}
+pre{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:.82rem;line-height:1.55}
+pre code{background:none;padding:0}
+pre.mermaid{text-align:center}
+.diagram{max-width:none;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+.diagram img{max-width:100%;height:auto}
+figure.fig{margin:16px 0;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+figure.fig img{max-width:100%;height:auto;border-radius:8px}
+figure.screens{display:inline-block;width:230px;margin:6px;vertical-align:top}
+figcaption{font-size:.8rem;color:var(--mut);margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--sf);margin:14px 0}
+.tw{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:14px 0}
+.tw table{margin:0}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--ln)}
+th{background:var(--sf2);font-weight:600;font-size:.8rem;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+blockquote{margin:14px 0;padding:10px 16px;border-left:3px solid var(--co);background:var(--sf);border-radius:0 10px 10px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--ln);margin:32px 0}
+strong{font-weight:600}
+@media print{.docnav{display:none}body{background:#fff}main{padding:0}}
+</style>
+</head>
+<body>
+<nav class="docnav"><ul><li><a class="" href="00-지원서-분석.html">00 지원서 분석</a></li><li><a class="" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-데이터베이스-설계서.html">05 데이터베이스 설계서</a></li><li><a class="" href="06-API-명세서.html">06 API 명세서</a></li><li><a class="" href="07-설계-모델-UML.html">07 설계 모델 (UML)</a></li><li><a class="" href="08-아키텍처-코드규칙.html">08 아키텍처·코드 규칙</a></li><li><a class="cur" href="09-디자인-가이드.html">09 디자인 가이드</a></li><li><a class="" href="10-테스트-계획.html">10 테스트 계획</a></li><li><a class="" href="11-결정기록-오픈이슈.html">11 결정 기록·오픈 이슈</a></li></ul></nav>
+<main>
+<div class="docmeta">SoundsFun Bridge · MVP 문서 v2 · 09</div>
+<h1 id="_1">디자인 가이드</h1>
+<p>차진숙 디자이너의 시안(SF 폴더 SVG 11장)과 시안 사이트의 CSS에서 값을 가져왔습니다. 모든 값은 <code>apps/mobile/src/shared/theme/tokens.ts</code> 한 파일에 있고, 화면 코드는 이름으로만 씁니다.</p>
+<h2 id="_2">원칙</h2>
+<ol>
+<li>시안과 같게. 눈대중이 아니라 시안에서 잰 값을 쓴다.</li>
+<li>아이 화면은 밝고 둥글게, 부모 화면은 차분하고 또렷하게.</li>
+<li>글보다 그림. 상태는 색과 모양 둘 다로 알린다.</li>
+<li>새로 디자인한 것은 <strong>루틴 길</strong> 하나. 나머지는 시안 그대로.</li>
+</ol>
+<h2 id="_3">색</h2>
+<h3 id="_4">바탕과 글자</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>토큰</th>
+<th>값</th>
+<th>쓰는 곳</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ground</td>
+<td><code>#FAF8F5</code></td>
+<td>오늘·소리여행 바탕</td>
+</tr>
+<tr>
+<td>groundParent</td>
+<td><code>#F7F3EC</code></td>
+<td>부모·설정 바탕</td>
+</tr>
+<tr>
+<td>frame</td>
+<td><code>#DFF2ED</code></td>
+<td>넓은 화면의 바깥 배경</td>
+</tr>
+<tr>
+<td>surface</td>
+<td><code>#FFFFFF</code></td>
+<td>카드</td>
+</tr>
+<tr>
+<td>ink / inkSoft / inkFaint</td>
+<td><code>#2C3E38</code> / <code>#6F7F79</code> / <code>#91A09B</code></td>
+<td>아이 화면 글자</td>
+</tr>
+<tr>
+<td>parentInk / parentSoft</td>
+<td><code>#3D332D</code> / <code>#8C8078</code></td>
+<td>부모 화면 글자</td>
+</tr>
+<tr>
+<td>brand</td>
+<td><code>#35AD86</code></td>
+<td>강조</td>
+</tr>
+<tr>
+<td>navActive / navActiveBg</td>
+<td><code>#256B61</code> / <code>#E0F3EE</code></td>
+<td>탭 막대</td>
+</tr>
+<tr>
+<td>splash</td>
+<td><code>#2D1B68</code></td>
+<td>시작 영상 바탕</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_5">루틴 색</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>루틴</th>
+<th>강조 <code>c</code></th>
+<th>파스텔 <code>p</code></th>
+<th>부모 화면</th>
+<th>캐릭터</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아침 노래</td>
+<td><code>#F4BC16</code></td>
+<td><code>#FFF2A8</code></td>
+<td><code>#FFD34D</code></td>
+<td>병아리</td>
+</tr>
+<tr>
+<td>오늘의 주제</td>
+<td><code>#20AFA3</code></td>
+<td><code>#BFEFE7</code></td>
+<td><code>#FF765D</code></td>
+<td>악어</td>
+</tr>
+<tr>
+<td>저녁 노래</td>
+<td><code>#F34E67</code></td>
+<td><code>#FFD0D7</code></td>
+<td><code>#4DB584</code></td>
+<td>고양이</td>
+</tr>
+<tr>
+<td>잠자리 이야기</td>
+<td><code>#B64FE0</code></td>
+<td><code>#EBC5FA</code></td>
+<td><code>#756BE3</code></td>
+<td>토끼</td>
+</tr>
+<tr>
+<td>주말 찬양</td>
+<td><code>#3F8FD6</code></td>
+<td><code>#CFE6FA</code></td>
+<td>같음</td>
+<td>병아리</td>
+</tr>
+<tr>
+<td>주말 바이블 스토리</td>
+<td><code>#8A6BD8</code></td>
+<td><code>#E2D8F8</code></td>
+<td>같음</td>
+<td>토끼</td>
+</tr>
+</tbody>
+</table></div>
+<p>부모 화면의 색이 다른 것은 시안 03A–C가 그렇게 되어 있기 때문입니다.</p>
+<h3 id="_6">그 밖</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>토큰</th>
+<th>값</th>
+<th>쓰는 곳</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>heroFrom → heroTo</td>
+<td><code>#FFE472</code> → <code>#FFCD33</code></td>
+<td>인사 카드</td>
+</tr>
+<tr>
+<td>weekFrom → weekTo</td>
+<td><code>#FFE981</code> → <code>#FFD33F</code></td>
+<td>이번 주 카드</td>
+</tr>
+<tr>
+<td>star / starSoft</td>
+<td><code>#F1BD24</code> / <code>#FFF5C9</code></td>
+<td>별</td>
+</tr>
+<tr>
+<td>stageColors</td>
+<td><code>#F1BE25</code> <code>#39B6A8</code> <code>#A85BD7</code> <code>#F05C72</code></td>
+<td>48주 네 단계</td>
+</tr>
+<tr>
+<td>streak</td>
+<td><code>#FF765D</code></td>
+<td>연속일</td>
+</tr>
+<tr>
+<td>calendarDone / calendarToday</td>
+<td><code>#43B37E</code> / <code>#FF7058</code></td>
+<td>월간 달력</td>
+</tr>
+<tr>
+<td>toggleOn / toggleOff</td>
+<td><code>#39B6A8</code> / <code>#D8D2CA</code></td>
+<td>스위치</td>
+</tr>
+<tr>
+<td>danger</td>
+<td><code>#EE5745</code></td>
+<td>탈퇴</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_7">글꼴</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>용도</th>
+<th>글꼴</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>큰 제목(화면 제목, 인사, 주차, 단어)</td>
+<td>빙그레체 Bold</td>
+<td><code>assets/fonts/Binggrae-Bold.ttf</code></td>
+</tr>
+<tr>
+<td>본문</td>
+<td>시스템 글꼴</td>
+<td>굵기는 400과 700 두 가지만</td>
+</tr>
+</tbody>
+</table></div>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>이름</th>
+<th>크기 / 줄 높이</th>
+<th>쓰는 곳</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>screenTitle</td>
+<td>31 / 39</td>
+<td>탭 제목</td>
+</tr>
+<tr>
+<td>heroTitle</td>
+<td>28 / 33</td>
+<td>인사 카드</td>
+</tr>
+<tr>
+<td>greeting</td>
+<td>25 / 32</td>
+<td>인사</td>
+</tr>
+<tr>
+<td>sheetTitle</td>
+<td>25 / 31</td>
+<td>시트 제목</td>
+</tr>
+<tr>
+<td>stat</td>
+<td>23 / 29</td>
+<td>부모 요약 숫자</td>
+</tr>
+<tr>
+<td>sectionTitle</td>
+<td>21 / 27</td>
+<td>구역 제목</td>
+</tr>
+<tr>
+<td>cardTitle</td>
+<td>18 / 24</td>
+<td>카드 제목</td>
+</tr>
+<tr>
+<td>button</td>
+<td>17 / 22</td>
+<td>버튼</td>
+</tr>
+<tr>
+<td>body</td>
+<td>15 / 22</td>
+<td>본문</td>
+</tr>
+<tr>
+<td>label · caption · micro</td>
+<td>13 · 12 · 11</td>
+<td>작은 글</td>
+</tr>
+<tr>
+<td>word</td>
+<td>34 / 42</td>
+<td>소리활동의 단어</td>
+</tr>
+<tr>
+<td>eyebrow</td>
+<td>12, 자간 1.1</td>
+<td><code>PARENT REPORT</code> 같은 머리말</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_8">간격과 모양</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>토큰</th>
+<th>값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spacing</td>
+<td>4 · 8 · 12 · 16 · 20 · 24 · 32</td>
+</tr>
+<tr>
+<td>radius</td>
+<td>10 · 16 · 22 · 25 · 인사 카드 30 · 시트 32 · 알약 999</td>
+</tr>
+<tr>
+<td>화면 여백</td>
+<td>좌우 20, 위 22, 아래 110(탭 막대 자리)</td>
+</tr>
+<tr>
+<td>앱 최대 폭</td>
+<td>430</td>
+</tr>
+<tr>
+<td>인사 카드 높이</td>
+<td>298</td>
+</tr>
+<tr>
+<td>이번 주 카드 높이</td>
+<td>170</td>
+</tr>
+<tr>
+<td>탭 막대</td>
+<td>높이 76, 좌우·아래 12 띄움, 모서리 27</td>
+</tr>
+<tr>
+<td>시트 높이</td>
+<td>600</td>
+</tr>
+<tr>
+<td>버튼 높이</td>
+<td>58, 모서리 21</td>
+</tr>
+<tr>
+<td>누르는 곳 최소</td>
+<td>44</td>
+</tr>
+</tbody>
+</table></div>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>그림자</th>
+<th>값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nav</td>
+<td><code>0 8 28 rgba(45,62,56,.12)</code></td>
+</tr>
+<tr>
+<td>stat</td>
+<td><code>0 7 18 rgba(72,63,55,.06)</code></td>
+</tr>
+<tr>
+<td>frame</td>
+<td><code>0 24 70 rgba(37,67,61,.22)</code></td>
+</tr>
+<tr>
+<td>character</td>
+<td><code>0 7 5 rgba(115,86,31,.15)</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_9">캐릭터</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>캐릭터</th>
+<th>파일</th>
+<th>맡은 루틴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>병아리</td>
+<td><code>characters/chick.webp</code></td>
+<td>아침 노래</td>
+</tr>
+<tr>
+<td>악어</td>
+<td><code>characters/crocodile.webp</code></td>
+<td>오늘의 주제</td>
+</tr>
+<tr>
+<td>고양이</td>
+<td><code>characters/cat.webp</code></td>
+<td>저녁 노래</td>
+</tr>
+<tr>
+<td>토끼</td>
+<td><code>characters/rabbit.webp</code></td>
+<td>잠자리 이야기</td>
+</tr>
+</tbody>
+</table></div>
+<p>원본 PNG(약 1MB)를 640×640 WebP(약 30KB)로 바꿔 씁니다. 인사 카드 안의 위치는 시안에서 잰 값입니다.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>캐릭터</th>
+<th>크기</th>
+<th>오른쪽에서</th>
+<th>아래에서</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>악어</td>
+<td>122</td>
+<td>4</td>
+<td>138</td>
+</tr>
+<tr>
+<td>토끼</td>
+<td>88</td>
+<td>130</td>
+<td>42</td>
+</tr>
+<tr>
+<td>고양이</td>
+<td>96</td>
+<td>-8</td>
+<td>54</td>
+</tr>
+<tr>
+<td>병아리</td>
+<td>132</td>
+<td>50</td>
+<td>18</td>
+</tr>
+</tbody>
+</table></div>
+<p>캐릭터는 3.2초 주기로 위아래로 살짝 둥실거립니다. 기기에서 움직임 줄이기를 켜면 멈춥니다.</p>
+<h2 id="_10">루틴 길 (새 디자인)</h2>
+<p>시안의 TODAY’S ROUTINE 목록 자리에 들어가는 디자인입니다. 디자이너의 캐릭터와 루틴 색을 그대로 써서 시안과 어울리게 했습니다.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>요소</th>
+<th>디자인</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>정거장</td>
+<td>루틴 파스텔 색의 둥근 돌. 아래에 강조색으로 두께를 주어 입체로 보인다. 그 위에 캐릭터</td>
+</tr>
+<tr>
+<td>번호</td>
+<td>정거장 왼쪽 위의 흰 동그라미, 강조색 숫자</td>
+</tr>
+<tr>
+<td>길</td>
+<td>회색 점선 곡선. 끝낸 구간은 그 루틴의 강조색 실선</td>
+</tr>
+<tr>
+<td>이름표</td>
+<td>정거장 반대쪽의 흰 카드: 이름, 영어 이름, 분, 재생 버튼</td>
+</tr>
+<tr>
+<td>완료</td>
+<td>정거장에 초록 체크, 이름표에 “완료” 알약</td>
+</tr>
+<tr>
+<td>날짜</td>
+<td>길 머리에 <code>DAY 1 · 오늘</code> 알약</td>
+</tr>
+<tr>
+<td>다음 날</td>
+<td>70% 크기, 흐리게, 점선 동그라미</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>Recraft AI로 길 배경 그림을 시험해 봤지만 시안의 캐릭터와 그림체가 맞지 않아 쓰지 않았습니다. 길은 SVG와 코드로 그려서 화면 폭에 맞게 늘어나고, 색도 토큰을 따릅니다.</p>
+</blockquote>
+<h2 id="_11">컴포넌트</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>컴포넌트</th>
+<th>파일</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AppText</td>
+<td><code>shared/ui/AppText</code></td>
+<td><code>variant</code>로 글자 위계를 고른다</td>
+</tr>
+<tr>
+<td>Pressy</td>
+<td><code>shared/ui/Pressy</code></td>
+<td>누르면 살짝 줄어드는 버튼 바탕</td>
+</tr>
+<tr>
+<td>Screen · AppFrame</td>
+<td><code>shared/ui</code></td>
+<td>화면 여백, 넓은 화면의 폰 틀</td>
+</tr>
+<tr>
+<td>Sheet</td>
+<td><code>shared/ui/Sheet</code></td>
+<td>아래에서 올라오는 창</td>
+</tr>
+<tr>
+<td>Form</td>
+<td><code>shared/ui/Form</code></td>
+<td>TextField, PrimaryButton, SoftButton, Chip, Checkbox, BackBar</td>
+</tr>
+<tr>
+<td>Character</td>
+<td><code>shared/ui/Character</code></td>
+<td>캐릭터 그림과 둥실 움직임</td>
+</tr>
+<tr>
+<td>icons</td>
+<td><code>shared/ui/icons</code></td>
+<td>시안 사이트의 아이콘 경로</td>
+</tr>
+<tr>
+<td>FeedbackHost</td>
+<td><code>shared/ui/FeedbackHost</code></td>
+<td>알림 띠, 확인 창</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_12">문구</h2>
+<ul>
+<li>아이에게 보이는 말은 짧게, 해요체로. “소리 놀이 시작”, “오늘 완료했어요”.</li>
+<li>점수·등수·실패 같은 말은 쓰지 않는다. 틀리면 정답을 알려 준다.</li>
+<li>부모에게는 숫자를 먼저: <code>20 / 90분</code>, <code>1 / 28</code>.</li>
+<li>영어는 콘텐츠(루틴 영어 이름, 한 문장, 단어)에만.</li>
+</ul>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "base" });
+</script>
+</body>
+</html>

@@ -29,6 +29,10 @@ pre code{background:none;padding:0}
 pre.mermaid{text-align:center}
 .diagram{max-width:none;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
 .diagram img{max-width:100%;height:auto}
+figure.fig{margin:16px 0;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+figure.fig img{max-width:100%;height:auto;border-radius:8px}
+figure.screens{display:inline-block;width:230px;margin:6px;vertical-align:top}
+figcaption{font-size:.8rem;color:var(--mut);margin-top:6px}
 table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--sf);margin:14px 0}
 .tw{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:14px 0}
 .tw table{margin:0}
@@ -43,10 +47,15 @@ strong{font-weight:600}
 </style>
 </head>
 <body>
-<nav class="docnav"><ul><li><a class="cur" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-팝업-가이드-명세서.html">05 팝업·가이드 명세서</a></li><li><a class="" href="06-데이터-API-명세서.html">06 데이터·API 명세서</a></li><li><a class="" href="07-아키텍처-코드규칙.html">07 아키텍처·코드 규칙</a></li><li><a class="" href="08-디자인-가이드.html">08 디자인 가이드</a></li><li><a class="" href="09-테스트-계획.html">09 테스트 계획</a></li><li><a class="" href="10-결정기록-오픈이슈.html">10 결정 기록·오픈 이슈</a></li></ul></nav>
+<nav class="docnav"><ul><li><a class="" href="00-지원서-분석.html">00 지원서 분석</a></li><li><a class="cur" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-데이터베이스-설계서.html">05 데이터베이스 설계서</a></li><li><a class="" href="06-API-명세서.html">06 API 명세서</a></li><li><a class="" href="07-설계-모델-UML.html">07 설계 모델 (UML)</a></li><li><a class="" href="08-아키텍처-코드규칙.html">08 아키텍처·코드 규칙</a></li><li><a class="" href="09-디자인-가이드.html">09 디자인 가이드</a></li><li><a class="" href="10-테스트-계획.html">10 테스트 계획</a></li><li><a class="" href="11-결정기록-오픈이슈.html">11 결정 기록·오픈 이슈</a></li></ul></nav>
 <main>
-<div class="docmeta">SoundsFun Bridge · MVP 문서 · 01</div>
+<div class="docmeta">SoundsFun Bridge · MVP 문서 v2 · 01</div>
 <h1 id="_1">비전과 범위</h1>
+<h2 id="_2">한 줄</h2>
+<blockquote>
+<p>아이가 매일 같은 시간에 영어 소리를 듣고, 들은 말을 찾고 말해 보며, 부모는 한 화면에서 확인한다.</p>
+</blockquote>
+<h2 id="_3">이번 버전</h2>
 <div class="tw"><table>
 <thead>
 <tr>
@@ -56,170 +65,156 @@ strong{font-weight:600}
 </thead>
 <tbody>
 <tr>
-<td>제품명</td>
-<td>사운즈펀 브릿지 (SoundsFun Bridge)</td>
+<td>이름</td>
+<td>SoundsFun (사운즈펀 브릿지) v0.2</td>
 </tr>
 <tr>
-<td>한 줄</td>
-<td>아이가 매일 4번, 영어 소리에 놀듯이 노출되는 루틴 앱</td>
-</tr>
-<tr>
-<td>버전</td>
-<td>MVP · Week 1 ‘Colors’</td>
+<td>범위</td>
+<td><strong>Week 1 · Colors</strong> 한 주. 파닉스는 제외</td>
 </tr>
 <tr>
 <td>플랫폼</td>
-<td>모바일 앱(iOS·Android) + 모바일 웹, 코드 한 벌(Expo)</td>
+<td>React Native(Expo) 한 벌로 모바일 웹·PWA와 앱. 반응형</td>
 </tr>
 <tr>
-<td>작성</td>
-<td>2026-09-16 · 강성준</td>
+<td>디자인</td>
+<td>차진숙 디자이너 시안 11장과 같게. 오늘의 루틴만 <strong>번호 길</strong>로 새로 디자인</td>
+</tr>
+<tr>
+<td>주 사용자</td>
+<td>아이(6–10세). 부모는 함께 쓰고 확인한다</td>
+</tr>
+<tr>
+<td>서버</td>
+<td>FastAPI + 관계형 DB. 앱은 기기 저장 우선</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="_2">문제</h2>
-<p>유튜브에 좋은 영어 노래·스토리는 많지만, 부모가 매일 무엇을 언제 틀지 정하고 챙기는 일은 지속되지 않는다. 종이 루틴표와 QR로 운영해 보니 알림과 기록이 없어 습관이 끊겼다.</p>
-<h2 id="_3">해결</h2>
-<p>가이드북의 하루 90분 소리루틴을 그대로 앱의 코스로 옮긴다.</p>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>루틴</th>
-<th>시간</th>
-<th>방식</th>
-<th>앱에서 하는 일</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>☀ 아침송</td>
-<td>20분</td>
-<td>듣기만</td>
-<td>유튜브 링크 열기 → 타이머 → 완료 스티커</td>
-</tr>
-<tr>
-<td>🎨 주제 집중듣기</td>
-<td>30분</td>
-<td>보기 + 놀이</td>
-<td>영상 → 단어 맞추기 → 단어 말하기</td>
-</tr>
-<tr>
-<td>🍽 저녁송</td>
-<td>20분</td>
-<td>듣기만</td>
-<td>유튜브 링크 열기 → 타이머 → 완료 스티커</td>
-</tr>
-<tr>
-<td>🌙 잠자리 스토리</td>
-<td>20분</td>
-<td>듣기만</td>
-<td>유튜브 링크 열기 → 타이머 → 완료 스티커</td>
-</tr>
-</tbody>
-</table></div>
-<p>화면을 보는 루틴은 주제 집중듣기 하나뿐이다. 나머지는 틀어 두고 생활하면 된다.</p>
 <h2 id="_4">사용자</h2>
 <div class="tw"><table>
 <thead>
 <tr>
 <th>사용자</th>
-<th>역할</th>
-<th>화면</th>
+<th>하는 일</th>
+<th>화면에서 지키는 것</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>아이 (6~10세, 주 사용자)</strong></td>
-<td>코스 맵에서 오늘 루틴을 누르고, 주제 놀이를 하고, 스티커를 받는다</td>
-<td>홈, 레슨, 보상</td>
+<td>아이</td>
+<td>길을 따라 루틴을 열고, 듣고, 소리활동을 한다</td>
+<td>글자 적게, 큰 그림, 큰 버튼</td>
 </tr>
 <tr>
 <td>부모</td>
-<td>계정·시간·알림을 관리하고 기록을 본다. 영어 실력 불필요</td>
-<td>부모 대시보드, 설정</td>
+<td>가입, 아이 등록, 알림 시각, 기록 확인, ‘들었어요’ 표시</td>
+<td>숫자와 표를 또렷하게</td>
+</tr>
+<tr>
+<td>교사(다음 단계)</td>
+<td>여러 아이 확인</td>
+<td>이번 버전에 없음</td>
 </tr>
 </tbody>
 </table></div>
-<p>아이 화면은 글자를 최소로 하고 모든 안내를 그림과 소리로 준다. 부모 화면은 큰 글자와 한 줄에 하나씩, 전문 용어 없이 만든다.</p>
-<h2 id="_5">목표 (파일럿 지표)</h2>
+<h2 id="_5">화면 구성</h2>
+<p>네 개의 탭과 그 위에 뜨는 화면입니다.</p>
 <div class="tw"><table>
 <thead>
 <tr>
-<th>구분</th>
-<th>지표</th>
+<th>탭</th>
+<th>내용</th>
+<th>시안</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>실천</td>
-<td>루틴별 시작·완료율, 하루 90분 달성률, 4주 잔존율</td>
+<td>오늘</td>
+<td>인사 카드, 오늘 진행, <strong>루틴 길(1·2·3·4)</strong>, 루틴 시트</td>
+<td>01, 05A–D</td>
 </tr>
 <tr>
-<td>학습</td>
-<td>주제 단어 정답률, 말하기 시도율</td>
+<td>소리여행</td>
+<td>이번 주 카드, 소리활동 들어가기, 요일 줄, 48주 단계, 13주 미리보기</td>
+<td>02</td>
 </tr>
 <tr>
 <td>부모</td>
-<td>“오늘 뭐 틀지” 고민 시간 감소, 재사용 의향</td>
+<td>요약 네 칸, 오늘·주간·월간, 이번 주 한눈에, 모은 스티커</td>
+<td>03A–C</td>
+</tr>
+<tr>
+<td>설정</td>
+<td>알림, 저녁 리마인드, 하잉RTA 주말, 아이 정보, 안내, 계정</td>
+<td>04</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="_6">범위</h2>
-<h3 id="_7">포함</h3>
+<p>그 밖: 시작 영상(00), 로그인·가입, 아이 등록, 소리활동(단어 맞추기·말하기).</p>
+<h2 id="_6">포함</h2>
 <ul>
-<li>회원가입·로그인, 아이 프로필(아바타 꾸미기 또는 얼굴 사진)</li>
-<li>코스 맵: Day 1~7, 하루 4루틴 노드, 연속일수</li>
-<li>듣기 루틴 3종: 유튜브 링크 + 타이머 + 완료</li>
-<li>주제 루틴: 영상 → 단어 맞추기 → 단어 말하기(음성인식)</li>
-<li>보상: 별, 스티커, 하루 완료 배지, 연속일수, 주간 트로피</li>
-<li>부모 확인 게이트, 부모 대시보드(요약·주간 루틴표·월간·통계)</li>
-<li>알림: 루틴 시각(앱 로컬 알림 / 웹 푸시)</li>
-<li>설정: 알림 시간, 아이 프로필, 하잉RTA 주말 콘텐츠 스위치, 안내·FAQ, 계정 삭제</li>
-<li>기능마다 첫 방문 가이드 팝업</li>
+<li>시작 영상 → 화면을 눌러 들어가기</li>
+<li>부모 계정 가입·로그인, 아이 등록(이름·연령·시작일·친구 4종 또는 사진)</li>
+<li>하루 4개 루틴: 유튜브로 열기, 듣기 시간 재기, 자동 완료와 직접 완료</li>
+<li>번호 길: 오늘과 다음 3일, 완료 구간 색칠, 캐릭터</li>
+<li>소리활동: 단어 맞추기(4유형) → 단어 말하기(음성 인식, 도움 모드), 별</li>
+<li>스티커 28칸, 연속일</li>
+<li>부모 탭: 오늘·주간 표·월간 달력, ‘들었어요’ 표시·해제</li>
+<li>루틴 알림, 저녁 리마인드, 하잉RTA 주말 콘텐츠 선택</li>
+<li>서버 설계와 구현: 스키마, API, 무결성 테스트</li>
 </ul>
-<h3 id="_8">제외 (구조만 준비)</h3>
-<ul>
-<li>Week 2 이후 콘텐츠, 파닉스·읽기·쓰기</li>
-<li>앱 내 유튜브 재생, 광고 처리</li>
-<li>교사·기관 대시보드, 다국어, 소셜 로그인</li>
-<li>하잉RTA Read–Talk–Apply 과정 자체</li>
-</ul>
-<h2 id="_9">원칙</h2>
+<h2 id="_7">제외</h2>
 <div class="tw"><table>
 <thead>
 <tr>
-<th>원칙</th>
-<th>구현</th>
+<th>제외</th>
+<th>이유</th>
+<th>준비해 둔 것</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>‘많이’보다 ‘매일’</td>
-<td>하루 단위 코스, 연속일수, 즉시 보상. 한 주 내내 같은 영상 반복</td>
+<td>부모 확인(잠금)</td>
+<td>MVP에서는 빼기로 결정</td>
+<td>부모 탭은 바로 열린다</td>
 </tr>
 <tr>
-<td>생활 속 소리 배치</td>
-<td>알림이 생활시간에 오고, 영상은 유튜브에서 틀고 앱은 시간만 잰다</td>
+<td>2주차 이후, 파닉스</td>
+<td>이번은 1주차만</td>
+<td><code>weeks</code> 테이블, 여정 화면</td>
 </tr>
 <tr>
-<td>강요 없는 말하기</td>
-<td>말하기는 건너뛸 수 있고 실패해도 통과. 벌점·하트 없음</td>
+<td>간단 진단</td>
+<td>연령 선택으로 대신</td>
+<td>난이도 설정값</td>
 </tr>
 <tr>
-<td>부모 준비 0</td>
-<td>오늘 카드에 “지금 틀 영상” 하나만</td>
+<td>교사·기관 대시보드</td>
+<td>파일럿 단계</td>
+<td><code>events</code>, 리포트 API</td>
 </tr>
 <tr>
-<td>공공 영어와 신앙교육 분리</td>
-<td>하잉RTA는 부모가 켤 때만, 기본 꺼짐</td>
+<td>서버 동기화 연결</td>
+<td>기기 저장으로 충분</td>
+<td>계정 저장소 인터페이스, API</td>
 </tr>
 <tr>
-<td>개인정보 최소</td>
-<td>아이 실명·생년월일 없음</td>
+<td>앱 안 영상 재생</td>
+<td>유튜브로 여는 방식으로 결정</td>
+<td><code>video_id</code> 보관</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="_10">문서 목록</h2>
+<h2 id="_8">원칙</h2>
+<ol>
+<li>아이 화면은 읽지 않아도 쓸 수 있어야 한다.</li>
+<li>시안과 같게 만든다. 값은 디자인 토큰 한 곳에 둔다.</li>
+<li>글·숫자·색·콘텐츠를 코드에 박지 않는다. JSON과 토큰, 문구 파일에 둔다.</li>
+<li>기록은 거짓이 없어야 한다. 어떻게 완료했는지(타이머·직접·부모)를 구분한다.</li>
+<li>아이 정보는 최소로. 사진은 기기를 떠나지 않는다.</li>
+<li>신앙 콘텐츠는 부모가 켤 때만.</li>
+</ol>
+<h2 id="_9">문서 목록</h2>
 <div class="tw"><table>
 <thead>
 <tr>
@@ -230,6 +225,11 @@ strong{font-weight:600}
 </thead>
 <tbody>
 <tr>
+<td>00</td>
+<td>지원서 분석</td>
+<td>지원서 내용과 기능의 연결</td>
+</tr>
+<tr>
 <td>01</td>
 <td>비전과 범위</td>
 <td>이 문서</td>
@@ -237,54 +237,59 @@ strong{font-weight:600}
 <tr>
 <td>02</td>
 <td>요구사항 명세서</td>
-<td>기능·비기능 요구사항</td>
+<td>기능·비기능 요구</td>
 </tr>
 <tr>
 <td>03</td>
 <td>유즈케이스 명세서</td>
-<td>행위자, 유즈케이스 다이어그램, 시나리오</td>
+<td>유즈케이스 다이어그램과 시나리오</td>
 </tr>
 <tr>
 <td>04</td>
 <td>화면 명세서</td>
-<td>화면별 구성·인터랙션·상태</td>
+<td>화면별 구성과 동작, 실제 화면</td>
 </tr>
 <tr>
 <td>05</td>
-<td>팝업·가이드 명세서</td>
-<td>모든 팝업, 시트, 토스트, 첫 방문 가이드</td>
+<td>데이터베이스 설계서</td>
+<td>ERD, 테이블, 무결성 규칙</td>
 </tr>
 <tr>
 <td>06</td>
-<td>데이터·API 명세서</td>
-<td>ERD, 테이블, API, 콘텐츠 JSON, 이벤트</td>
+<td>API 명세서</td>
+<td>엔드포인트, 요청·응답, 오류</td>
 </tr>
 <tr>
 <td>07</td>
-<td>아키텍처·코드 규칙</td>
-<td>스택, 폴더 구조, 플랫폼 어댑터, 규칙</td>
+<td>설계 모델 (UML)</td>
+<td>클래스·시퀀스·상태·컴포넌트 다이어그램</td>
 </tr>
 <tr>
 <td>08</td>
-<td>디자인 가이드</td>
-<td>토큰, 컴포넌트, 캐릭터 시스템, 그림 목록</td>
+<td>아키텍처·코드 규칙</td>
+<td>폴더, 의존 규칙, 배포</td>
 </tr>
 <tr>
 <td>09</td>
-<td>테스트 계획</td>
-<td>인수 기준, 기기 매트릭스</td>
+<td>디자인 가이드</td>
+<td>색·글꼴·간격·컴포넌트 값</td>
 </tr>
 <tr>
 <td>10</td>
+<td>테스트 계획</td>
+<td>단위·통합·화면 테스트, 인수 기준</td>
+</tr>
+<tr>
+<td>11</td>
 <td>결정 기록·오픈 이슈</td>
-<td>결정된 것, 결정할 것</td>
+<td>결정과 확인할 것</td>
 </tr>
 </tbody>
 </table></div>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-  mermaid.initialize({ startOnLoad: true, theme: "neutral", fontFamily: "IBM Plex Sans KR, sans-serif" });
+  mermaid.initialize({ startOnLoad: true, theme: "base" });
 </script>
 </body>
 </html>

@@ -41,6 +41,7 @@ def refresh(body: RefreshIn, db: DbSession) -> TokensOut:
 
 @router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
 def delete_me(user: CurrentUser, db: DbSession) -> Response:
+    """탈퇴: 계정과 아이·기록·구독이 외래키 CASCADE 로 함께 지워진다."""
     db.delete(user)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)

@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>데이터베이스 설계서</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Jua&display=swap">
+<style>
+:root{--bg:#F3F6F4;--sf:#fff;--sf2:#E9EFEB;--ink:#1B2B25;--mut:#5E6E67;--ln:#D5DED9;--ac:#1F7A5C;--ac2:#DDEFE6;--co:#E8603F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+main{max-width:1000px;margin:0 auto;padding:24px 20px 80px}
+.docnav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln);padding:0 20px}
+.docnav ul{list-style:none;margin:0 auto;padding:0;max-width:1000px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.docnav a{display:block;padding:10px 9px;font-size:.82rem;color:var(--mut);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent}
+.docnav a.cur,.docnav a:hover{color:var(--ac);border-color:var(--ac)}
+.docmeta{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:600;margin-top:18px}
+h1,h2,h3,h4{font-family:"Jua","IBM Plex Sans KR",sans-serif;font-weight:400;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:2.3rem;line-height:1.15;margin:6px 0 10px}
+h2{font-size:1.6rem;margin-top:48px;padding-top:16px;border-top:1px solid var(--ln)}
+h3{font-size:1.2rem;margin-top:28px;color:#145A43}
+h4{font-size:1rem;margin-top:18px;font-family:inherit;font-weight:600}
+p{margin:10px 0;max-width:72ch}
+a{color:var(--ac)}
+ul,ol{margin:8px 0;padding-left:22px;max-width:76ch}li{margin:3px 0}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--sf2);padding:1px 5px;border-radius:4px}
+pre{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:.82rem;line-height:1.55}
+pre code{background:none;padding:0}
+pre.mermaid{text-align:center}
+.diagram{max-width:none;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+.diagram img{max-width:100%;height:auto}
+figure.fig{margin:16px 0;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+figure.fig img{max-width:100%;height:auto;border-radius:8px}
+figure.screens{display:inline-block;width:230px;margin:6px;vertical-align:top}
+figcaption{font-size:.8rem;color:var(--mut);margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--sf);margin:14px 0}
+.tw{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:14px 0}
+.tw table{margin:0}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--ln)}
+th{background:var(--sf2);font-weight:600;font-size:.8rem;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+blockquote{margin:14px 0;padding:10px 16px;border-left:3px solid var(--co);background:var(--sf);border-radius:0 10px 10px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--ln);margin:32px 0}
+strong{font-weight:600}
+@media print{.docnav{display:none}body{background:#fff}main{padding:0}}
+</style>
+</head>
+<body>
+<nav class="docnav"><ul><li><a class="" href="00-지원서-분석.html">00 지원서 분석</a></li><li><a class="" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="cur" href="05-데이터베이스-설계서.html">05 데이터베이스 설계서</a></li><li><a class="" href="06-API-명세서.html">06 API 명세서</a></li><li><a class="" href="07-설계-모델-UML.html">07 설계 모델 (UML)</a></li><li><a class="" href="08-아키텍처-코드규칙.html">08 아키텍처·코드 규칙</a></li><li><a class="" href="09-디자인-가이드.html">09 디자인 가이드</a></li><li><a class="" href="10-테스트-계획.html">10 테스트 계획</a></li><li><a class="" href="11-결정기록-오픈이슈.html">11 결정 기록·오픈 이슈</a></li></ul></nav>
+<main>
+<div class="docmeta">SoundsFun Bridge · MVP 문서 v2 · 05</div>
+<h1 id="_1">데이터베이스 설계서</h1>
+<p>관계형 DB 16개 테이블입니다. 개발은 SQLite, 운영은 PostgreSQL을 쓰며 모델은 한 벌(<code>apps/api/app/models.py</code>, SQLAlchemy 2.0)입니다. 실제 DDL은 <code>docs/schema/schema.postgresql.sql</code>, <code>schema.sqlite.sql</code>에 뽑아 두었습니다.</p>
+<h2 id="_2">설계 원칙</h2>
+<ol>
+<li><strong>3정규형.</strong> 반복되는 값은 참조 테이블로 뺀다. 루틴 이름·분은 <code>routines</code>에만, 주차마다 바뀌는 영상은 <code>week_routines</code>에만 있다.</li>
+<li><strong>무결성은 DB가 지킨다.</strong> API가 검사하더라도 외래키·유니크·체크 제약을 모두 건다. API를 거치지 않은 잘못된 값도 DB가 거부한다(테스트로 확인).</li>
+<li><strong>지울 때의 규칙을 정해 둔다.</strong> 사용자 쪽은 CASCADE, 콘텐츠 참조는 RESTRICT.</li>
+<li><strong>사진은 저장하지 않는다.</strong> <code>uses_photo</code> 여부만 둔다.</li>
+<li><strong>멱등 키.</strong> 하루·루틴당 기록은 한 줄(<code>UNIQUE</code>). 같은 요청이 여러 번 와도 줄이 늘지 않는다.</li>
+</ol>
+<h2 id="_3">전체 관계</h2>
+<p class="diagram"><img src="../assets/diagrams/dcca349db332.png" alt="다이어그램"></p>
+
+<h2 id="_4">콘텐츠 영역</h2>
+<p>앱의 콘텐츠 JSON을 서버가 시작할 때 읽어 채웁니다(멱등 시드). 운영자가 영상을 바꾸려면 <code>week_routines</code> 한 줄만 고치면 됩니다.</p>
+<p class="diagram"><img src="../assets/diagrams/ad4a0e551666.png" alt="다이어그램"></p>
+
+<h2 id="_5">사용자·기록 영역</h2>
+<p class="diagram"><img src="../assets/diagrams/515140236182.png" alt="다이어그램"></p>
+
+<h2 id="_6">테이블 명세</h2>
+<h3 id="characters">characters — 캐릭터</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>컬럼</th>
+<th>형</th>
+<th>제약</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td>VARCHAR(16)</td>
+<td>PK</td>
+<td>chick · crocodile · cat · rabbit</td>
+</tr>
+<tr>
+<td>name_ko</td>
+<td>VARCHAR(16)</td>
+<td>NOT NULL</td>
+<td>병아리 · 악어 · 고양이 · 토끼</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="routines">routines — 루틴 정의</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>컬럼</th>
+<th>형</th>
+<th>제약</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td>VARCHAR(16)</td>
+<td>PK</td>
+<td>morning · theme · dinner · bedtime · faithSong · faithStory</td>
+</tr>
+<tr>
+<td>order_no</td>
+<td>SMALLINT</td>
+<td>NOT NULL, UNIQUE, &gt; 0</td>
+<td>길에서의 번호</td>
+</tr>
+<tr>
+<td>title / short_title / title_en</td>
+<td>VARCHAR</td>
+<td>NOT NULL</td>
+<td>아침 노래 / 아침 / Morning Song</td>
+</tr>
+<tr>
+<td>target_minutes</td>
+<td>SMALLINT</td>
+<td>NOT NULL, &gt; 0</td>
+<td>20 · 30 · 20 · 20</td>
+</tr>
+<tr>
+<td>tone</td>
+<td>VARCHAR(16)</td>
+<td>NOT NULL</td>
+<td>디자인 토큰의 색 이름</td>
+</tr>
+<tr>
+<td>character_key</td>
+<td>VARCHAR(16)</td>
+<td>FK → characters (RESTRICT)</td>
+<td>정거장 캐릭터, 스티커 그림</td>
+</tr>
+<tr>
+<td>requires_faith</td>
+<td>BOOLEAN</td>
+<td>NOT NULL, 기본 false</td>
+<td>하잉RTA를 켠 주말에만</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="weeks">weeks — 주차</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>컬럼</th>
+<th>형</th>
+<th>제약</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>week_no</td>
+<td>SMALLINT</td>
+<td>PK, 1–48</td>
+<td>주차</td>
+</tr>
+<tr>
+<td>theme</td>
+<td>VARCHAR(32)</td>
+<td>NOT NULL</td>
+<td>Colors</td>
+</tr>
+<tr>
+<td>headline / subline / activity_title</td>
+<td>VARCHAR(64)</td>
+<td>NOT NULL</td>
+<td>화면 문구</td>
+</tr>
+<tr>
+<td>playlist_id</td>
+<td>VARCHAR(64)</td>
+<td>NOT NULL</td>
+<td>유튜브 재생목록</td>
+</tr>
+<tr>
+<td>days</td>
+<td>SMALLINT</td>
+<td>NOT NULL, 1–7, 기본 7</td>
+<td>한 주의 날 수</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="week_routines">week_routines — 주차별 루틴 콘텐츠</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>컬럼</th>
+<th>형</th>
+<th>제약</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>week_no</td>
+<td>SMALLINT</td>
+<td>PK, FK → weeks (CASCADE)</td>
+<td></td>
+</tr>
+<tr>
+<td>routine_key</td>
+<td>VARCHAR(16)</td>
+<td>PK, FK → routines (RESTRICT)</td>
+<td></td>
+</tr>
+<tr>
+<td>guide</td>
+<td>VARCHAR(128)</td>
+<td>NOT NULL</td>
+<td>안내 한 줄</td>
+</tr>
+<tr>
+<td>sentence</td>
+<td>VARCHAR(128)</td>
+<td>NOT NULL</td>
+<td>오늘의 한 문장</td>
+</tr>
+<tr>
+<td>video_id</td>
+<td>VARCHAR(16)</td>
+<td>NULL</td>
+<td>영상 하나일 때</td>
+</tr>
+<tr>
+<td>video_playlist_id</td>
+<td>VARCHAR(64)</td>
+<td>NULL</td>
+<td>재생목록일 때</td>
+</tr>
+<tr>
+<td>video_title / video_channel</td>
+<td>VARCHAR</td>
+<td>NOT NULL</td>
+<td></td>
+</tr>
+<tr>
+<td>duration_sec</td>
+<td>INTEGER</td>
+<td>NULL 또는 &gt; 0</td>
+<td>영상 길이</td>
+</tr>
+</tbody>
+</table></div>
+<p>체크: <code>video_id</code>와 <code>video_playlist_id</code> 중 하나는 있어야 한다.</p>
+<h3 id="words-week_words-week_sentences">words · week_words · week_sentences — 단어와 문장</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>테이블</th>
+<th>컬럼</th>
+<th>제약</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>words</td>
+<td>id PK, ko, word_group, swatch</td>
+<td><code>word_group IN ('color','thing','routine')</code></td>
+</tr>
+<tr>
+<td>week_words</td>
+<td>(week_no, word_id) PK, position, is_focus</td>
+<td>FK 둘, <code>UNIQUE(week_no, position)</code>, position &gt; 0</td>
+</tr>
+<tr>
+<td>week_sentences</td>
+<td>id PK, week_no FK, text, answer_word_id FK</td>
+<td><code>UNIQUE(week_no, text)</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="users">users — 부모 계정</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>컬럼</th>
+<th>형</th>
+<th>제약</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>VARCHAR(36)</td>
+<td>PK</td>
+<td>UUID</td>
+</tr>
+<tr>
+<td>email</td>
+<td>VARCHAR(255)</td>
+<td>NOT NULL, UNIQUE, <code>email = lower(email)</code></td>
+<td>소문자로만 저장 → 대소문자 중복 가입 방지</td>
+</tr>
+<tr>
+<td>password_hash</td>
+<td>VARCHAR(255)</td>
+<td>NOT NULL</td>
+<td>argon2</td>
+</tr>
+<tr>
+<td>consent_version</td>
+<td>VARCHAR(32)</td>
+<td>NOT NULL</td>
+<td>동의한 약관 판</td>
+</tr>
+<tr>
+<td>notify_consent</td>
+<td>BOOLEAN</td>
+<td>NOT NULL</td>
+<td>알림 수신 동의</td>
+</tr>
+<tr>
+<td>created_at</td>
+<td>DATETIME</td>
+<td>NOT NULL</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="children">children — 아이</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>컬럼</th>
+<th>형</th>
+<th>제약</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>VARCHAR(36)</td>
+<td>PK</td>
+<td>UUID</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>VARCHAR(36)</td>
+<td>FK → users (CASCADE), INDEX</td>
+<td></td>
+</tr>
+<tr>
+<td>nickname</td>
+<td>VARCHAR(16)</td>
+<td>NOT NULL, <code>length(trim(nickname)) &gt; 0</code></td>
+<td>공백만은 안 됨</td>
+</tr>
+<tr>
+<td>age_band</td>
+<td>VARCHAR(8)</td>
+<td><code>IN ('6','7','8','9-10')</code></td>
+<td></td>
+</tr>
+<tr>
+<td>uses_photo</td>
+<td>BOOLEAN</td>
+<td>NOT NULL</td>
+<td>사진은 기기에만</td>
+</tr>
+<tr>
+<td>avatar_character</td>
+<td>VARCHAR(16)</td>
+<td>FK → characters (RESTRICT), NULL 가능</td>
+<td></td>
+</tr>
+<tr>
+<td>start_date</td>
+<td>DATE</td>
+<td>NOT NULL</td>
+<td>처음 시작한 날</td>
+</tr>
+<tr>
+<td>run</td>
+<td>SMALLINT</td>
+<td>≥ 1</td>
+<td>몇 번째 도는지</td>
+</tr>
+<tr>
+<td>run_start_date</td>
+<td>DATE</td>
+<td><code>&gt;= start_date</code></td>
+<td>이번 회차 시작일</td>
+</tr>
+<tr>
+<td>faith_enabled</td>
+<td>BOOLEAN</td>
+<td>기본 false</td>
+<td>하잉RTA 주말</td>
+</tr>
+<tr>
+<td>notifications_enabled / evening_reminder</td>
+<td>BOOLEAN</td>
+<td>기본 true</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>체크: <code>uses_photo OR avatar_character IS NOT NULL</code> — 아바타가 없는 아이는 없다.</p>
+<h3 id="routine_schedules">routine_schedules — 알림 시각</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>컬럼</th>
+<th>형</th>
+<th>제약</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>child_id</td>
+<td>VARCHAR(36)</td>
+<td>PK, FK → children (CASCADE)</td>
+</tr>
+<tr>
+<td>routine_key</td>
+<td>VARCHAR(16)</td>
+<td>PK, FK → routines (RESTRICT)</td>
+</tr>
+<tr>
+<td>time_local</td>
+<td>VARCHAR(5)</td>
+<td>HH:MM 24시간 형식 체크, INDEX</td>
+</tr>
+<tr>
+<td>enabled</td>
+<td>BOOLEAN</td>
+<td>기본 true</td>
+</tr>
+</tbody>
+</table></div>
+<p>시간 형식 체크는 DB마다 문법이 달라 방언별로 선언했습니다. PostgreSQL은 정규식 <code>~ '^([01][0-9]|2[0-3]):[0-5][0-9]$'</code>, SQLite는 <code>GLOB</code>.</p>
+<h3 id="routine_records">routine_records — 루틴 기록</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>컬럼</th>
+<th>형</th>
+<th>제약</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>VARCHAR(36)</td>
+<td>PK</td>
+<td></td>
+</tr>
+<tr>
+<td>child_id</td>
+<td>VARCHAR(36)</td>
+<td>FK → children (CASCADE)</td>
+<td></td>
+</tr>
+<tr>
+<td>record_date</td>
+<td>DATE</td>
+<td>NOT NULL</td>
+<td>기기의 그날</td>
+</tr>
+<tr>
+<td>routine_key</td>
+<td>VARCHAR(16)</td>
+<td>FK → routines (RESTRICT)</td>
+<td></td>
+</tr>
+<tr>
+<td>running_since</td>
+<td>BIGINT</td>
+<td>NULL</td>
+<td>흐르는 중이면 시작 시각(ms)</td>
+</tr>
+<tr>
+<td>accumulated_sec</td>
+<td>INTEGER</td>
+<td>≥ 0</td>
+<td>멈추기 전까지 쌓인 초</td>
+</tr>
+<tr>
+<td>listened_min</td>
+<td>SMALLINT</td>
+<td>≥ 0</td>
+<td>인정된 분</td>
+</tr>
+<tr>
+<td>completion</td>
+<td>VARCHAR(8)</td>
+<td>NULL 또는 <code>IN ('timer','manual','parent')</code></td>
+<td>어떻게 완료했나</td>
+</tr>
+<tr>
+<td>completed_at</td>
+<td>BIGINT</td>
+<td>NULL</td>
+<td>완료 시각(ms)</td>
+</tr>
+<tr>
+<td>updated_at</td>
+<td>DATETIME</td>
+<td>NOT NULL</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>제약</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UNIQUE(child_id, record_date, routine_key)</code></td>
+<td>하루·루틴당 한 줄</td>
+</tr>
+<tr>
+<td><code>(completion IS NULL) = (completed_at IS NULL)</code></td>
+<td>완료 방식과 시각은 함께 있거나 함께 없다</td>
+</tr>
+<tr>
+<td><code>completed_at IS NULL OR running_since IS NULL</code></td>
+<td>끝난 기록은 시간이 흐르지 않는다</td>
+</tr>
+<tr>
+<td><code>INDEX(child_id, record_date)</code></td>
+<td>주간·월간 조회</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="activity_records-quiz_answers-speak_attempts">activity_records · quiz_answers · speak_attempts — 소리활동</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>테이블</th>
+<th>핵심 제약</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>activity_records</td>
+<td><code>UNIQUE(child_id, week_no, record_date)</code>, stars ≥ 0, FK child(CASCADE)·week(RESTRICT)</td>
+</tr>
+<tr>
+<td>quiz_answers</td>
+<td><code>UNIQUE(activity_id, question_id)</code>, <code>question_type IN (pickImage, pickWord, match, sentenceColor)</code>, response_ms ≥ 0, <strong><code>(question_type = 'match') = (word_id IS NULL)</code></strong> — 짝 맞추기만 단어가 없다</td>
+</tr>
+<tr>
+<td>speak_attempts</td>
+<td><code>UNIQUE(activity_id, word_id)</code>, <code>score BETWEEN 0 AND 1</code>, <code>result IN (pass, passAfterRetry, passByParent, given, skipped)</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="push_subscriptions-events">push_subscriptions · events</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>테이블</th>
+<th>핵심 제약</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>push_subscriptions</td>
+<td><code>endpoint</code> UNIQUE, FK user (CASCADE)</td>
+</tr>
+<tr>
+<td>events</td>
+<td>FK user (CASCADE), FK child (<strong>SET NULL</strong>) — 아이를 지워도 익명 통계는 남는다</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_7">지울 때의 규칙</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>지우는 것</th>
+<th>함께 지워지는 것</th>
+<th>막히는 경우</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>users 한 줄</td>
+<td>children → schedules, records, activities → answers, attempts / push_subscriptions / events</td>
+<td>–</td>
+</tr>
+<tr>
+<td>children 한 줄</td>
+<td>위의 아이 아래 전부. events.child_id는 NULL로</td>
+<td>–</td>
+</tr>
+<tr>
+<td>weeks 한 줄</td>
+<td>week_routines, week_words, week_sentences</td>
+<td>그 주차의 activity_records가 있으면 RESTRICT</td>
+</tr>
+<tr>
+<td>routines · characters · words</td>
+<td>–</td>
+<td>참조하는 줄이 있으면 RESTRICT</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_8">무결성 검증</h2>
+<p><code>apps/api/tests/test_api.py</code>에서 API를 거치지 않고 DB에 직접 넣어 거부되는지 확인합니다.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>시도</th>
+<th>막는 제약</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>완료 방식만 있고 완료 시각이 없는 기록</td>
+<td>ck_routine_records_completion_pair</td>
+</tr>
+<tr>
+<td>없는 완료 방식 <code>later</code></td>
+<td>ck_routine_records_completion</td>
+</tr>
+<tr>
+<td>음수 초</td>
+<td>ck_routine_records_non_negative</td>
+</tr>
+<tr>
+<td>없는 루틴 <code>nap</code>, 없는 아이, 없는 부모</td>
+<td>외래키</td>
+</tr>
+<tr>
+<td>같은 날·같은 루틴 두 줄</td>
+<td>uq_routine_records_day_routine</td>
+</tr>
+<tr>
+<td>공백뿐인 이름, 연령 <code>12</code></td>
+<td>ck_children_nickname_not_blank, ck_children_age_band</td>
+</tr>
+</tbody>
+</table></div>
+<p>SQLite는 연결마다 <code>PRAGMA foreign_keys=ON</code>을 켜서 외래키를 지키게 했습니다.</p>
+<h2 id="_9">자주 쓰는 질의</h2>
+<pre><code class="language-sql">-- 주간 완료율 (지원서 지표: 주간 완료율 65%)
+SELECT c.id,
+       COUNT(r.completed_at) * 1.0 / (7 * 4) AS weekly_rate
+FROM children c
+LEFT JOIN routine_records r
+       ON r.child_id = c.id
+      AND r.record_date BETWEEN :monday AND :sunday
+GROUP BY c.id;
+
+-- 지금 알림을 보낼 대상 (매분 실행)
+SELECT s.child_id, s.routine_key
+FROM routine_schedules s
+JOIN children c ON c.id = s.child_id AND c.notifications_enabled
+LEFT JOIN routine_records r
+       ON r.child_id = s.child_id AND r.routine_key = s.routine_key AND r.record_date = :today
+WHERE s.time_local = :hhmm AND s.enabled AND r.completed_at IS NULL;
+
+-- 아이들이 어려워하는 단어
+SELECT word_id, AVG(score) AS avg_score, COUNT(*) AS tries
+FROM speak_attempts GROUP BY word_id ORDER BY avg_score;
+</code></pre>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "base" });
+</script>
+</body>
+</html>

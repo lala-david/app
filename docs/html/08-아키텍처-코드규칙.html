@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>아키텍처·코드 규칙</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Jua&display=swap">
+<style>
+:root{--bg:#F3F6F4;--sf:#fff;--sf2:#E9EFEB;--ink:#1B2B25;--mut:#5E6E67;--ln:#D5DED9;--ac:#1F7A5C;--ac2:#DDEFE6;--co:#E8603F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+main{max-width:1000px;margin:0 auto;padding:24px 20px 80px}
+.docnav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln);padding:0 20px}
+.docnav ul{list-style:none;margin:0 auto;padding:0;max-width:1000px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.docnav a{display:block;padding:10px 9px;font-size:.82rem;color:var(--mut);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent}
+.docnav a.cur,.docnav a:hover{color:var(--ac);border-color:var(--ac)}
+.docmeta{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:600;margin-top:18px}
+h1,h2,h3,h4{font-family:"Jua","IBM Plex Sans KR",sans-serif;font-weight:400;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:2.3rem;line-height:1.15;margin:6px 0 10px}
+h2{font-size:1.6rem;margin-top:48px;padding-top:16px;border-top:1px solid var(--ln)}
+h3{font-size:1.2rem;margin-top:28px;color:#145A43}
+h4{font-size:1rem;margin-top:18px;font-family:inherit;font-weight:600}
+p{margin:10px 0;max-width:72ch}
+a{color:var(--ac)}
+ul,ol{margin:8px 0;padding-left:22px;max-width:76ch}li{margin:3px 0}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--sf2);padding:1px 5px;border-radius:4px}
+pre{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:.82rem;line-height:1.55}
+pre code{background:none;padding:0}
+pre.mermaid{text-align:center}
+.diagram{max-width:none;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+.diagram img{max-width:100%;height:auto}
+figure.fig{margin:16px 0;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+figure.fig img{max-width:100%;height:auto;border-radius:8px}
+figure.screens{display:inline-block;width:230px;margin:6px;vertical-align:top}
+figcaption{font-size:.8rem;color:var(--mut);margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--sf);margin:14px 0}
+.tw{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:14px 0}
+.tw table{margin:0}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--ln)}
+th{background:var(--sf2);font-weight:600;font-size:.8rem;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+blockquote{margin:14px 0;padding:10px 16px;border-left:3px solid var(--co);background:var(--sf);border-radius:0 10px 10px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--ln);margin:32px 0}
+strong{font-weight:600}
+@media print{.docnav{display:none}body{background:#fff}main{padding:0}}
+</style>
+</head>
+<body>
+<nav class="docnav"><ul><li><a class="" href="00-지원서-분석.html">00 지원서 분석</a></li><li><a class="" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-데이터베이스-설계서.html">05 데이터베이스 설계서</a></li><li><a class="" href="06-API-명세서.html">06 API 명세서</a></li><li><a class="" href="07-설계-모델-UML.html">07 설계 모델 (UML)</a></li><li><a class="cur" href="08-아키텍처-코드규칙.html">08 아키텍처·코드 규칙</a></li><li><a class="" href="09-디자인-가이드.html">09 디자인 가이드</a></li><li><a class="" href="10-테스트-계획.html">10 테스트 계획</a></li><li><a class="" href="11-결정기록-오픈이슈.html">11 결정 기록·오픈 이슈</a></li></ul></nav>
+<main>
+<div class="docmeta">SoundsFun Bridge · MVP 문서 v2 · 08</div>
+<h1 id="_1">아키텍처·코드 규칙</h1>
+<h2 id="_2">스택</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>영역</th>
+<th>선택</th>
+<th>이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>앱</td>
+<td>Expo SDK 57 (React Native 0.86, react-native-web)</td>
+<td>코드 한 벌로 모바일 웹·PWA와 앱</td>
+</tr>
+<tr>
+<td>언어</td>
+<td>TypeScript strict</td>
+<td>오류 0을 유지</td>
+</tr>
+<tr>
+<td>경로</td>
+<td>expo-router (typed routes, <code>Stack.Protected</code>)</td>
+<td>로그인·아이 등록 여부로 화면 보호</td>
+</tr>
+<tr>
+<td>상태</td>
+<td>Zustand + persist</td>
+<td>작고 단순. 기기 저장과 바로 연결</td>
+</tr>
+<tr>
+<td>움직임·그림</td>
+<td>react-native-reanimated, react-native-svg, expo-linear-gradient</td>
+<td>길의 곡선, 캐릭터 둥실, 카드 그러데이션</td>
+</tr>
+<tr>
+<td>영상</td>
+<td>expo-video</td>
+<td>시작 영상만. 루틴 영상은 유튜브로 연다</td>
+</tr>
+<tr>
+<td>소리·말</td>
+<td>expo-audio, expo-speech, expo-speech-recognition / Web Speech API</td>
+<td>단어 소리, 음성 인식</td>
+</tr>
+<tr>
+<td>알림</td>
+<td>expo-notifications / Notification + 서비스 워커</td>
+<td>앱은 기기 예약, 웹은 서비스 워커 알림(서버 연결 시 Web Push)</td>
+</tr>
+<tr>
+<td>서버</td>
+<td>FastAPI, SQLAlchemy 2.0, argon2, PyJWT, pywebpush, APScheduler</td>
+<td>05·06 문서</td>
+</tr>
+<tr>
+<td>DB</td>
+<td>SQLite(개발) · PostgreSQL(운영)</td>
+<td>같은 모델</td>
+</tr>
+<tr>
+<td>테스트</td>
+<td>Vitest, Playwright, pytest</td>
+<td>10 문서</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_3">폴더</h2>
+<pre><code>sol/
+├─ apps/
+│  ├─ mobile/                앱 (Expo)
+│  │  ├─ assets/             글꼴 · 그림(WebP) · 시작 영상 · 단어 소리
+│  │  └─ src/
+│  │     ├─ app/             경로 파일만. 화면을 불러 돌려준다
+│  │     ├─ app-shell/       탭 막대, 저장소 준비, PWA 머리말
+│  │     ├─ screens/         화면 조립
+│  │     ├─ features/        today · journey · activity · parent · settings · splash · help · child-profile · notifications · auth
+│  │     ├─ entities/        content · course · child · progress · quiz · speech · schedule · session · account
+│  │     ├─ shared/          ui · theme(tokens) · i18n(문구) · platform(어댑터) · lib
+│  │     └─ content/         week1.json · journey.json · app-config.json · words.json · help.json · legal.json
+│  └─ api/                   서버 (FastAPI)
+│     ├─ app/ core · models · schemas · routers · services
+│     ├─ scripts/export_schema.py
+│     └─ tests/
+├─ packages/content-tools/   그림 변환, 자산 목록 생성, 유즈케이스 다이어그램 생성
+└─ docs/                     src(md) → html · docx, assets, schema(sql)
+</code></pre>
+<h2 id="_4">의존 규칙</h2>
+<p class="diagram"><img src="../assets/diagrams/054901490b9f.png" alt="다이어그램"></p>
+
+<div class="tw"><table>
+<thead>
+<tr>
+<th>규칙</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>한 방향</td>
+<td>위에서 아래로만 가져온다. <code>entities</code>는 <code>features</code>를 모른다</td>
+</tr>
+<tr>
+<td>기능끼리</td>
+<td><code>features/a</code>는 <code>features/b</code>를 가져오지 않는다. 함께 쓸 것은 <code>entities</code>나 <code>shared</code>로 내린다</td>
+</tr>
+<tr>
+<td>계산은 순수 함수</td>
+<td>날짜·진행·리포트·문제 만들기·발음 판정·길 좌표는 화면과 저장소를 모른다 → 단위 테스트</td>
+</tr>
+<tr>
+<td>저장소는 얇게</td>
+<td>store는 값과 저장만. 규칙은 <code>lib/</code>의 함수</td>
+</tr>
+<tr>
+<td>플랫폼 차이</td>
+<td><code>shared/platform/*.web.ts</code> / <code>*.native.ts</code> 어댑터 안에만. 화면은 차이를 모른다</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_5">하드코딩 금지</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>종류</th>
+<th>있는 곳</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>색·간격·모서리·글자 크기·그림자</td>
+<td><code>shared/theme/tokens.ts</code></td>
+</tr>
+<tr>
+<td>화면 문구</td>
+<td><code>shared/i18n/strings.ko.ts</code></td>
+</tr>
+<tr>
+<td>루틴·영상·단어·문제 구성</td>
+<td><code>content/weeks/week1.json</code></td>
+</tr>
+<tr>
+<td>목표 분, 기본 알림 시각, 연령, 캐릭터, 스티커 칸 수, 발음 기준</td>
+<td><code>content/app-config.json</code></td>
+</tr>
+<tr>
+<td>그림·소리 파일 목록</td>
+<td><code>content/generated/assets.ts</code> (도구가 만든다)</td>
+</tr>
+<tr>
+<td>주소·키</td>
+<td><code>.env</code> (저장소에 올리지 않는다)</td>
+</tr>
+</tbody>
+</table></div>
+<p>2주차를 더하려면 <code>week2.json</code>과 그림·소리를 넣고 <code>entities/content/content.ts</code>의 <code>WEEKS</code>에 한 줄 등록하면 됩니다. 화면 코드는 고치지 않습니다.</p>
+<h2 id="_6">상태 흐름</h2>
+<p class="diagram"><img src="../assets/diagrams/4193c33882c7.png" alt="다이어그램"></p>
+
+<p>기록의 키는 <code>날짜:루틴</code>입니다. 시간은 “시작 시각 + 쌓인 초”로 저장하므로 앱을 닫아도 이어집니다.</p>
+<h2 id="_7">반응형</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>폭</th>
+<th>동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>~430</td>
+<td>화면 가득. 길의 좌표는 폭에 맞춰 다시 계산</td>
+</tr>
+<tr>
+<td>431~</td>
+<td>가운데 폰 틀(최대 430), 둥근 모서리와 그림자, 옅은 민트 배경</td>
+</tr>
+</tbody>
+</table></div>
+<p>틀의 높이는 백분율이 아니라 창 높이에서 계산한 숫자입니다(react-native-web에서 백분율 높이가 0이 되는 문제를 피함). 좁을 때와 넓을 때의 컴포넌트 구조는 같습니다.</p>
+<h2 id="_8">코드 규칙</h2>
+<ul>
+<li>주석은 “왜”가 필요할 때만 한 줄. 무엇을 하는지는 이름이 말한다.</li>
+<li>컴포넌트는 한 가지 일. 길어지면 <code>ui/</code>의 조각으로 나눈다.</li>
+<li><code>any</code> 금지, 단언(<code>as</code>)은 경계에서만.</li>
+<li>파일 이름: 컴포넌트 <code>PascalCase.tsx</code>, 그 밖 <code>camelCase.ts</code>, 테스트 <code>*.test.ts</code>.</li>
+<li>서버: 라우터는 얇게(검사·권한·응답), 규칙은 <code>services/</code>, 제약은 <code>models.py</code>.</li>
+</ul>
+<h2 id="_9">빌드와 배포</h2>
+<pre><code class="language-bash"># 앱 개발
+cd apps/mobile &amp;&amp; npx expo start --web
+
+# 검사
+npx tsc --noEmit &amp;&amp; npx vitest run
+
+# 웹 배포 (GitHub Pages, /app 아래)
+EXPO_PUBLIC_BASE_URL=app npx expo export -p web
+node scripts/spa-fallback.mjs          # 404.html, .nojekyll
+npx gh-pages --nojekyll -d dist
+
+# 문서
+python docs/build.py                   # md → html + docx, 다이어그램 PNG
+node packages/content-tools/src/usecase-diagram.mjs
+</code></pre>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>환경 변수</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EXPO_PUBLIC_BASE_URL</td>
+<td>웹 배포 경로 (<code>app</code>)</td>
+</tr>
+<tr>
+<td>EXPO_PUBLIC_LISTEN_TIME_SCALE</td>
+<td>시연·테스트에서 시간을 빨리 흐르게 (<code>npm run web:demo</code>은 60배)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>이번 버전의 앱은 서버에 연결하지 않고 기기 저장만 씁니다. 서버는 따로 완성·테스트되어 있고, 연결은 계정 저장소(<code>entities/account</code>)의 구현을 API용으로 바꾸고 기록 저장 뒤에 멱등 PUT을 보내는 작업으로 끝납니다.</p>
+</blockquote>
+<h2 id="_10">보안·개인정보</h2>
+<ul>
+<li>아이에 대해 받는 것: 이름, 연령대, 시작일, 고른 캐릭터. 사진은 기기에만.</li>
+<li>비밀번호는 기기에서는 소금 + 해시, 서버에서는 argon2.</li>
+<li>광고·외부 분석 도구 없음. 사용 로그는 자체 <code>events</code> 테이블에만.</li>
+<li>원본 지원서·가이드북·디자인 원본은 저장소에 올리지 않는다(<code>.gitignore</code>).</li>
+</ul>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "base" });
+</script>
+</body>
+</html>

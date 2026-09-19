@@ -28,6 +28,23 @@ ROOT = Path(__file__).parent
 SRC, HTML_DIR, DOCX_DIR = ROOT / "src", ROOT / "html", ROOT / "docx"
 MERMAID_INK = "https://mermaid.ink/img/"
 
+# 다이어그램 색은 앱 디자인 토큰(노랑·청록·코랄·보라)에서 가져온다
+MERMAID_THEME = {
+    "theme": "base",
+    "themeVariables": {
+        "fontFamily": "Pretendard, Malgun Gothic, sans-serif", "fontSize": "15px",
+        "primaryColor": "#FFF2A8", "primaryBorderColor": "#E0A800", "primaryTextColor": "#2B2A33",
+        "secondaryColor": "#BFEFE7", "secondaryBorderColor": "#20AFA3", "tertiaryColor": "#FFF9E6", "tertiaryBorderColor": "#F4BC16",
+        "lineColor": "#6B6880", "textColor": "#2B2A33", "mainBkg": "#FFF2A8", "nodeBorder": "#E0A800",
+        "clusterBkg": "#FFFBEF", "clusterBorder": "#F4BC16", "edgeLabelBackground": "#FFFFFF",
+        "actorBkg": "#BFEFE7", "actorBorder": "#20AFA3", "actorTextColor": "#16423E", "actorLineColor": "#B9B6C9",
+        "signalColor": "#4A4860", "signalTextColor": "#2B2A33", "labelBoxBkgColor": "#FFD0D7", "labelBoxBorderColor": "#F34E67", "labelTextColor": "#5A1320",
+        "loopTextColor": "#5A1320", "noteBkgColor": "#EBC5FA", "noteBorderColor": "#B64FE0", "noteTextColor": "#3B1450",
+        "activationBkgColor": "#FFE472", "activationBorderColor": "#E0A800", "sequenceNumberColor": "#FFFFFF",
+        "classText": "#2B2A33", "attributeBackgroundColorEven": "#FFFFFF", "attributeBackgroundColorOdd": "#FFFBEF",
+    },
+}
+
 # ───────────────────────────── HTML ─────────────────────────────
 
 HTML_TEMPLATE = """<!doctype html>
@@ -42,12 +59,12 @@ HTML_TEMPLATE = """<!doctype html>
 <body>
 <nav class="docnav">{nav}</nav>
 <main>
-<div class="docmeta">SoundsFun Bridge · MVP 문서 · {file_no}</div>
+<div class="docmeta">SoundsFun Bridge · MVP 문서 v2 · {file_no}</div>
 {body}
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-  mermaid.initialize({{ startOnLoad: true, theme: "neutral", fontFamily: "IBM Plex Sans KR, sans-serif" }});
+  mermaid.initialize({{ startOnLoad: true, theme: "base" }});
 </script>
 </body>
 </html>
@@ -77,6 +94,10 @@ pre code{background:none;padding:0}
 pre.mermaid{text-align:center}
 .diagram{max-width:none;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
 .diagram img{max-width:100%;height:auto}
+figure.fig{margin:16px 0;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+figure.fig img{max-width:100%;height:auto;border-radius:8px}
+figure.screens{display:inline-block;width:230px;margin:6px;vertical-align:top}
+figcaption{font-size:.8rem;color:var(--mut);margin-top:6px}
 table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--sf);margin:14px 0}
 .tw{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:14px 0}
 .tw table{margin:0}
@@ -100,6 +121,7 @@ def md_to_html(text: str) -> str:
 
     text = re.sub(r"```mermaid\n(.*?)```", diagram, text, flags=re.S)
     html = markdown.markdown(text, extensions=["tables", "fenced_code", "sane_lists", "toc"])
+    html = re.sub(r'<p><img alt="([^"]*)" src="([^"]+)" ?/?></p>', lambda m: f'<figure class="fig {Path(m.group(2)).parent.name}"><img src="{m.group(2)}" alt="{m.group(1)}"><figcaption>{m.group(1)}</figcaption></figure>', html)
     return re.sub(r"(<table>.*?</table>)", r'<div class="tw">\1</div>', html, flags=re.S)
 
 
@@ -125,6 +147,11 @@ def parse_blocks(text: str) -> list[Block]:
                 j += 1
             blocks.append(Block("mermaid" if lang == "mermaid" else "code", "\n".join(lines[i + 1:j])))
             i = j + 1
+            continue
+        im = re.match(r"^!\[(.*?)\]\((.+?)\)\s*$", line)
+        if im:
+            blocks.append(Block("image", im.group(2), items=[im.group(1)]))
+            i += 1
             continue
         m = re.match(r"^(#{1,4})\s+(.*)", line)
         if m:
@@ -196,19 +223,20 @@ def shade(cell, hex_color: str):
 
 
 DIAGRAM_DIR = ROOT / "assets" / "diagrams"
+IMAGE_WIDTHS = {"screens": 6.2, "uml": 16.5}  # 폴더별 DOCX 그림 폭(cm)
 
 
 def diagram_file(code: str) -> Path | None:
     """mermaid 코드를 PNG로 렌더링해 assets/diagrams에 캐시한다 (내용 해시로 파일명)."""
     import hashlib
     DIAGRAM_DIR.mkdir(parents=True, exist_ok=True)
-    path = DIAGRAM_DIR / f"{hashlib.sha1(code.encode()).hexdigest()[:12]}.png"
+    path = DIAGRAM_DIR / f"{hashlib.sha1((code + "|v2").encode()).hexdigest()[:12]}.png"
     if path.exists():
         return path
-    state = '{"code":' + __import__("json").dumps(code) + ',"mermaid":{"theme":"neutral"}}'
+    state = __import__("json").dumps({"code": code, "mermaid": MERMAID_THEME}, ensure_ascii=False)
     payload = base64.urlsafe_b64encode(zlib.compress(state.encode(), 9)).decode()
     try:
-        req = urllib.request.Request(MERMAID_INK + "pako:" + payload + "?type=png&bgColor=FFFFFF&width=1600", headers={"User-Agent": "Mozilla/5.0"})
+        req = urllib.request.Request(MERMAID_INK + "pako:" + payload + "?type=png&bgColor=FFFFFF&width=2000", headers={"User-Agent": "Mozilla/5.0"})
         with urllib.request.urlopen(req, timeout=40) as r:
             path.write_bytes(r.read())
         return path
@@ -239,7 +267,7 @@ def set_base_font(doc: Document):
 def blocks_to_docx(blocks: list[Block], out: Path, title: str):
     doc = Document()
     set_base_font(doc)
-    doc.add_paragraph("SoundsFun Bridge · MVP 문서").runs[0].font.color.rgb = RGBColor.from_string("1F7A5C")
+    doc.add_paragraph("SoundsFun Bridge · MVP 문서 v2").runs[0].font.color.rgb = RGBColor.from_string("1F7A5C")
     for b in blocks:
         if b.kind == "h1":
             doc.add_heading(b.text, level=0)
@@ -270,6 +298,14 @@ def blocks_to_docx(blocks: list[Block], out: Path, title: str):
             else:
                 p = doc.add_paragraph(); run = p.add_run("[다이어그램 - HTML 버전에서 확인]\n" + b.text)
                 run.font.name = "Consolas"; run.font.size = Pt(8.5)
+        elif b.kind == "image":
+            path = (SRC / b.text).resolve()
+            if path.exists():
+                doc.add_picture(str(path), width=Cm(float(IMAGE_WIDTHS.get(path.parent.name, 16))))
+                doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+                if b.items and b.items[0]:
+                    cap = doc.add_paragraph(); cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    run = cap.add_run(b.items[0]); run.font.size = Pt(9); run.font.color.rgb = RGBColor.from_string("5E6E67")
         elif b.kind == "table" and b.rows:
             cols = max(len(r) for r in b.rows)
             t = doc.add_table(rows=len(b.rows), cols=cols); t.style = "Table Grid"

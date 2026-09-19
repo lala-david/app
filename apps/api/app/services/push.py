@@ -1,4 +1,4 @@
-"""Web Push 발송과 매분 루틴 알림 스케줄."""
+"""Web Push 발송과 매분 루틴 알림."""
 from __future__ import annotations
 
 import json
@@ -12,8 +12,8 @@ from sqlalchemy.orm import Session
 
 from ..core.config import get_settings
 from ..core.db import SessionLocal
-from ..models import Child, LessonProgress, PushSubscription, RoutineSchedule
-from .content import app_config, lesson_key, load_week, routines_for_date
+from ..models import PushSubscription, RoutineRecord, RoutineSchedule, WeekRoutine
+from .course import current_week, is_course_day, routines_for
 
 log = logging.getLogger("soundsfun.push")
 
@@ -27,35 +27,24 @@ class PushMessage:
 
 
 def due_messages(db: Session, now_local: datetime) -> list[PushMessage]:
-    """지금(분 단위)이 루틴 시각이고, 아직 끝내지 않은 루틴의 알림 목록."""
-    week = load_week(app_config()["currentWeek"])
+    """지금(분 단위)이 알림 시각이고 아직 끝내지 않은 루틴의 알림 목록."""
+    week = current_week(db)
     today = now_local.date()
-    hhmm = now_local.strftime("%H:%M")
     messages: list[PushMessage] = []
 
-    schedules = db.scalars(select(RoutineSchedule).where(RoutineSchedule.time_local == hhmm, RoutineSchedule.enabled.is_(True))).all()
+    schedules = db.scalars(select(RoutineSchedule).where(RoutineSchedule.time_local == now_local.strftime("%H:%M"), RoutineSchedule.enabled.is_(True))).all()
     for schedule in schedules:
-        child: Child = schedule.child
-        if not child.notifications_enabled:
+        child = schedule.child
+        if not child.notifications_enabled or not is_course_day(week, child, today):
             continue
-        day = (today - child.run_start_date).days + 1
-        if not 1 <= day <= week["days"]:
-            continue
-        routine = next((r for r in routines_for_date(week, today, child.faith_enabled) if r["key"] == schedule.routine_key), None)
+        routine = next((r for r in routines_for(db, week, child, today) if r.key == schedule.routine_key), None)
         if routine is None:
             continue
-        key = lesson_key(child.run, day, routine["key"])
-        done = db.scalar(select(LessonProgress.completed_at).where(LessonProgress.child_id == child.id, LessonProgress.lesson_key == key))
+        done = db.scalar(select(RoutineRecord.completed_at).where(RoutineRecord.child_id == child.id, RoutineRecord.record_date == today, RoutineRecord.routine_key == routine.key))
         if done:
             continue
-        messages.append(
-            PushMessage(
-                user_id=child.user_id,
-                title=f"{routine['titleKo']} 시간이에요",
-                body=f"{routine['video']['title']} · {routine['targetMinutes']}분",
-                url=f"/home?lesson={key}",
-            )
-        )
+        content = db.get(WeekRoutine, (week.week_no, routine.key))
+        messages.append(PushMessage(user_id=child.user_id, title=f"{routine.title} 시간이에요", body=f"{content.video_title} · {routine.target_minutes}분", url=f"/today?open={routine.key}"))
     return messages
 
 
@@ -65,24 +54,18 @@ def send_to_user(db: Session, message: PushMessage) -> int:
         log.info("VAPID key missing; skip push to %s", message.user_id)
         return 0
 
-    from pywebpush import WebPushException, webpush  # 선택 의존성: 키가 있을 때만 불러온다
+    from pywebpush import WebPushException, webpush  # 키가 있을 때만 필요한 의존성
 
     sent = 0
     payload = json.dumps({"title": message.title, "body": message.body, "url": message.url}, ensure_ascii=False)
-    for subscription in db.scalars(select(PushSubscription).where(PushSubscription.user_id == message.user_id)).all():
+    for sub in db.scalars(select(PushSubscription).where(PushSubscription.user_id == message.user_id)).all():
         try:
-            webpush(
-                subscription_info={"endpoint": subscription.endpoint, "keys": subscription.keys},
-                data=payload,
-                vapid_private_key=settings.vapid_private_key,
-                vapid_claims={"sub": settings.vapid_subject},
-            )
+            webpush(subscription_info={"endpoint": sub.endpoint, "keys": {"p256dh": sub.p256dh, "auth": sub.auth}}, data=payload, vapid_private_key=settings.vapid_private_key, vapid_claims={"sub": settings.vapid_subject})
             sent += 1
         except WebPushException as error:
-            status = getattr(error.response, "status_code", None)
-            if status in (404, 410):
-                db.delete(subscription)
-            log.warning("push failed %s: %s", status, error)
+            if getattr(error.response, "status_code", None) in (404, 410):
+                db.delete(sub)  # 브라우저가 구독을 버렸다
+            log.warning("push failed: %s", error)
     db.commit()
     return sent
 

@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>테스트 계획</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Jua&display=swap">
+<style>
+:root{--bg:#F3F6F4;--sf:#fff;--sf2:#E9EFEB;--ink:#1B2B25;--mut:#5E6E67;--ln:#D5DED9;--ac:#1F7A5C;--ac2:#DDEFE6;--co:#E8603F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+main{max-width:1000px;margin:0 auto;padding:24px 20px 80px}
+.docnav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln);padding:0 20px}
+.docnav ul{list-style:none;margin:0 auto;padding:0;max-width:1000px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.docnav a{display:block;padding:10px 9px;font-size:.82rem;color:var(--mut);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent}
+.docnav a.cur,.docnav a:hover{color:var(--ac);border-color:var(--ac)}
+.docmeta{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:600;margin-top:18px}
+h1,h2,h3,h4{font-family:"Jua","IBM Plex Sans KR",sans-serif;font-weight:400;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:2.3rem;line-height:1.15;margin:6px 0 10px}
+h2{font-size:1.6rem;margin-top:48px;padding-top:16px;border-top:1px solid var(--ln)}
+h3{font-size:1.2rem;margin-top:28px;color:#145A43}
+h4{font-size:1rem;margin-top:18px;font-family:inherit;font-weight:600}
+p{margin:10px 0;max-width:72ch}
+a{color:var(--ac)}
+ul,ol{margin:8px 0;padding-left:22px;max-width:76ch}li{margin:3px 0}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--sf2);padding:1px 5px;border-radius:4px}
+pre{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:.82rem;line-height:1.55}
+pre code{background:none;padding:0}
+pre.mermaid{text-align:center}
+.diagram{max-width:none;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+.diagram img{max-width:100%;height:auto}
+figure.fig{margin:16px 0;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+figure.fig img{max-width:100%;height:auto;border-radius:8px}
+figure.screens{display:inline-block;width:230px;margin:6px;vertical-align:top}
+figcaption{font-size:.8rem;color:var(--mut);margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--sf);margin:14px 0}
+.tw{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:14px 0}
+.tw table{margin:0}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--ln)}
+th{background:var(--sf2);font-weight:600;font-size:.8rem;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+blockquote{margin:14px 0;padding:10px 16px;border-left:3px solid var(--co);background:var(--sf);border-radius:0 10px 10px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--ln);margin:32px 0}
+strong{font-weight:600}
+@media print{.docnav{display:none}body{background:#fff}main{padding:0}}
+</style>
+</head>
+<body>
+<nav class="docnav"><ul><li><a class="" href="00-지원서-분석.html">00 지원서 분석</a></li><li><a class="" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-데이터베이스-설계서.html">05 데이터베이스 설계서</a></li><li><a class="" href="06-API-명세서.html">06 API 명세서</a></li><li><a class="" href="07-설계-모델-UML.html">07 설계 모델 (UML)</a></li><li><a class="" href="08-아키텍처-코드규칙.html">08 아키텍처·코드 규칙</a></li><li><a class="" href="09-디자인-가이드.html">09 디자인 가이드</a></li><li><a class="cur" href="10-테스트-계획.html">10 테스트 계획</a></li><li><a class="" href="11-결정기록-오픈이슈.html">11 결정 기록·오픈 이슈</a></li></ul></nav>
+<main>
+<div class="docmeta">SoundsFun Bridge · MVP 문서 v2 · 10</div>
+<h1 id="_1">테스트 계획</h1>
+<h2 id="_2">현재 결과</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>종류</th>
+<th>도구</th>
+<th>수</th>
+<th>결과</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>형 검사</td>
+<td><code>tsc --noEmit</code> (strict)</td>
+<td>–</td>
+<td>오류 0</td>
+</tr>
+<tr>
+<td>앱 단위 테스트</td>
+<td>Vitest</td>
+<td>40</td>
+<td>모두 통과</td>
+</tr>
+<tr>
+<td>서버 테스트 (API + DB 무결성)</td>
+<td>pytest</td>
+<td>19</td>
+<td>모두 통과</td>
+</tr>
+<tr>
+<td>화면 돌아보기</td>
+<td>Playwright (headless, 390×844 · 1280 · 820)</td>
+<td>25장면</td>
+<td>콘솔 오류 0</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_3">범위</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>층</th>
+<th>무엇을</th>
+<th>어떻게</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>규칙(순수 함수)</td>
+<td>날짜, 코스, 진행, 리포트, 문제 만들기, 발음 판정, 알림 예약, 길 좌표</td>
+<td>단위 테스트</td>
+</tr>
+<tr>
+<td>서버</td>
+<td>가입·권한·멱등·리포트·알림 대상·시드</td>
+<td>TestClient로 통합 테스트</td>
+</tr>
+<tr>
+<td>DB</td>
+<td>체크·유니크·외래키·CASCADE</td>
+<td>API를 거치지 않고 직접 넣어 거부되는지</td>
+</tr>
+<tr>
+<td>화면</td>
+<td>처음부터 끝까지의 흐름, 시안과의 비교</td>
+<td>Playwright 돌아보기 + 눈으로 비교</td>
+</tr>
+<tr>
+<td>기기</td>
+<td>실제 폰의 브라우저, 마이크, 알림</td>
+<td>손으로 확인 (아래 표)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_4">앱 단위 테스트</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>파일</th>
+<th>확인하는 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>course.test.ts</code></td>
+<td>달 경계·주 시작·달력 칸, 날짜 → DAY 번호, 주말·하잉RTA일 때만 신앙 루틴, 시안 순서의 7일</td>
+</tr>
+<tr>
+<td><code>progress.test.ts</code></td>
+<td>흐르는 시간 더하기, 칸 상태(완료·예정·놓침·듣는 중), 연속일(오늘이 비면 어제부터), 앱·부모 완료 구분, 끝난 루틴만 분으로 인정, 스티커 순서</td>
+</tr>
+<tr>
+<td><code>todayState.test.ts</code></td>
+<td>오늘 + 다음 3일과 1~4번, 분·퍼센트, 시작 전·마침 상태, 길이 좌우로 번갈아 놓이고 폭을 넘지 않으며 끝낸 구간이 색칠됨</td>
+</tr>
+<tr>
+<td><code>report.test.ts</code></td>
+<td>종이 루틴표와 같은 주간 표, 요약 네 칸, 루틴별 완료, 월간의 일부 한 날, 스티커 판</td>
+</tr>
+<tr>
+<td><code>buildQuiz.test.ts</code></td>
+<td>유형별 문제 수, 같은 씨앗값이면 같은 문제, 정답은 보기 중 한 번, 문장 문제는 색 단어만, 유형 섞기</td>
+</tr>
+<tr>
+<td><code>judgeSpeech.test.ts</code></td>
+<td>대소문자, 문장 속 단어, 동음이의어, 여러 후보 중 최고, 엉뚱한 말·침묵 거부, 문장부호 정리, 편집 거리</td>
+</tr>
+<tr>
+<td><code>schedule.test.ts</code></td>
+<td>시각 옮기기(자정 넘김), 오전·오후 표시, 순서가 뒤바뀐 시각 찾기, 다음에 할 루틴 고르기</td>
+</tr>
+<tr>
+<td><code>buildUpcoming.test.ts</code></td>
+<td>지난 시각·꺼진 루틴·끝낸 루틴 건너뛰기, 마지막 날 뒤에는 없음, 주말 신앙 루틴과 저녁 리마인드</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_5">서버 테스트</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>테스트</th>
+<th>확인하는 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>seed</td>
+<td>두 번 돌려도 같다. 루틴 이름·캐릭터·영상·집중 단어가 시안·재생목록과 같다</td>
+</tr>
+<tr>
+<td>계정</td>
+<td>가입, 대소문자만 다른 중복 409, 틀린 비밀번호 401, 토큰 갱신</td>
+</tr>
+<tr>
+<td>아이</td>
+<td>캐릭터 없는 아바타 422, 없는 캐릭터 422, 기본 알림 시각, 사진으로 바꾸기</td>
+</tr>
+<tr>
+<td>알림 시각</td>
+<td><code>25:00</code> 422, 없는 루틴 422, 같은 루틴 두 번 422</td>
+</tr>
+<tr>
+<td>루틴 기록</td>
+<td>멱등, 완료가 되돌려지지 않음, 분이 줄지 않음, 짝 없는 완료 422, 없는 루틴 404</td>
+</tr>
+<tr>
+<td>부모 표시</td>
+<td>표시·해제, 앱 기록은 409, 미래 날짜 422</td>
+</tr>
+<tr>
+<td>소리활동</td>
+<td>다시 올려도 답이 두 배가 되지 않음, 없는 단어 422, 유형과 단어의 짝</td>
+</tr>
+<tr>
+<td>리포트</td>
+<td>오늘 분·목표 90·총 분·연속 2일·스티커 순서·루틴 넷</td>
+</tr>
+<tr>
+<td>권한</td>
+<td>다른 부모는 404</td>
+</tr>
+<tr>
+<td>탈퇴</td>
+<td>계정·아이·기록·알림 시각이 모두 0줄</td>
+</tr>
+<tr>
+<td>알림 대상</td>
+<td>시각이 맞으면 1건, 끝낸 뒤에는 0건</td>
+</tr>
+<tr>
+<td><strong>DB 무결성 (7 + 3)</strong></td>
+<td>완료 짝, 없는 완료 방식, 음수, 없는 루틴·아이·부모, 없는 루틴의 알림, 같은 날 두 줄, 공백 이름, 연령 12</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_6">인수 기준</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>UC</th>
+<th>기준</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UC-01</td>
+<td>시작 영상에서 화면을 누르면 1초 안에 다음 화면. 영상이 없어도 들어가진다</td>
+</tr>
+<tr>
+<td>UC-02</td>
+<td>정거장 4개가 1~4번으로 보이고, 320 폭에서도 이름표가 잘리지 않는다</td>
+</tr>
+<tr>
+<td>UC-03</td>
+<td>시작을 누르면 유튜브가 열리고 시간이 흐른다. 앱을 닫았다 열어도 이어진다</td>
+</tr>
+<tr>
+<td>UC-04</td>
+<td>직접 완료는 목표 분을 기록한다(아침 20, 주제 30). 다시 눌러도 스티커는 1장</td>
+</tr>
+<tr>
+<td>UC-05</td>
+<td>8문제. 고른 뒤 화면 높이가 변하지 않는다. 6세는 글자가 없다</td>
+</tr>
+<tr>
+<td>UC-06</td>
+<td>마이크를 거부해도 도움 모드로 끝까지 갈 수 있다</td>
+</tr>
+<tr>
+<td>UC-08</td>
+<td>요약 네 칸의 숫자가 기록과 맞다. 주간 표가 종이 루틴표와 같은 행·열이다</td>
+</tr>
+<tr>
+<td>UC-09</td>
+<td>앱에서 완료한 칸은 지워지지 않는다. 미래 칸은 눌리지 않는다</td>
+</tr>
+<tr>
+<td>UC-12</td>
+<td>사진을 골라도 네트워크로 나가는 요청이 없다</td>
+</tr>
+<tr>
+<td>UC-14</td>
+<td>켜기 전에는 어디에도 신앙 콘텐츠가 보이지 않는다. 켜면 토·일에만</td>
+</tr>
+<tr>
+<td>UC-15</td>
+<td>끝낸 루틴의 알림은 오지 않는다</td>
+</tr>
+<tr>
+<td>UC-16</td>
+<td>탈퇴 뒤 기기 저장소에 계정·아이·기록이 남지 않는다</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_7">기기에서 손으로 확인</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>기기·브라우저</th>
+<th>볼 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>안드로이드 크롬</td>
+<td>홈 화면에 추가, 알림, 음성 인식, 유튜브 앱으로 열림</td>
+</tr>
+<tr>
+<td>아이폰 사파리</td>
+<td>홈 화면에 추가한 뒤 알림, 음성 인식은 도움 모드로 가는지, 시작 영상 자동 재생</td>
+</tr>
+<tr>
+<td>PC 크롬·엣지</td>
+<td>가운데 폰 틀, 마우스로 시트 닫기</td>
+</tr>
+<tr>
+<td>작은 폰(320 폭)</td>
+<td>길, 주간 표, 요약 네 칸이 넘치지 않는지</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_8">시안과 비교</h2>
+<p>오늘·소리여행·부모 세 화면·설정·루틴 시트를 시안 SVG와 나란히 놓고 색·위치·크기를 확인했습니다. 루틴 길만 새 디자인이고 나머지는 같게 맞췄습니다.</p>
+<h2 id="_9">출시 전 확인</h2>
+<ul>
+<li>[ ] <code>tsc</code>, Vitest, pytest 모두 통과</li>
+<li>[ ] <code>EXPO_PUBLIC_BASE_URL=app</code>으로 빌드한 뒤 GitHub Pages에서 새로 고침·직접 주소 입력이 된다</li>
+<li>[ ] 글꼴·시작 영상·캐릭터가 Pages에서 404 없이 뜬다</li>
+<li>[ ] 저장소에 <code>.env</code>, 원본 지원서, 디자인 원본이 없다</li>
+<li>[ ] 운영 서버의 <code>JWT_SECRET</code>, VAPID 키를 바꿨다</li>
+</ul>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "base" });
+</script>
+</body>
+</html>

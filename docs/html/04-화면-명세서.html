@@ -29,6 +29,10 @@ pre code{background:none;padding:0}
 pre.mermaid{text-align:center}
 .diagram{max-width:none;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
 .diagram img{max-width:100%;height:auto}
+figure.fig{margin:16px 0;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+figure.fig img{max-width:100%;height:auto;border-radius:8px}
+figure.screens{display:inline-block;width:230px;margin:6px;vertical-align:top}
+figcaption{font-size:.8rem;color:var(--mut);margin-top:6px}
 table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--sf);margin:14px 0}
 .tw{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:14px 0}
 .tw table{margin:0}
@@ -43,348 +47,106 @@ strong{font-weight:600}
 </style>
 </head>
 <body>
-<nav class="docnav"><ul><li><a class="" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="cur" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-팝업-가이드-명세서.html">05 팝업·가이드 명세서</a></li><li><a class="" href="06-데이터-API-명세서.html">06 데이터·API 명세서</a></li><li><a class="" href="07-아키텍처-코드규칙.html">07 아키텍처·코드 규칙</a></li><li><a class="" href="08-디자인-가이드.html">08 디자인 가이드</a></li><li><a class="" href="09-테스트-계획.html">09 테스트 계획</a></li><li><a class="" href="10-결정기록-오픈이슈.html">10 결정 기록·오픈 이슈</a></li></ul></nav>
+<nav class="docnav"><ul><li><a class="" href="00-지원서-분석.html">00 지원서 분석</a></li><li><a class="" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="cur" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-데이터베이스-설계서.html">05 데이터베이스 설계서</a></li><li><a class="" href="06-API-명세서.html">06 API 명세서</a></li><li><a class="" href="07-설계-모델-UML.html">07 설계 모델 (UML)</a></li><li><a class="" href="08-아키텍처-코드규칙.html">08 아키텍처·코드 규칙</a></li><li><a class="" href="09-디자인-가이드.html">09 디자인 가이드</a></li><li><a class="" href="10-테스트-계획.html">10 테스트 계획</a></li><li><a class="" href="11-결정기록-오픈이슈.html">11 결정 기록·오픈 이슈</a></li></ul></nav>
 <main>
-<div class="docmeta">SoundsFun Bridge · MVP 문서 · 04</div>
+<div class="docmeta">SoundsFun Bridge · MVP 문서 v2 · 04</div>
 <h1 id="_1">화면 명세서</h1>
-<p>ID 규칙: <strong>A</strong> 온보딩 · <strong>H</strong> 홈 · <strong>L</strong> 레슨 · <strong>P</strong> 부모 대시보드 · <strong>S</strong> 설정 · <strong>G</strong> 게이트 · <strong>N</strong> 알림. 팝업·가이드 ID(D·G·T·B)는 05 문서.</p>
-<p>아이 화면 글자 규칙: 제목 한 줄(≤ 12자), 버튼은 아이콘 + 두 글자 이내, 안내는 음성으로. 부모 화면: 16pt 이상, 한 줄에 하나, 전문 용어 없음.</p>
-<h2 id="_2">탭 구조</h2>
+<p>시안(SF 폴더 11장)과 같게 만들었습니다. 아래 그림은 시안이 아니라 <strong>만들어진 앱의 실제 화면</strong>입니다. 값(색·간격·글꼴)은 09 디자인 가이드에 있습니다.</p>
+<h2 id="_2">화면 목록</h2>
 <div class="tw"><table>
 <thead>
 <tr>
-<th>탭</th>
+<th>ID</th>
 <th>화면</th>
-<th>사용자</th>
-<th>게이트</th>
+<th>시안</th>
+<th>경로</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>🏠 홈</td>
-<td>H1 코스 맵</td>
-<td>아이</td>
-<td>없음</td>
+<td>S0</td>
+<td>시작 영상</td>
+<td>00 Splash</td>
+<td>(모든 화면 위)</td>
 </tr>
 <tr>
-<td>📋 부모</td>
-<td>P1 대시보드</td>
-<td>부모</td>
-<td>부모 확인</td>
-</tr>
-<tr>
-<td>⚙ 설정</td>
-<td>S1 설정</td>
-<td>부모</td>
-<td>부모 확인</td>
-</tr>
-</tbody>
-</table></div>
-<p>레슨(L)은 탭 위에 전체화면으로 뜬다.</p>
-<h2 id="_3">흐름도</h2>
-<p class="diagram"><img src="../assets/diagrams/ffe8e5226740.png" alt="다이어그램"></p>
-
-<hr />
-<h2 id="a0">A0 앱 소개</h2>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>항목</th>
-<th>내용</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>목적</td>
-<td>첫 실행에 “하루 4번, 틀어주기만” 을 그림으로 설명</td>
-</tr>
-<tr>
-<td>진입</td>
-<td>첫 실행. 이후엔 설정 S4에서 다시 보기</td>
-</tr>
-<tr>
-<td>사용자</td>
-<td>부모</td>
-</tr>
-</tbody>
-</table></div>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>슬라이드 3장 (그림 + 한 줄) ① 하루 90분 소리 환경 ② 아침·주제·저녁·잠자리 ③ 아이는 놀고, 부모는 틀어주기만</td>
-<td>좌우 스와이프</td>
-<td>점 표시 이동. 마지막 장에서 버튼이 “시작하기”</td>
-</tr>
-<tr>
-<td>“시작하기”</td>
-<td>탭</td>
-<td>A2</td>
-</tr>
-<tr>
-<td>“이미 계정이 있어요”</td>
-<td>탭</td>
 <td>A1</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="a1">A1 로그인</h2>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>이메일, 비밀번호(보기 토글)</td>
-<td>입력 후 “로그인”</td>
-<td>성공: 프로필 있으면 H1, 없으면 A3. 실패: 입력칸 아래 빨간 한 줄 “이메일 또는 비밀번호가 맞지 않아요”</td>
+<td>로그인</td>
+<td>–</td>
+<td><code>/login</code></td>
 </tr>
 <tr>
-<td>“비밀번호를 잊었어요”</td>
-<td>탭</td>
-<td>이메일 입력 시트 → 발송 토스트 T-01</td>
-</tr>
-<tr>
-<td>“처음이세요? 가입하기”</td>
-<td>탭</td>
 <td>A2</td>
+<td>가입</td>
+<td>–</td>
+<td><code>/signup</code></td>
 </tr>
 <tr>
-<td>로그인 상태 유지</td>
-<td>—</td>
-<td>기본 켜짐. 리프레시 토큰 저장</td>
+<td>A3</td>
+<td>아이 등록</td>
+<td>–</td>
+<td><code>/onboarding</code></td>
+</tr>
+<tr>
+<td>T1</td>
+<td>오늘</td>
+<td>01 오늘</td>
+<td><code>/today</code></td>
+</tr>
+<tr>
+<td>T2</td>
+<td>루틴 시트</td>
+<td>05A–D 팝업</td>
+<td>오늘 위 시트</td>
+</tr>
+<tr>
+<td>J1</td>
+<td>소리여행</td>
+<td>02 소리여행</td>
+<td><code>/journey</code></td>
+</tr>
+<tr>
+<td>J2</td>
+<td>소리활동</td>
+<td>–</td>
+<td><code>/activity</code></td>
+</tr>
+<tr>
+<td>P1</td>
+<td>부모 · 오늘</td>
+<td>03A</td>
+<td><code>/parent</code></td>
+</tr>
+<tr>
+<td>P2</td>
+<td>부모 · 주간</td>
+<td>03B</td>
+<td><code>/parent</code></td>
+</tr>
+<tr>
+<td>P3</td>
+<td>부모 · 월간</td>
+<td>03C</td>
+<td><code>/parent</code></td>
+</tr>
+<tr>
+<td>C1</td>
+<td>설정</td>
+<td>04 설정</td>
+<td><code>/settings</code></td>
+</tr>
+<tr>
+<td>C2</td>
+<td>아이 정보 · 알림 시간 · 안내</td>
+<td>–</td>
+<td><code>/manage/*</code></td>
 </tr>
 </tbody>
 </table></div>
-<p>상태: 로딩(버튼 스피너, 입력 잠금) · 네트워크 오류(배너 B-02)</p>
-<h2 id="a2">A2 회원가입</h2>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>이메일, 비밀번호(8자 이상), 확인</td>
-<td>입력</td>
-<td>실시간 검증. 조건 미달 시 칸 아래 안내</td>
-</tr>
-<tr>
-<td>동의: [필수] 이용약관 · [필수] 개인정보 · [선택] 알림</td>
-<td>체크. 항목 텍스트 탭 → 전문 시트</td>
-<td>필수 2개 체크 시 “가입하기” 활성</td>
-</tr>
-<tr>
-<td>“가입하기”</td>
-<td>탭</td>
-<td>계정 생성 → 자동 로그인 → A3</td>
-</tr>
-<tr>
-<td>중복 이메일</td>
-<td>—</td>
-<td>D-02 “이미 가입된 이메일이에요. 로그인할까요?”</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="a3">A3 아이 프로필</h2>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>항목</th>
-<th>내용</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>목적</td>
-<td>별명·연령대·아바타. 실명·생일 없음</td>
-</tr>
-<tr>
-<td>진입</td>
-<td>온보딩, 설정 S2 (같은 화면)</td>
-</tr>
-</tbody>
-</table></div>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>아바타 미리보기(큰 원) + “꾸미기” “내 사진” 버튼</td>
-<td>“꾸미기”</td>
-<td>A3-1</td>
-</tr>
-<tr>
-<td></td>
-<td>“내 사진”</td>
-<td>A3-2</td>
-</tr>
-<tr>
-<td>별명 (≤ 8자)</td>
-<td>입력</td>
-<td>홈·보상 화면에 “OO” 로 사용</td>
-</tr>
-<tr>
-<td>연령대: 6세 · 7세 · 8세 · 9~10세</td>
-<td>탭</td>
-<td>퀴즈에서 글자 노출 정도 결정</td>
-</tr>
-<tr>
-<td>“다음” (온보딩) / “저장” (설정)</td>
-<td>탭</td>
-<td>저장 → A4 / S1</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="a3-1">A3-1 아바타 편집기</h3>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>상단 큰 미리보기 (SVG)</td>
-<td>—</td>
-<td>선택 즉시 반영</td>
-</tr>
-<tr>
-<td>부위 탭: 피부 · 머리 · 머리색 · 눈 · 눈썹 · 입 · 안경 · 귀걸이 · 배경색</td>
-<td>탭</td>
-<td>아래 옵션 그리드 전환</td>
-</tr>
-<tr>
-<td>옵션 그리드 (그림 타일, 글자 없음)</td>
-<td>탭</td>
-<td>선택 표시, 미리보기 갱신</td>
-</tr>
-<tr>
-<td>🎲 랜덤</td>
-<td>탭</td>
-<td>무작위 조합</td>
-</tr>
-<tr>
-<td>“완료”</td>
-<td>탭</td>
-<td>옵션 값(JSON) 저장 → A3</td>
-</tr>
-</tbody>
-</table></div>
-<p>아바타는 오픈소스 아바타 라이브러리(DiceBear, MIT)의 스타일 하나를 쓰고 옵션 값만 저장한다. 그림 파일을 저장하지 않는다.</p>
-<h3 id="a3-2">A3-2 사진 자르기</h3>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>갤러리 / 카메라 선택</td>
-<td>탭</td>
-<td>시스템 선택기. 권한 거부 → T-04</td>
-</tr>
-<tr>
-<td>원형 마스크 + 핀치 줌·드래그</td>
-<td>조정</td>
-<td>얼굴이 원 안에 오게</td>
-</tr>
-<tr>
-<td>테두리 장식 5종 (없음·구름·별·꽃·헤드폰)</td>
-<td>탭</td>
-<td>미리보기</td>
-</tr>
-<tr>
-<td>“완료”</td>
-<td>탭</td>
-<td>256px 원형으로 잘라 업로드. 안내 한 줄 “사진은 앱 안에서만 보여요”</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="a4">A4 루틴 시각</h2>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>루틴 4줄: 아이콘 · 이름 · 길이 · 시각. 기본 07:30 / 17:30 / 18:30 / 20:30</td>
-<td>시각 탭</td>
-<td>시간 선택기 D-30</td>
-</tr>
-<tr>
-<td>순서 검증</td>
-<td>—</td>
-<td>아침 &lt; 주제 &lt; 저녁 &lt; 잠자리 아니면 줄 아래 안내 “주제 집중듣기는 저녁송보다 앞이에요”</td>
-</tr>
-<tr>
-<td>시작일 (기본 오늘, 최대 7일 뒤)</td>
-<td>탭</td>
-<td>날짜 선택기</td>
-</tr>
-<tr>
-<td>“다음”</td>
-<td>탭</td>
-<td>저장 → A5</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="a5">A5 알림 허용</h2>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>그림 + “시간이 되면 알려드릴게요” + 예시 알림 카드</td>
-<td>“알림 켜기”</td>
-<td>시스템 권한 → 허용: 예약 등록 → H1. 거부: T-05 → H1 (배너 B-01)</td>
-</tr>
-<tr>
-<td>iOS 웹이면 먼저 D-05 “홈 화면에 추가” 안내</td>
-<td>“추가했어요”</td>
-<td>설치 확인 후 권한 요청</td>
-</tr>
-<tr>
-<td>“나중에”</td>
-<td>탭</td>
-<td>H1 (배너 B-01)</td>
-</tr>
-</tbody>
-</table></div>
-<hr />
-<h2 id="h1">H1 홈 · 코스 맵</h2>
+<h2 id="_3">흐름</h2>
+<p class="diagram"><img src="../assets/diagrams/17e068ee1aca.png" alt="다이어그램"></p>
+
+<h2 id="_4">공통</h2>
 <div class="tw"><table>
 <thead>
 <tr>
@@ -394,652 +156,401 @@ strong{font-weight:600}
 </thead>
 <tbody>
 <tr>
-<td>목적</td>
-<td>오늘 할 루틴을 아이가 한눈에 보고 누른다</td>
+<td>틀</td>
+<td>폭 430 이하는 화면 가득, 그보다 넓으면 가운데에 폰 틀(최대 430)과 옅은 배경</td>
 </tr>
 <tr>
-<td>사용자</td>
-<td>아이</td>
+<td>탭 막대</td>
+<td>아래에 떠 있는 막대(높이 76, 모서리 27, 좌우 12). 오늘·소리여행·부모·설정</td>
 </tr>
 <tr>
-<td>첫 방문</td>
-<td>G-H1 (그림 + 음성 “오늘 반짝이는 동그라미를 눌러봐”)</td>
+<td>시트</td>
+<td>아래에서 올라오는 창(모서리 32). 밖을 누르거나 아래로 내려 닫는다</td>
+</tr>
+<tr>
+<td>알림 띠</td>
+<td>저장·완료 같은 짧은 알림은 화면 위에 잠깐</td>
+</tr>
+<tr>
+<td>글</td>
+<td>큰 제목은 빙그레체, 본문은 시스템 글꼴</td>
 </tr>
 </tbody>
 </table></div>
+<h2 id="s0">S0 시작 영상</h2>
+<figure class="fig screens"><img src="../assets/screens/01-splash.png" alt="S0 시작 영상"><figcaption>S0 시작 영상</figcaption></figure>
 <div class="tw"><table>
 <thead>
 <tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
+<th>요소</th>
+<th>동작</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>상단 바: 아바타 · 🔥 연속일수 · ⭐ 별</td>
-<td>아바타 탭</td>
-<td>튕김 + 캐릭터 인사 음성. 길게 누르면 A3-1</td>
+<td>영상</td>
+<td>디자이너가 준 6초 영상. 소리 없이 자동 재생, 반복</td>
 </tr>
 <tr>
-<td></td>
-<td>🔥 탭</td>
-<td>연속일수 시트 D-60 (달력 7칸, 불꽃 크기)</td>
+<td>안내</td>
+<td>“화면을 눌러 시작해요” — 부드럽게 깜빡인다</td>
 </tr>
 <tr>
-<td>“지금” 카드: 다음 루틴 아이콘·이름, 남은 시간(부모용 작은 글자), 오늘 진행 링 (분)</td>
-<td>탭</td>
-<td>L0</td>
+<td>소리 버튼</td>
+<td>오른쪽 위. 누르면 소리 켜기·끄기</td>
 </tr>
 <tr>
-<td>Day 띠: “Day 3” + 날짜(작게)</td>
-<td>—</td>
-<td>지난 Day 회색, 오늘 강조, 미래 자물쇠</td>
-</tr>
-<tr>
-<td>노드 4개/Day (지름 72, 루틴 아이콘)</td>
-<td>열림·진행중 탭</td>
-<td>L0</td>
-</tr>
-<tr>
-<td></td>
-<td>완료 탭</td>
-<td>L0 (다시 하기 / 오늘 스티커 보기)</td>
-</tr>
-<tr>
-<td></td>
-<td>잠김 탭</td>
-<td>흔들림 + 음성 “내일 열려요”</td>
-</tr>
-<tr>
-<td></td>
-<td>놓침 탭</td>
-<td>음성 “지난 건 부모님이 표시해 줄 수 있어요”</td>
-</tr>
-<tr>
-<td>오늘 4개 완료</td>
-<td>—</td>
-<td>Day 배지 등장, 길이 다음 Day로 그려지는 모션 1회</td>
-</tr>
-<tr>
-<td>알림 꺼짐 배너 B-01 (부모용, 작게)</td>
-<td>탭</td>
-<td>A5</td>
-</tr>
-<tr>
-<td>맵 끝 (Day 7 후)</td>
-<td>—</td>
-<td>트로피 자리. 완료 시 “한 번 더” 노드</td>
+<td>화면 누르기</td>
+<td>영상이 사라지고 앱으로 들어간다</td>
 </tr>
 </tbody>
 </table></div>
-<p>노드 상태</p>
+<h2 id="a1-a2-a3">A1 · A2 · A3 계정과 아이 등록</h2>
+<p><img alt="A1 로그인" src="../assets/screens/02-login.png" />
+<img alt="A2 가입" src="../assets/screens/03-signup.png" />
+<img alt="A3 아이 등록" src="../assets/screens/04-onboarding.png" /></p>
 <div class="tw"><table>
 <thead>
 <tr>
-<th>상태</th>
-<th>조건</th>
-<th>모양</th>
+<th>화면</th>
+<th>입력</th>
+<th>검사</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>잠김</td>
-<td>미래 Day</td>
-<td>회색, 자물쇠</td>
+<td>로그인</td>
+<td>이메일, 비밀번호(보기·숨기기)</td>
+<td>틀리면 “이메일 또는 비밀번호가 맞지 않아요”</td>
 </tr>
 <tr>
-<td>열림</td>
-<td>오늘, 미시작</td>
-<td>루틴 색 테두리, 살짝 떠 있는 애니메이션</td>
+<td>가입</td>
+<td>이메일, 비밀번호, 확인, 동의 3개(모두 동의)</td>
+<td>형식, 8자 이상, 일치, 필수 동의</td>
 </tr>
 <tr>
-<td>진행중</td>
-<td>오늘, 일부 단계 완료</td>
-<td>테두리 + 진행 호(arc)</td>
+<td>아이 등록</td>
+<td>이름, 연령 4개 중 하나, 시작일(오늘·내일·날짜), 친구 4종 또는 사진</td>
+<td>이름은 비울 수 없다</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="t1">T1 오늘</h2>
+<p><img alt="T1 오늘 — 인사 카드와 진행" src="../assets/screens/06-today-top.png" />
+<img alt="T1 오늘 — 번호 길" src="../assets/screens/07-today-path.png" />
+<img alt="T1 오늘 — 다음 날 미리보기" src="../assets/screens/08-today-path-2.png" /></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>구역</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>머리</td>
+<td>날짜, “오늘”, 연속일 알약</td>
+</tr>
+<tr>
+<td>인사 카드</td>
+<td>노랑 그러데이션(높이 298, 모서리 30). 이름, <code>WEEK 1 · Colors</code>, 캐릭터 넷이 시안 위치에서 둥실거린다</td>
+</tr>
+<tr>
+<td>오늘 진행</td>
+<td><code>1 / 4</code>, <code>20 / 90분</code>, 막대</td>
+</tr>
+<tr>
+<td><strong>루틴 길</strong></td>
+<td>시안의 TODAY’S ROUTINE 목록을 대신하는 새 디자인</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_5">루틴 길 규칙</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>규칙</th>
+<th>값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>정거장 배치</td>
+<td>1번 왼쪽, 2번 오른쪽 … 번갈아. 세로 간격 일정</td>
+</tr>
+<tr>
+<td>정거장 모양</td>
+<td>루틴 색의 둥근 돌(아래쪽이 조금 더 진함) 위에 캐릭터. 왼쪽 위에 번호 동그라미</td>
+</tr>
+<tr>
+<td>이름표</td>
+<td>루틴 이름, 영어 이름, 분, 재생 버튼. 정거장 반대쪽에 놓인다</td>
+</tr>
+<tr>
+<td>길</td>
+<td>정거장을 잇는 점선 곡선(SVG). 완료한 구간은 루틴 색 실선</td>
 </tr>
 <tr>
 <td>완료</td>
-<td>완료</td>
-<td>루틴 색 채움 + ✓</td>
+<td>정거장에 체크, 이름표에 “완료”</td>
 </tr>
 <tr>
-<td>놓침</td>
-<td>지난 Day, 미완료</td>
-<td>점선 회색</td>
-</tr>
-</tbody>
-</table></div>
-<hr />
-<h2 id="l0">L0 시작 시트</h2>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>루틴 아이콘 + 이름 + “20분”</td>
-<td>—</td>
-<td>—</td>
+<td>날짜 알약</td>
+<td>길 위에 <code>DAY 1 · 오늘</code>. 다음 날은 <code>DAY 2</code> …</td>
 </tr>
 <tr>
-<td>영상 썸네일·제목 (작게)</td>
-<td>—</td>
-<td>—</td>
+<td>다음 3일</td>
+<td>작게, 흐리게, 점선 동그라미. 눌리지 않는다</td>
 </tr>
 <tr>
-<td>단계 점: 듣기 루틴 1개 / 주제 루틴 3개</td>
-<td>—</td>
-<td>완료 단계는 채움</td>
-</tr>
-<tr>
-<td>부모 한 줄 (작게): “등원 준비하면서 틀어주세요”</td>
-<td>—</td>
-<td>가이드북 문구</td>
-</tr>
-<tr>
-<td>▶ 시작 (큰 버튼)</td>
-<td>탭</td>
-<td>첫 미완료 단계로</td>
-</tr>
-<tr>
-<td>“이미 들었어요” (작은 링크)</td>
-<td>탭</td>
-<td>G1 → 듣기 수동 완료 → L4 또는 L2</td>
-</tr>
-<tr>
-<td>바깥 탭 / 닫기</td>
-<td>탭</td>
-<td>닫힘</td>
+<td>좌표 계산</td>
+<td><code>pathLayout.ts</code>의 순수 함수. 화면 폭에 맞춰 다시 계산되고 단위 테스트가 있다</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="l1">L1 영상 듣기</h2>
+<figure class="fig screens"><img src="../assets/screens/11-today-after-complete.png" alt="T1 완료 뒤"><figcaption>T1 완료 뒤</figcaption></figure>
+<h2 id="t2">T2 루틴 시트</h2>
+<figure class="fig screens"><img src="../assets/screens/10-sheet-morning.png" alt="T2 루틴 시트"><figcaption>T2 루틴 시트</figcaption></figure>
 <div class="tw"><table>
 <thead>
 <tr>
-<th>항목</th>
+<th>요소</th>
 <th>내용</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>목적</td>
-<td>유튜브 열고 시간 재기</td>
+<td>타일</td>
+<td>루틴 색 배경, 캐릭터, 이름·영어 이름·분</td>
 </tr>
 <tr>
-<td>첫 방문</td>
-<td>G-L1 (부모용: “유튜브에서 틀고 돌아오면 시간이 차 있어요”)</td>
-</tr>
-</tbody>
-</table></div>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>큰 원형 타이머 (남은 분:초), 안에 루틴 아이콘</td>
-<td>—</td>
-<td>시작 시각 기준 계산. 앱 밖에서도 흐름</td>
+<td>안내</td>
+<td>한 줄. 예: “등원 준비를 하며 신나는 아침 인사를 들어요”</td>
 </tr>
 <tr>
-<td>▶ “유튜브에서 틀기”</td>
-<td>탭</td>
-<td>시작 시각 저장 → 유튜브 앱/브라우저 열림</td>
+<td>오늘의 한 문장</td>
+<td>예: <code>Good morning! Are you ready?</code></td>
 </tr>
 <tr>
-<td>돌아왔을 때</td>
-<td>—</td>
-<td>경과 반영. 아직 안 열었으면 버튼 그대로</td>
+<td>시간 막대</td>
+<td><code>00:00 / 20:00</code>. 흐르는 중에는 멈춤 버튼</td>
 </tr>
 <tr>
-<td>열기 실패</td>
-<td>—</td>
-<td>“다시 열기” / “브라우저로 열기” 버튼</td>
+<td>▶ 소리 놀이 시작</td>
+<td>유튜브를 열고 시간을 잰다 (높이 58, 모서리 21)</td>
 </tr>
 <tr>
-<td>부모 가이드 카드 (접힘)</td>
-<td>펼침</td>
-<td>표현 예 3줄</td>
+<td>✓ 오늘 완료했어요</td>
+<td>바로 완료. 목표 분이 기록된다</td>
 </tr>
 <tr>
-<td>목표 도달</td>
-<td>—</td>
-<td>진동·소리, 캐릭터 박수, 버튼이 ✓ “다 들었어요”</td>
-</tr>
-<tr>
-<td>✓ “다 들었어요”</td>
-<td>탭</td>
-<td>자동 기록 → 듣기 루틴: L4 / 주제: L2</td>
-</tr>
-<tr>
-<td>“먼저 넘어가기” (작은 링크, 목표 전)</td>
-<td>탭</td>
-<td>G1 → D-11 들은 분 선택 → 수동 기록</td>
-</tr>
-<tr>
-<td>X</td>
-<td>탭</td>
-<td>D-10 → 홈, 진행 저장</td>
+<td>완료 상태</td>
+<td>버튼 대신 완료 표시와 “다시 듣기”</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="l2">L2 단어 맞추기 (주제 루틴)</h2>
+<h2 id="j1">J1 소리여행</h2>
+<p><img alt="J1 소리여행 위" src="../assets/screens/13-journey-top.png" />
+<img alt="J1 소리여행 아래" src="../assets/screens/14-journey-bottom.png" /></p>
 <div class="tw"><table>
 <thead>
 <tr>
-<th>항목</th>
+<th>구역</th>
 <th>내용</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>사용자</td>
-<td>아이</td>
+<td>이번 주 카드</td>
+<td><code>WEEK 1</code>, Colors, “듣고, 찾고, 색깔을 말해요”</td>
 </tr>
 <tr>
-<td>첫 방문</td>
-<td>G-L2 음성 “소리를 듣고 맞는 그림을 눌러봐”</td>
+<td>소리활동 카드</td>
+<td>“색깔을 듣고, 찾고, 말해요” → J2</td>
 </tr>
 <tr>
-<td>글자</td>
-<td>문항 지시문 없음. 🔊 버튼과 그림만</td>
-</tr>
-</tbody>
-</table></div>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>상단: X · 진행바</td>
-<td>X</td>
-<td>D-10</td>
+<td>요일 줄</td>
+<td>월~일. 한 날은 색이 찬다. 오늘은 테두리</td>
 </tr>
 <tr>
-<td>유형 A 듣고 그림 고르기: 🔊 + 그림 4</td>
-<td>🔊</td>
-<td>단어 음성 (자동 1회 + 재생 가능)</td>
+<td>48주 단계</td>
+<td>LISTEN → LISTEN + PLAY → LISTEN + READ → LISTEN + CONNECT. 지금 단계 강조</td>
 </tr>
 <tr>
-<td></td>
-<td>그림 탭</td>
-<td>정답: 초록 테두리·효과음·⭐, 아래 초록 결과 띠 “좋아요!” + 계속. 오답: 흔들림·정답 강조·정답 음성, 아래 결과 띠 “정답은 이거예요” + 정답 그림 + 계속</td>
-</tr>
-<tr>
-<td>유형 B 그림 보고 고르기: 큰 그림 + 버튼 2~3 (그림+단어, 6~7세는 탭 시 먼저 읽어줌)</td>
-<td>탭</td>
-<td>동일</td>
-</tr>
-<tr>
-<td>유형 C 짝 맞추기: 🔊 4 ↔ 그림 4</td>
-<td>🔊 → 그림</td>
-<td>맞으면 둘 다 사라짐</td>
-</tr>
-<tr>
-<td>유형 D 문장 듣고 색 찾기: 🔊 “It’s red.” + 색 물건 4</td>
-<td>탭</td>
-<td>동일</td>
-</tr>
-<tr>
-<td>결과: 별 N개, 오늘 단어 카드 나열</td>
-<td>“계속”</td>
-<td>L3</td>
+<td>13주 미리보기</td>
+<td>“어떤 두 단어가 같은 소리로 끝날까요?” 보기 2개, 눌러 보면 답을 알려 준다</td>
 </tr>
 </tbody>
 </table></div>
-<p>문항 구성(8문항): A×3, B×2, C×1, D×2. 연령대 6~7세는 B에서 글자 대신 그림만.</p>
-<h2 id="l3">L3 단어 말하기 (주제 루틴)</h2>
+<h2 id="j2">J2 소리활동</h2>
+<p><img alt="J2 단어 맞추기" src="../assets/screens/15-activity-quiz.png" />
+<img alt="J2 맞힌 뒤" src="../assets/screens/16-activity-feedback.png" /></p>
 <div class="tw"><table>
 <thead>
 <tr>
-<th>항목</th>
+<th>단계</th>
 <th>내용</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>첫 방문</td>
-<td>G-L3 음성 “듣고 따라 말해봐. 마이크를 꾹 누르고 말해”</td>
+<td>맞추기</td>
+<td>위에 진행 점, 소리 버튼, 아래에 보기 타일. 고르면 아래 고정된 자리에 결과가 뜬다(화면이 밀리지 않는다)</td>
+</tr>
+<tr>
+<td>말하기</td>
+<td>큰 그림, 단어, 마이크 버튼. 듣는 동안 물결. 결과는 통과·한 번 더·정답 듣기</td>
+</tr>
+<tr>
+<td>도움 모드</td>
+<td>마이크를 못 쓰면 “잘 말했어요” 버튼</td>
+</tr>
+<tr>
+<td>마침</td>
+<td>받은 별, 다시 하기, 돌아가기</td>
 </tr>
 </tbody>
 </table></div>
+<h2 id="p1-p2-p3">P1 · P2 · P3 부모</h2>
+<p><img alt="P1 부모 · 오늘" src="../assets/screens/17-parent-today.png" />
+<img alt="P2 부모 · 주간" src="../assets/screens/18-parent-week.png" />
+<img alt="P3 부모 · 월간" src="../assets/screens/19-parent-month.png" />
+<img alt="부모 아래쪽" src="../assets/screens/20-parent-bottom.png" /></p>
 <div class="tw"><table>
 <thead>
 <tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>단어 카드: 그림 + 단어 + 🔊, 진행 “2/4” 점</td>
-<td>🔊</td>
-<td>음성 재생</td>
-</tr>
-<tr>
-<td>🎤 큰 버튼</td>
-<td>길게 누름</td>
-<td>파형 애니메이션, 녹음 → 인식 → 판정</td>
-</tr>
-<tr>
-<td>판정 통과</td>
-<td>—</td>
-<td>캐릭터 “멋져요!” 음성, ⭐, 다음 카드</td>
-</tr>
-<tr>
-<td>판정 미달 1회</td>
-<td>—</td>
-<td>“한 번 더?” 음성, 카드 그대로</td>
-</tr>
-<tr>
-<td>미달 2회</td>
-<td>—</td>
-<td>“잘 들었어요!” 통과</td>
-</tr>
-<tr>
-<td>마이크 불가</td>
-<td>—</td>
-<td>부모 들어주기 모드 D-12: 아이가 말하면 부모가 ✓</td>
-</tr>
-<tr>
-<td>“건너뛰기” (작게)</td>
-<td>탭</td>
-<td>다음 카드, skipped</td>
-</tr>
-<tr>
-<td>마지막 카드 후</td>
-<td>—</td>
-<td>L4</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="l4">L4 완료</h2>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>캐릭터 축하 + 스티커 1장 붙는 모션</td>
-<td>—</td>
-<td>자동</td>
-</tr>
-<tr>
-<td>별 합계, 오늘 진행 링 (예: 60/90)</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>하루 4개째: “오늘 다 했어!” 배지 + 연속 +1 + 컨페티</td>
-<td>—</td>
-<td>1회</td>
-</tr>
-<tr>
-<td>“홈으로”</td>
-<td>탭</td>
-<td>H1, 노드 완료 모션</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="l5-day-7">L5 주간 트로피 (Day 7)</h2>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>트로피 + 스티커 28장 모자이크 + 캐릭터</td>
-<td>—</td>
-<td>음성 “일주일 다 했어!”</td>
-</tr>
-<tr>
-<td>“홈으로”</td>
-<td>탭</td>
-<td>H1, “한 번 더” 노드</td>
-</tr>
-</tbody>
-</table></div>
-<hr />
-<h2 id="g1">G1 부모 확인</h2>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>시트: “부모님이 3초 눌러주세요” + 원형 게이지 버튼</td>
-<td>3초 길게</td>
-<td>통과, 10분 유지</td>
-</tr>
-<tr>
-<td></td>
-<td>중간에 뗌</td>
-<td>게이지 초기화, “조금만 더요”</td>
-</tr>
-<tr>
-<td>닫기</td>
-<td>탭</td>
-<td>요청 취소</td>
-</tr>
-</tbody>
-</table></div>
-<hr />
-<h2 id="p1">P1 부모 대시보드</h2>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>항목</th>
+<th>구역</th>
 <th>내용</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>목적</td>
-<td>오늘 상황과 한 주·한 달 기록을 한 화면에</td>
+<td>머리</td>
+<td><code>PARENT REPORT</code>, “○○의 기록”</td>
 </tr>
 <tr>
-<td>첫 방문</td>
-<td>G-P1 (3장: 요약·루틴표·수동 체크)</td>
+<td>요약 네 칸</td>
+<td>오늘 소리노출 <code>20 / 90분</code> · 연속 <code>1일</code> · 이번 주 루틴 <code>1 / 28</code> · 총 소리노출 <code>20분</code></td>
 </tr>
 <tr>
-<td>글자</td>
-<td>16pt 이상, 숫자는 큰 글자, 한 카드에 하나</td>
+<td>기간 고르기</td>
+<td>오늘 · 주간 · 월간</td>
+</tr>
+<tr>
+<td>오늘</td>
+<td>루틴 네 줄: 색 점, 이름, 분, 상태</td>
+</tr>
+<tr>
+<td>주간</td>
+<td>루틴(행) × 월~일(열). ● 앱 완료, ◐ 부모 표시, ○ 안 함, 빈칸 해당 없음. 칸을 눌러 표시·해제</td>
+</tr>
+<tr>
+<td>월간</td>
+<td>달력. 다 한 날은 진한 색, 일부 한 날은 옅은 색</td>
+</tr>
+<tr>
+<td>이번 주 한눈에</td>
+<td>루틴별 완료 막대 <code>2 / 5</code></td>
+</tr>
+<tr>
+<td>모은 스티커</td>
+<td>28칸. 완료할 때마다 그 루틴의 캐릭터가 붙는다</td>
 </tr>
 </tbody>
 </table></div>
+<p>부모 화면의 루틴 색은 시안대로 노랑 <code>#FFD34D</code>, 코랄 <code>#FF765D</code>, 초록 <code>#4DB584</code>, 보라 <code>#756BE3</code>입니다.</p>
+<h2 id="c1">C1 설정</h2>
+<figure class="fig screens"><img src="../assets/screens/21-settings.png" alt="C1 설정"><figcaption>C1 설정</figcaption></figure>
 <div class="tw"><table>
 <thead>
 <tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
+<th>묶음</th>
+<th>항목</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>요약 4카드: 오늘 40/90분 · 🔥 연속 5일 · 이번 주 18/28 · 총 6시간 20분</td>
-<td>—</td>
-<td>—</td>
+<td>학습 설정</td>
+<td>소리놀이 알림(스위치), 알림 시간, 저녁 리마인드(스위치), 아이 정보, 하잉RTA 주말 콘텐츠(스위치)</td>
 </tr>
 <tr>
-<td>🔥 카드</td>
-<td>탭</td>
-<td>D-60 연속일수 시트</td>
+<td>안내</td>
+<td>소리노출 가이드, 자주 묻는 질문, 시작 영상 다시 보기, 문의하기</td>
 </tr>
 <tr>
-<td>보기 전환: 주간 · 월간 (세그먼트)</td>
-<td>탭</td>
-<td>아래 영역 전환</td>
-</tr>
-<tr>
-<td>주간 루틴표: 4행 × 7열, 칸 = ✓(진함, 자동) · ✓(연함, 수동) · 빈칸 · 오늘(테두리) · 미래(회색)</td>
-<td>빈칸 탭</td>
-<td>D-21 → 수동 체크</td>
-</tr>
-<tr>
-<td></td>
-<td>수동 ✓ 탭</td>
-<td>D-22 → 해제</td>
-</tr>
-<tr>
-<td></td>
-<td>자동 ✓ 탭</td>
-<td>T-20</td>
-</tr>
-<tr>
-<td>주 이동 ‹ ›</td>
-<td>탭</td>
-<td>시작일 이전·미래 주는 비활성</td>
-</tr>
-<tr>
-<td>월간 달력: 날짜마다 점 0~4, 4개면 채움</td>
-<td>날짜 탭</td>
-<td>D-20 일별 상세</td>
-</tr>
-<tr>
-<td>통계 카드 3: 루틴별 완료율 (막대 4) · 단어 정답률 · 말하기 시도/통과</td>
-<td>—</td>
-<td>이번 주 기준</td>
-</tr>
-<tr>
-<td>스티커판</td>
-<td>스티커 탭</td>
-<td>툴팁 “9/17 아침송”</td>
-</tr>
-<tr>
-<td>바로가기: 알림 시간 · 아이 프로필</td>
-<td>탭</td>
-<td>S3 · S2</td>
-</tr>
-<tr>
-<td>데이터 없음</td>
-<td>—</td>
-<td>“오늘 첫 루틴을 하면 여기에 쌓여요” + 홈 버튼</td>
+<td>계정</td>
+<td>이용약관, 개인정보 처리방침, 로그아웃, 탈퇴</td>
 </tr>
 </tbody>
 </table></div>
-<hr />
-<h2 id="s1">S1 설정</h2>
+<h2 id="_6">넓은 화면</h2>
+<figure class="fig screens"><img src="../assets/screens/24-wide-today.png" alt="넓은 화면(PC)"><figcaption>넓은 화면(PC)</figcaption></figure>
+<p>PC나 태블릿에서는 가운데에 폰 크기 틀을 두고 같은 화면을 보여 줍니다. 틀의 높이는 창 높이에서 계산한 숫자 값입니다.</p>
+<h2 id="_7">창·알림 띠 목록</h2>
 <div class="tw"><table>
 <thead>
 <tr>
-<th>구성</th>
-<th>사용자가 하면</th>
-<th>결과</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>아이 카드: 아바타 · 별명 · 연령대 · “Day 3”</td>
-<td>탭</td>
-<td>S2</td>
-</tr>
-<tr>
-<td>알림: 전체 스위치 + 루틴 4줄 (시각 · 스위치)</td>
-<td>탭</td>
-<td>S3</td>
-</tr>
-<tr>
-<td>주말 코스: “하잉RTA 신앙 콘텐츠” 스위치 (기본 꺼짐) + 한 줄 설명</td>
-<td>켜기</td>
-<td>D-40 확인</td>
-</tr>
-<tr>
-<td>안내: 소리노출 가이드 · 자주 묻는 질문 · 앱 소개 다시 보기 · 가이드 팝업 다시 보기 · 문의</td>
-<td>탭</td>
-<td>S4</td>
-</tr>
-<tr>
-<td>계정: 이메일 · 비밀번호 변경 · 로그아웃</td>
-<td>탭</td>
-<td>S5</td>
-</tr>
-<tr>
-<td>데이터 모두 삭제하고 탈퇴 (빨간 글자)</td>
-<td>탭</td>
-<td>D-50</td>
-</tr>
-<tr>
-<td>버전 · 개인정보처리방침</td>
-<td>—</td>
-<td>—</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="s2-a3">S2 아이 프로필 = A3 (저장 버튼)</h3>
-<h3 id="s3-a4">S3 알림 = A4 + 스위치 + “알림 테스트 보내기” + 저녁 리마인드 스위치</h3>
-<h3 id="s4-faq-faq-3">S4 안내·FAQ: 가이드북 요약, FAQ 3문항, 문의(메일 링크)</h3>
-<h3 id="s5-d-51">S5 계정: 비밀번호 변경(현재·새·확인), 로그아웃 D-51</h3>
-<hr />
-<h2 id="n1">N1 알림</h2>
-<div class="tw"><table>
-<thead>
-<tr>
+<th>ID</th>
 <th>종류</th>
-<th>시각</th>
-<th>제목 · 본문</th>
-<th>탭</th>
+<th>언제</th>
+<th>버튼</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>N-01 루틴</td>
-<td>설정 시각, 미완료일 때만</td>
-<td>☀ 아침송 시간이에요 · Good Morning Mr. Rooster 20분</td>
-<td>H1 + L0 열림</td>
+<td>D-01</td>
+<td>확인 창</td>
+<td>이미 가입한 이메일</td>
+<td>로그인하기 / 다른 이메일</td>
 </tr>
 <tr>
-<td>N-02 타이머 완료</td>
-<td>L1 목표 도달, 백그라운드</td>
-<td>20분 다 들었어요 ✓ · 돌아와서 스티커 받기</td>
-<td>L1</td>
+<td>D-02</td>
+<td>확인 창</td>
+<td>‘들었어요’ 표시</td>
+<td>표시하기 / 닫기</td>
 </tr>
 <tr>
-<td>N-03 저녁 리마인드</td>
-<td>20:00, 미완료 있을 때</td>
-<td>오늘 2개 남았어요 · 잠자리 스토리로 마무리해요</td>
-<td>H1</td>
+<td>D-03</td>
+<td>확인 창</td>
+<td>표시 지우기</td>
+<td>지우기 / 닫기</td>
 </tr>
 <tr>
-<td>N-04 테스트</td>
-<td>요청 10초 후</td>
-<td>알림이 잘 와요 🎧</td>
-<td>S3</td>
+<td>D-04</td>
+<td>확인 창</td>
+<td>하잉RTA 켜기</td>
+<td>추가하기 / 닫기</td>
+</tr>
+<tr>
+<td>D-05</td>
+<td>확인 창</td>
+<td>로그아웃, 탈퇴</td>
+<td>확인 / 닫기</td>
+</tr>
+<tr>
+<td>T-01</td>
+<td>알림 띠</td>
+<td>저장했어요, 표시했어요, 표시를 지웠어요</td>
+<td>–</td>
+</tr>
+<tr>
+<td>T-02</td>
+<td>알림 띠</td>
+<td>앱에서 완료한 기록은 지울 수 없어요</td>
+<td>–</td>
+</tr>
+<tr>
+<td>H-01</td>
+<td>도움 카드</td>
+<td>오늘 탭 첫 방문: 길을 따라 눌러 보라는 한 장</td>
+<td>알겠어요</td>
 </tr>
 </tbody>
 </table></div>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-  mermaid.initialize({ startOnLoad: true, theme: "neutral", fontFamily: "IBM Plex Sans KR, sans-serif" });
+  mermaid.initialize({ startOnLoad: true, theme: "base" });
 </script>
 </body>
 </html>

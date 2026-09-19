@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>지원서 분석</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Jua&display=swap">
+<style>
+:root{--bg:#F3F6F4;--sf:#fff;--sf2:#E9EFEB;--ink:#1B2B25;--mut:#5E6E67;--ln:#D5DED9;--ac:#1F7A5C;--ac2:#DDEFE6;--co:#E8603F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+main{max-width:1000px;margin:0 auto;padding:24px 20px 80px}
+.docnav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln);padding:0 20px}
+.docnav ul{list-style:none;margin:0 auto;padding:0;max-width:1000px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.docnav a{display:block;padding:10px 9px;font-size:.82rem;color:var(--mut);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent}
+.docnav a.cur,.docnav a:hover{color:var(--ac);border-color:var(--ac)}
+.docmeta{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:600;margin-top:18px}
+h1,h2,h3,h4{font-family:"Jua","IBM Plex Sans KR",sans-serif;font-weight:400;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:2.3rem;line-height:1.15;margin:6px 0 10px}
+h2{font-size:1.6rem;margin-top:48px;padding-top:16px;border-top:1px solid var(--ln)}
+h3{font-size:1.2rem;margin-top:28px;color:#145A43}
+h4{font-size:1rem;margin-top:18px;font-family:inherit;font-weight:600}
+p{margin:10px 0;max-width:72ch}
+a{color:var(--ac)}
+ul,ol{margin:8px 0;padding-left:22px;max-width:76ch}li{margin:3px 0}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--sf2);padding:1px 5px;border-radius:4px}
+pre{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:.82rem;line-height:1.55}
+pre code{background:none;padding:0}
+pre.mermaid{text-align:center}
+.diagram{max-width:none;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+.diagram img{max-width:100%;height:auto}
+figure.fig{margin:16px 0;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+figure.fig img{max-width:100%;height:auto;border-radius:8px}
+figure.screens{display:inline-block;width:230px;margin:6px;vertical-align:top}
+figcaption{font-size:.8rem;color:var(--mut);margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--sf);margin:14px 0}
+.tw{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:14px 0}
+.tw table{margin:0}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--ln)}
+th{background:var(--sf2);font-weight:600;font-size:.8rem;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+blockquote{margin:14px 0;padding:10px 16px;border-left:3px solid var(--co);background:var(--sf);border-radius:0 10px 10px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--ln);margin:32px 0}
+strong{font-weight:600}
+@media print{.docnav{display:none}body{background:#fff}main{padding:0}}
+</style>
+</head>
+<body>
+<nav class="docnav"><ul><li><a class="cur" href="00-지원서-분석.html">00 지원서 분석</a></li><li><a class="" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-데이터베이스-설계서.html">05 데이터베이스 설계서</a></li><li><a class="" href="06-API-명세서.html">06 API 명세서</a></li><li><a class="" href="07-설계-모델-UML.html">07 설계 모델 (UML)</a></li><li><a class="" href="08-아키텍처-코드규칙.html">08 아키텍처·코드 규칙</a></li><li><a class="" href="09-디자인-가이드.html">09 디자인 가이드</a></li><li><a class="" href="10-테스트-계획.html">10 테스트 계획</a></li><li><a class="" href="11-결정기록-오픈이슈.html">11 결정 기록·오픈 이슈</a></li></ul></nav>
+<main>
+<div class="docmeta">SoundsFun Bridge · MVP 문서 v2 · 00</div>
+<h1 id="_1">지원서 분석</h1>
+<p>『The neXt』 참가지원서(하잉RTA · 선효경)를 읽고, 제품에 영향을 주는 내용만 뽑아 앱 기능과 연결한 문서입니다. 연락처·법인 정보 같은 개인정보는 옮기지 않았습니다.</p>
+<blockquote>
+<p>읽은 자료: 참가지원서 docx, 소리노출 가이드북(최종), 소리루틴표 Week1 sample, 디자인 시안 11장(SF 폴더), 로고·캐릭터·영상 원본, 1주차 재생목록.</p>
+</blockquote>
+<h2 id="1">1. 한눈에 보기</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>지원서 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>프로젝트</td>
+<td>사운즈펀 브릿지 <strong>SoundsFun Bridge</strong> — 매일 영어 소리 루틴 플랫폼</td>
+</tr>
+<tr>
+<td>지원 구분</td>
+<td>피스티스임팩트(비영리)</td>
+</tr>
+<tr>
+<td>팀</td>
+<td>선효경(총괄·교육과정), 차진숙(콘텐츠·UX/UI), 강성준(앱·웹 개발)</td>
+</tr>
+<tr>
+<td>1차 대상</td>
+<td>유치 7세 ~ 초등 1학년, 저소득층·다문화가정·교육 소외지역 아동</td>
+</tr>
+<tr>
+<td>2차 대상</td>
+<td>보호자, 지역아동센터·교회·학교 밖 배움터 교사와 자원봉사자</td>
+</tr>
+<tr>
+<td>핵심 문제</td>
+<td>콘텐츠가 없어서가 아니라 <strong>매일 이어 가게 해 주는 구조</strong>가 없다</td>
+</tr>
+<tr>
+<td>해결</td>
+<td>선별한 유튜브 영상 + 하루 루틴 + 알림 + 실천 기록</td>
+</tr>
+<tr>
+<td>검증 근거</td>
+<td>인스타 자료 공유에 22만 명 관심·2만 명 요청, 교사 양성과정 2기 운영</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="2">2. 문제 정의</h2>
+<p>지원서는 세 가지 간극을 말합니다.</p>
+<ol>
+<li><strong>고르는 부담</strong> — 영상은 많지만 부모가 무엇을 어떤 순서로 보여 줄지 정하기 어렵다.</li>
+<li><strong>이어 가는 부담</strong> — 자료를 받아도 혼자 의지로는 오래 못 간다. 밴드·카카오 채널로 독려했지만 알림과 자동화가 필요했다.</li>
+<li><strong>확인하는 부담</strong> — 교사와 보호자가 아이가 실제로 했는지, 얼마나 했는지 쉽게 볼 방법이 없다.</li>
+</ol>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>당사자</th>
+<th>어려움</th>
+<th>필요한 변화</th>
+<th>앱에서의 답</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>저소득층 아동</td>
+<td>사교육비, 피드백 부족</td>
+<td>무료 경로와 작은 성공</td>
+<td>번호 길, 스티커, 연속일</td>
+</tr>
+<tr>
+<td>다문화가정 아동</td>
+<td>가정 내 영어 지원 어려움</td>
+<td>그림·소리 중심 안내</td>
+<td>글자 적은 화면, 캐릭터, 소리 버튼</td>
+</tr>
+<tr>
+<td>비수도권 아동</td>
+<td>프로그램 선택지 부족</td>
+<td>장소 무관 모바일 학습</td>
+<td>웹앱(PWA), 저사양 기기 고려</td>
+</tr>
+<tr>
+<td>보호자·교사</td>
+<td>선별·관리·확인 부담</td>
+<td>오늘 할 일이 분명한 대시보드</td>
+<td>오늘 탭, 부모 탭</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="3">3. 핵심 설계 원칙 → 기능</h2>
+<p>지원서 4장의 설계 원칙을 그대로 제품 규칙으로 옮겼습니다.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>지원서 원칙</th>
+<th>앱에 반영한 방식</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>단계별·주제별 교육과정</td>
+<td>48주 여정(12주×4단계), 1주차 주제 Colors</td>
+</tr>
+<tr>
+<td>능동 학습을 부르는 게임형·보상형</td>
+<td>단어 맞추기, 단어 말하기, 별, 스티커 28칸</td>
+</tr>
+<tr>
+<td>‘많이’보다 ‘매일’ — 출석·반복·작은 성취</td>
+<td>같은 영상을 한 주 반복, 연속일, 루틴 길</td>
+</tr>
+<tr>
+<td>같은 시간에 깨우는 알림</td>
+<td>루틴별 알림 시각, 저녁 리마인드</td>
+</tr>
+<tr>
+<td>공공 영어과정과 신앙과정의 분리</td>
+<td>하잉RTA 주말 콘텐츠는 설정에서 켤 때만 보임 (기본 꺼짐)</td>
+</tr>
+<tr>
+<td>저사양 스마트폰, 모바일 우선</td>
+<td>반응형 웹앱, 영상은 유튜브로 열기, 그림은 WebP</td>
+</tr>
+<tr>
+<td>개인정보 최소, 보호자 동의, 광고 없음</td>
+<td>아이는 이름·연령만, 사진은 기기에만, 광고 없음</td>
+</tr>
+<tr>
+<td>쉬운 한국어·그림 안내</td>
+<td>짧은 문장, 캐릭터 4종, 아이콘 위주</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="4-mvp">4. 지원서의 MVP 기능과 이번 범위</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>지원서 MVP 항목</th>
+<th>이번 Week 1 MVP</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아동: 오늘의 영상 듣기</td>
+<td>포함</td>
+<td>하루 4개 루틴</td>
+</tr>
+<tr>
+<td>아동: 단어 듣고 따라 말하기</td>
+<td>포함</td>
+<td>소리활동(맞추기 + 말하기)</td>
+</tr>
+<tr>
+<td>아동: 스티커·연속학습 기록</td>
+<td>포함</td>
+<td>스티커 판, 연속일</td>
+</tr>
+<tr>
+<td>아동: 간단 진단</td>
+<td>제외</td>
+<td>연령 선택으로 난이도만 조절</td>
+</tr>
+<tr>
+<td>교사·보호자: 출석·완료율 확인</td>
+<td>포함</td>
+<td>부모 탭 오늘·주간·월간</td>
+</tr>
+<tr>
+<td>교사·보호자: 어려운 항목, 대화 가이드</td>
+<td>일부</td>
+<td>기록만 저장, 화면은 다음 단계</td>
+</tr>
+<tr>
+<td>운영자: 콘텐츠 점검·배정</td>
+<td>제외</td>
+<td>콘텐츠는 JSON → 테이블 시드</td>
+</tr>
+<tr>
+<td>접근성: 쉬운 한국어·그림·PWA</td>
+<td>포함</td>
+<td>저용량 모드는 다음 단계</td>
+</tr>
+<tr>
+<td>2단계 Literacy Bridge(파닉스·읽기)</td>
+<td>제외</td>
+<td>여정 화면에 미리보기만</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="5-20-90">5. ‘매일 20분’과 ‘하루 90분’</h2>
+<p>지원서는 서비스를 <strong>“매일 20분 영어 루틴”</strong>이라고 부르고, 가이드북과 소리루틴표·디자인 시안은 <strong>하루 90분(20 + 30 + 20 + 20)</strong>으로 짜여 있습니다. 두 숫자는 서로 다른 것을 셉니다.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>구분</th>
+<th>뜻</th>
+<th>앱에서의 위치</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>20분</td>
+<td>한 번에 하는 루틴 한 개의 길이. 아이가 “지금 할 일”로 만나는 단위</td>
+<td>루틴 시트의 목표 시간, 알림 한 번</td>
+</tr>
+<tr>
+<td>90분</td>
+<td>하루 네 번의 루틴을 모두 했을 때의 소리노출 합계</td>
+<td>오늘 탭의 진행 막대, 부모 탭의 “오늘 소리노출 0 / 90분”</td>
+</tr>
+</tbody>
+</table></div>
+<p>앱은 시안과 같게 20 · 30 · 20 · 20분을 쓰고, 안내 문구는 지원서처럼 “한 번에 20분”을 앞세웁니다. 루틴 하나만 해도 그날은 연속일에 들어갑니다.</p>
+<blockquote>
+<p>확인 필요: 공모전 심사에서 “20분”으로 통일해 보여 줄지, 가이드북의 90분을 그대로 보여 줄지는 선효경 대표님이 정해 주시면 설정값(<code>dailyTargetMinutes</code>, 루틴별 <code>targetMinutes</code>)만 바꾸면 됩니다.</p>
+</blockquote>
+<h2 id="6-1">6. 1주차 콘텐츠</h2>
+<p>재생목록 「사운즈펀 소리루틴 1주_sample」에서 가져왔습니다. 자세한 값은 <code>docs/week1-routine.txt</code>.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>순서</th>
+<th>루틴</th>
+<th>목표</th>
+<th>영상</th>
+<th>채널</th>
+<th>캐릭터</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>아침 노래 Morning Song</td>
+<td>20분</td>
+<td>Good Morning Mr. Rooster + More</td>
+<td>Super Simple Songs</td>
+<td>병아리</td>
+</tr>
+<tr>
+<td>2</td>
+<td>오늘의 주제 Theme Time</td>
+<td>30분</td>
+<td>Red Yellow Green Blue + More</td>
+<td>Super Simple Songs</td>
+<td>악어</td>
+</tr>
+<tr>
+<td>3</td>
+<td>저녁 노래 Dinner Song</td>
+<td>20분</td>
+<td>This is the Way Song (Dinner Time)</td>
+<td>CoComelon</td>
+<td>고양이</td>
+</tr>
+<tr>
+<td>4</td>
+<td>잠자리 이야기 Bedtime Story</td>
+<td>20분</td>
+<td>Color Stories for Kids!</td>
+<td>Vooks</td>
+<td>토끼</td>
+</tr>
+<tr>
+<td>주말</td>
+<td>찬양 · 바이블 스토리</td>
+<td>각 20분</td>
+<td>하잉RTA 재생목록</td>
+<td>하잉RTA</td>
+<td>선택 시에만</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="7">7. 성과 지표와 데이터</h2>
+<p>지원서 6장의 지표를 앱이 남기는 데이터로 계산할 수 있게 했습니다.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>지원서 지표</th>
+<th>계산에 쓰는 테이블</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>주간 완료율 65% 이상</td>
+<td><code>routine_records</code> (완료 칸 ÷ 해야 할 칸)</td>
+</tr>
+<tr>
+<td>4·8·12주 잔존율 70% 이상</td>
+<td><code>routine_records.record_date</code>, <code>children.start_date</code></td>
+</tr>
+<tr>
+<td>중도이탈 사유</td>
+<td><code>events</code> (마지막 활동), 인터뷰</td>
+</tr>
+<tr>
+<td>듣기·말하기 변화</td>
+<td><code>quiz_answers</code>, <code>speak_attempts</code></td>
+</tr>
+<tr>
+<td>교사 준비시간, 만족도</td>
+<td>앱 밖 설문</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="8">8. 지원서가 요구하는 안전 기준</h2>
+<ul>
+<li>아동 개인정보와 학습 데이터를 수익화하지 않는다 → 광고·외부 분석 도구 없음.</li>
+<li>신앙과정은 사전 동의 없이 노출하지 않는다 → 기본 꺼짐, 켤 때 확인 창.</li>
+<li>외부 유튜브 콘텐츠는 링크 방식, 링크 변경·삭제 대비 → 영상 정보는 <code>week_routines</code> 한 곳에서 바꾼다.</li>
+<li>단기 성과를 과장하지 않는다 → ‘완료’는 타이머·직접 누름·부모 표시를 구분해 저장한다.</li>
+</ul>
+<h2 id="9">9. 예산과 개발 범위</h2>
+<p>실행비 2,000만 원 중 MVP 기획·개발이 40%(800만 원)입니다. 그래서 이번 버전은 서버 비용이 거의 들지 않게 <strong>기기 저장 우선</strong>으로 만들고, 서버(FastAPI + RDB)는 파일럿에서 여러 기기·기관 통계를 볼 때 붙일 수 있게 설계만 끝내 두었습니다.</p>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "base" });
+</script>
+</body>
+</html>

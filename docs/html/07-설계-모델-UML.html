@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>설계 모델 (UML)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Jua&display=swap">
+<style>
+:root{--bg:#F3F6F4;--sf:#fff;--sf2:#E9EFEB;--ink:#1B2B25;--mut:#5E6E67;--ln:#D5DED9;--ac:#1F7A5C;--ac2:#DDEFE6;--co:#E8603F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+main{max-width:1000px;margin:0 auto;padding:24px 20px 80px}
+.docnav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln);padding:0 20px}
+.docnav ul{list-style:none;margin:0 auto;padding:0;max-width:1000px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.docnav a{display:block;padding:10px 9px;font-size:.82rem;color:var(--mut);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent}
+.docnav a.cur,.docnav a:hover{color:var(--ac);border-color:var(--ac)}
+.docmeta{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:600;margin-top:18px}
+h1,h2,h3,h4{font-family:"Jua","IBM Plex Sans KR",sans-serif;font-weight:400;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:2.3rem;line-height:1.15;margin:6px 0 10px}
+h2{font-size:1.6rem;margin-top:48px;padding-top:16px;border-top:1px solid var(--ln)}
+h3{font-size:1.2rem;margin-top:28px;color:#145A43}
+h4{font-size:1rem;margin-top:18px;font-family:inherit;font-weight:600}
+p{margin:10px 0;max-width:72ch}
+a{color:var(--ac)}
+ul,ol{margin:8px 0;padding-left:22px;max-width:76ch}li{margin:3px 0}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--sf2);padding:1px 5px;border-radius:4px}
+pre{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:.82rem;line-height:1.55}
+pre code{background:none;padding:0}
+pre.mermaid{text-align:center}
+.diagram{max-width:none;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+.diagram img{max-width:100%;height:auto}
+figure.fig{margin:16px 0;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+figure.fig img{max-width:100%;height:auto;border-radius:8px}
+figure.screens{display:inline-block;width:230px;margin:6px;vertical-align:top}
+figcaption{font-size:.8rem;color:var(--mut);margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--sf);margin:14px 0}
+.tw{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:14px 0}
+.tw table{margin:0}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--ln)}
+th{background:var(--sf2);font-weight:600;font-size:.8rem;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+blockquote{margin:14px 0;padding:10px 16px;border-left:3px solid var(--co);background:var(--sf);border-radius:0 10px 10px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--ln);margin:32px 0}
+strong{font-weight:600}
+@media print{.docnav{display:none}body{background:#fff}main{padding:0}}
+</style>
+</head>
+<body>
+<nav class="docnav"><ul><li><a class="" href="00-지원서-분석.html">00 지원서 분석</a></li><li><a class="" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-데이터베이스-설계서.html">05 데이터베이스 설계서</a></li><li><a class="" href="06-API-명세서.html">06 API 명세서</a></li><li><a class="cur" href="07-설계-모델-UML.html">07 설계 모델 (UML)</a></li><li><a class="" href="08-아키텍처-코드규칙.html">08 아키텍처·코드 규칙</a></li><li><a class="" href="09-디자인-가이드.html">09 디자인 가이드</a></li><li><a class="" href="10-테스트-계획.html">10 테스트 계획</a></li><li><a class="" href="11-결정기록-오픈이슈.html">11 결정 기록·오픈 이슈</a></li></ul></nav>
+<main>
+<div class="docmeta">SoundsFun Bridge · MVP 문서 v2 · 07</div>
+<h1 id="uml">설계 모델 (UML)</h1>
+<p>유즈케이스 다이어그램은 03 문서에, ERD는 05 문서에 있습니다. 여기에는 클래스·시퀀스·상태·컴포넌트·배치 다이어그램을 모았습니다.</p>
+<h2 id="1">1. 클래스 다이어그램 — 도메인 모델</h2>
+<p>앱(<code>entities/</code>)과 서버(<code>models.py</code>)가 함께 쓰는 개념입니다. 계산은 모두 순수 함수로 두어 화면 없이 테스트합니다.</p>
+<p class="diagram"><img src="../assets/diagrams/de6000db1ceb.png" alt="다이어그램"></p>
+
+<h2 id="2">2. 클래스 다이어그램 — 앱의 층</h2>
+<p class="diagram"><img src="../assets/diagrams/1feb288dd22e.png" alt="다이어그램"></p>
+
+<h2 id="3-uc-03-uc-04">3. 시퀀스 — 루틴 듣고 완료하기 (UC-03, UC-04)</h2>
+<p class="diagram"><img src="../assets/diagrams/dc6dd751637e.png" alt="다이어그램"></p>
+
+<h2 id="4-uc-01-uc-11-uc-12">4. 시퀀스 — 가입에서 첫 화면까지 (UC-01, UC-11, UC-12)</h2>
+<p class="diagram"><img src="../assets/diagrams/1e3be98d2b9a.png" alt="다이어그램"></p>
+
+<h2 id="5-uc-05-uc-06">5. 시퀀스 — 소리활동 (UC-05, UC-06)</h2>
+<p class="diagram"><img src="../assets/diagrams/fca61470829c.png" alt="다이어그램"></p>
+
+<h2 id="6-uc-15">6. 시퀀스 — 알림 (UC-15)</h2>
+<p class="diagram"><img src="../assets/diagrams/5993fa3d0857.png" alt="다이어그램"></p>
+
+<p>이 그림은 서버를 연결했을 때의 Web Push 흐름입니다. 이번 버전은 서버 없이, 앱은 기기 알림을 미리 예약하고(<code>buildUpcoming</code>) 웹은 열려 있는 동안 서비스 워커로 알림을 띄웁니다.</p>
+<h2 id="7-uc-09">7. 시퀀스 — ‘들었어요’ 표시 (UC-09)</h2>
+<p class="diagram"><img src="../assets/diagrams/98566c864370.png" alt="다이어그램"></p>
+
+<h2 id="8">8. 상태 — 루틴 기록</h2>
+<p class="diagram"><img src="../assets/diagrams/d95971a7d304.png" alt="다이어그램"></p>
+
+<p>DB의 체크 제약이 이 상태를 그대로 지킵니다: 완료 방식과 완료 시각은 함께 있고, 완료된 줄은 <code>running_since</code>가 비어 있습니다.</p>
+<h2 id="9">9. 컴포넌트</h2>
+<p class="diagram"><img src="../assets/diagrams/01816b4047a5.png" alt="다이어그램"></p>
+
+<h2 id="10">10. 배치</h2>
+<p class="diagram"><img src="../assets/diagrams/cf91c150d8a4.png" alt="다이어그램"></p>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "base" });
+</script>
+</body>
+</html>

@@ -29,6 +29,10 @@ pre code{background:none;padding:0}
 pre.mermaid{text-align:center}
 .diagram{max-width:none;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
 .diagram img{max-width:100%;height:auto}
+figure.fig{margin:16px 0;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+figure.fig img{max-width:100%;height:auto;border-radius:8px}
+figure.screens{display:inline-block;width:230px;margin:6px;vertical-align:top}
+figcaption{font-size:.8rem;color:var(--mut);margin-top:6px}
 table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--sf);margin:14px 0}
 .tw{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:14px 0}
 .tw table{margin:0}
@@ -43,479 +47,374 @@ strong{font-weight:600}
 </style>
 </head>
 <body>
-<nav class="docnav"><ul><li><a class="" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="cur" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-팝업-가이드-명세서.html">05 팝업·가이드 명세서</a></li><li><a class="" href="06-데이터-API-명세서.html">06 데이터·API 명세서</a></li><li><a class="" href="07-아키텍처-코드규칙.html">07 아키텍처·코드 규칙</a></li><li><a class="" href="08-디자인-가이드.html">08 디자인 가이드</a></li><li><a class="" href="09-테스트-계획.html">09 테스트 계획</a></li><li><a class="" href="10-결정기록-오픈이슈.html">10 결정 기록·오픈 이슈</a></li></ul></nav>
+<nav class="docnav"><ul><li><a class="" href="00-지원서-분석.html">00 지원서 분석</a></li><li><a class="" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="cur" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-데이터베이스-설계서.html">05 데이터베이스 설계서</a></li><li><a class="" href="06-API-명세서.html">06 API 명세서</a></li><li><a class="" href="07-설계-모델-UML.html">07 설계 모델 (UML)</a></li><li><a class="" href="08-아키텍처-코드규칙.html">08 아키텍처·코드 규칙</a></li><li><a class="" href="09-디자인-가이드.html">09 디자인 가이드</a></li><li><a class="" href="10-테스트-계획.html">10 테스트 계획</a></li><li><a class="" href="11-결정기록-오픈이슈.html">11 결정 기록·오픈 이슈</a></li></ul></nav>
 <main>
-<div class="docmeta">SoundsFun Bridge · MVP 문서 · 02</div>
+<div class="docmeta">SoundsFun Bridge · MVP 문서 v2 · 02</div>
 <h1 id="srs">요구사항 명세서 (SRS)</h1>
-<p>우선순위: <strong>M</strong> 필수(없으면 MVP 아님) · <strong>S</strong> 파일럿 전 포함 · <strong>L</strong> 나중, 구조만 준비</p>
-<h2 id="1">1. 계정·온보딩</h2>
+<p>우선순위: <strong>M</strong> 꼭 있어야 함 · <strong>S</strong> 있으면 좋음 · <strong>L</strong> 다음 단계. 모든 M과 S는 이번 버전에 구현되어 있습니다.</p>
+<h2 id="1">1. 시작·계정</h2>
 <div class="tw"><table>
 <thead>
 <tr>
 <th>ID</th>
 <th>요구사항</th>
-<th>우선</th>
-<th>화면</th>
+<th>순위</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>FR-101</td>
-<td>이메일·비밀번호로 가입·로그인·로그아웃할 수 있다</td>
+<td>앱을 열면 시작 영상이 나오고, 화면을 누르면 들어간다. 소리는 버튼으로 켜고 끈다</td>
 <td>M</td>
-<td>A1 A2</td>
 </tr>
 <tr>
 <td>FR-102</td>
-<td>비밀번호 재설정 링크를 이메일로 받을 수 있다</td>
+<td>부모는 이메일·비밀번호(8자 이상)로 가입한다. 필수 동의 2개, 알림 동의는 선택</td>
 <td>M</td>
-<td>A1</td>
 </tr>
 <tr>
 <td>FR-103</td>
-<td>가입 시 이용약관·개인정보(필수), 알림(선택) 동의를 받고 시각·버전을 저장한다</td>
+<td>이미 가입한 이메일이면 로그인으로 안내한다</td>
 <td>M</td>
-<td>A2</td>
 </tr>
 <tr>
 <td>FR-104</td>
-<td>아이 프로필은 별명·연령대·아바타만 저장한다 (실명·생년월일 없음)</td>
+<td>로그인 상태는 앱을 다시 열어도 유지된다</td>
 <td>M</td>
-<td>A3</td>
 </tr>
 <tr>
 <td>FR-105</td>
-<td>아바타를 부위별(피부·머리·눈·입·안경·배경 등)로 꾸밀 수 있다</td>
+<td>탈퇴하면 계정·아이·기록이 모두 지워진다</td>
 <td>M</td>
-<td>A3</td>
 </tr>
 <tr>
 <td>FR-106</td>
-<td>얼굴 사진을 올려 원형으로 자르고 테두리 장식을 고를 수 있다</td>
+<td>설정에서 시작 영상을 다시 볼 수 있다</td>
 <td>S</td>
-<td>A3</td>
-</tr>
-<tr>
-<td>FR-107</td>
-<td>루틴 4개의 시각과 시작일을 정한다. 기본값이 채워져 있다</td>
-<td>M</td>
-<td>A4</td>
-</tr>
-<tr>
-<td>FR-108</td>
-<td>알림 권한을 요청하고, 거부해도 앱을 쓸 수 있다</td>
-<td>M</td>
-<td>A5</td>
-</tr>
-<tr>
-<td>FR-109</td>
-<td>첫 실행에만 앱 소개 3장을 보여준다</td>
-<td>S</td>
-<td>A0</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="2">2. 코스 맵 (홈)</h2>
+<h2 id="2">2. 아이 등록</h2>
 <div class="tw"><table>
 <thead>
 <tr>
 <th>ID</th>
 <th>요구사항</th>
-<th>우선</th>
-<th>화면</th>
+<th>순위</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>FR-201</td>
-<td>Week 1의 Day 1~7과 Day별 루틴 4개를 길 모양으로 보여준다</td>
+<td>이름(8자 이내), 연령(6·7·8·9–10세), 학습 시작일(오늘~7일 뒤)을 받는다</td>
 <td>M</td>
-<td>H1</td>
 </tr>
 <tr>
 <td>FR-202</td>
-<td>노드 상태 5종: 완료·열림·진행중·잠김·놓침</td>
+<td>함께할 친구를 병아리·악어·고양이·토끼 중 고르거나 사진을 쓴다</td>
 <td>M</td>
-<td>H1</td>
 </tr>
 <tr>
 <td>FR-203</td>
-<td>오늘 Day의 루틴만 열리고, 순서 무관하게 시작할 수 있다</td>
+<td>사진은 256px로 줄여 기기에만 저장한다. 서버에는 ‘사진 사용’ 여부만 간다</td>
 <td>M</td>
-<td>H1</td>
 </tr>
 <tr>
 <td>FR-204</td>
-<td>열면 오늘 노드로 자동 스크롤한다</td>
+<td>설정에서 아이 정보를 바꿀 수 있다</td>
 <td>M</td>
-<td>H1</td>
-</tr>
-<tr>
-<td>FR-205</td>
-<td>“지금 할 루틴” 카드에 다음 루틴과 남은 시간, 오늘 진행(분)을 보여준다</td>
-<td>M</td>
-<td>H1</td>
-</tr>
-<tr>
-<td>FR-206</td>
-<td>연속일수와 누적 별을 상단에 보여준다</td>
-<td>M</td>
-<td>H1</td>
-</tr>
-<tr>
-<td>FR-207</td>
-<td>하루 4개 완료 시 Day 배지, Day 7 완료 시 주간 트로피 연출</td>
-<td>M</td>
-<td>H1 L4</td>
-</tr>
-<tr>
-<td>FR-208</td>
-<td>Week 1 완료 후 “한 번 더” 노드로 반복할 수 있다</td>
-<td>S</td>
-<td>H1</td>
-</tr>
-<tr>
-<td>FR-209</td>
-<td>Week·Day·루틴·단어는 모두 데이터(JSON)로 정의하고 코드에 넣지 않는다</td>
-<td>M</td>
-<td>—</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="3">3. 듣기 루틴 (아침·저녁·잠자리)</h2>
+<h2 id="3">3. 오늘 탭</h2>
 <div class="tw"><table>
 <thead>
 <tr>
 <th>ID</th>
 <th>요구사항</th>
-<th>우선</th>
-<th>화면</th>
+<th>순위</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>FR-301</td>
-<td>유튜브 링크를 외부(유튜브 앱 또는 브라우저)로 연다. 앱 내 재생 없음</td>
+<td>인사 카드에 이름, 주차·주제, 캐릭터 네 마리를 시안 위치대로 보여 준다</td>
 <td>M</td>
-<td>L1</td>
 </tr>
 <tr>
 <td>FR-302</td>
-<td>타이머는 시작 시각 기준으로 계산해 앱을 벗어나도 흐른다</td>
+<td>오늘 진행을 <code>완료 수 / 전체</code>, 분, 막대로 보여 준다</td>
 <td>M</td>
-<td>L1</td>
 </tr>
 <tr>
 <td>FR-303</td>
-<td>목표 시간 도달 시 진동·소리 1회, 백그라운드면 알림 1회</td>
+<td>오늘의 루틴을 <strong>번호가 붙은 길</strong>로 보여 준다. 정거장이 좌우로 번갈아 놓이고 점선 길로 이어진다</td>
 <td>M</td>
-<td>L1 N1</td>
 </tr>
 <tr>
 <td>FR-304</td>
-<td>“다 들었어요”로 완료하면 듣기 분을 자동 기록한다</td>
+<td>끝낸 구간은 색이 칠해지고 정거장에 완료 표시가 붙는다</td>
 <td>M</td>
-<td>L1</td>
 </tr>
 <tr>
 <td>FR-305</td>
-<td>“이미 들었어요”, “먼저 넘어가기”는 부모 확인 후 수동 기록한다</td>
-<td>M</td>
-<td>L0 L1</td>
+<td>길 아래로 다음 3일을 작고 흐리게 미리 보여 준다</td>
+<td>S</td>
 </tr>
 <tr>
 <td>FR-306</td>
-<td>완료 시 스티커 1장과 별을 준다</td>
+<td>정거장을 누르면 루틴 시트가 열린다</td>
 <td>M</td>
-<td>L4</td>
 </tr>
 <tr>
 <td>FR-307</td>
-<td>부모 가이드(표현 예시)를 접힌 카드로 제공한다</td>
-<td>S</td>
-<td>L1</td>
+<td>시작일 전이면 시작을 기다리는 안내를, 7일이 끝나면 마침 안내를 보여 준다</td>
+<td>M</td>
+</tr>
+<tr>
+<td>FR-308</td>
+<td>주말에 하잉RTA가 켜져 있으면 찬양·바이블 스토리 정거장이 추가된다</td>
+<td>M</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="4">4. 주제 루틴 (집중듣기)</h2>
+<h2 id="4">4. 루틴 시트</h2>
 <div class="tw"><table>
 <thead>
 <tr>
 <th>ID</th>
 <th>요구사항</th>
-<th>우선</th>
-<th>화면</th>
+<th>순위</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>FR-401</td>
-<td>단계 3개: 영상 보기 → 단어 맞추기 → 단어 말하기</td>
+<td>루틴 이름, 영어 이름, 목표 분, 안내 한 줄, 오늘의 한 문장을 보여 준다</td>
 <td>M</td>
-<td>L1 L2 L3</td>
 </tr>
 <tr>
 <td>FR-402</td>
-<td>퀴즈는 단어 데이터에서 자동 생성한다. 유형: 듣고 그림 고르기, 그림 보고 단어 고르기, 짝 맞추기</td>
+<td>“소리 놀이 시작”을 누르면 유튜브가 열리고 듣기 시간이 흐른다</td>
 <td>M</td>
-<td>L2</td>
 </tr>
 <tr>
 <td>FR-403</td>
-<td>문장 듣고 색 찾기 유형 (“It’s red.”)</td>
-<td>S</td>
-<td>L2</td>
+<td>멈춤·이어 듣기를 할 수 있고, 앱을 닫아도 시간은 이어진다</td>
+<td>M</td>
 </tr>
 <tr>
 <td>FR-404</td>
-<td>모든 선택지에 그림과 소리가 있다. 글자를 못 읽어도 풀 수 있다</td>
+<td>목표 시간에 닿으면 자동으로 완료된다 (<code>timer</code>)</td>
 <td>M</td>
-<td>L2</td>
 </tr>
 <tr>
 <td>FR-405</td>
-<td>오답에 벌점 없음. 정답을 보여주고 다음으로 넘어간다</td>
+<td>“오늘 완료했어요”를 누르면 바로 완료되고 목표 분이 기록된다 (<code>manual</code>)</td>
 <td>M</td>
-<td>L2</td>
 </tr>
 <tr>
 <td>FR-406</td>
-<td>말하기: 단어 음성 듣기 → 마이크 → 인식 결과와 유사도 비교</td>
+<td>완료하면 스티커 한 장과 축하 표시를 준다</td>
 <td>M</td>
-<td>L3</td>
 </tr>
 <tr>
 <td>FR-407</td>
-<td>두 번 미달이면 통과 처리. 언제든 건너뛸 수 있다</td>
+<td>한 번 완료한 루틴은 되돌리지 않는다</td>
 <td>M</td>
-<td>L3</td>
-</tr>
-<tr>
-<td>FR-408</td>
-<td>마이크 불가 시 “부모가 들어주기” 모드로 부모가 체크한다</td>
-<td>M</td>
-<td>L3</td>
-</tr>
-<tr>
-<td>FR-409</td>
-<td>단어·문장 음성은 미리 생성한 mp3를 쓴다</td>
-<td>M</td>
-<td>L2 L3</td>
-</tr>
-<tr>
-<td>FR-410</td>
-<td>음성인식 서버 폴백 (Whisper)</td>
-<td>L</td>
-<td>L3</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="5">5. 보상</h2>
+<h2 id="5">5. 소리여행·소리활동</h2>
 <div class="tw"><table>
 <thead>
 <tr>
 <th>ID</th>
 <th>요구사항</th>
-<th>우선</th>
-<th>화면</th>
+<th>순위</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>FR-501</td>
-<td>별: 단계 완료마다. 스티커: 루틴 완료마다 (루틴별 그림)</td>
+<td>이번 주 카드, 요일 줄(한 날 표시), 48주 4단계, 13주 미리보기 문제를 보여 준다</td>
 <td>M</td>
-<td>L4</td>
 </tr>
 <tr>
 <td>FR-502</td>
-<td>하루 완료 배지: 4루틴 모두 완료</td>
+<td>소리활동은 단어 맞추기 → 단어 말하기 순서다</td>
 <td>M</td>
-<td>L4 H1</td>
 </tr>
 <tr>
 <td>FR-503</td>
-<td>연속일수: 하루 1루틴 이상 실제 완료면 유지. 놓치면 0 (동결 없음)</td>
+<td>맞추기 유형: 그림 고르기, 단어 고르기, 짝 맞추기, 문장 듣고 색 고르기. 8문제</td>
 <td>M</td>
-<td>H1 P1</td>
 </tr>
 <tr>
 <td>FR-504</td>
-<td>주간 트로피: Day 7 완료</td>
+<td>연령에 따라 보기 수가 달라지고, 6세는 글자를 숨긴다</td>
 <td>M</td>
-<td>L4</td>
 </tr>
 <tr>
 <td>FR-505</td>
-<td>스티커판에서 모은 스티커를 본다</td>
+<td>틀리면 정답을 알려 주고 넘어간다. 점수로 막지 않는다</td>
+<td>M</td>
+</tr>
+<tr>
+<td>FR-506</td>
+<td>말하기는 기기 음성 인식으로 듣고 0.7 이상이면 통과. 두 번까지</td>
+<td>M</td>
+</tr>
+<tr>
+<td>FR-507</td>
+<td>마이크를 못 쓰면 도움 모드(부모가 “잘 말했어요”)로 바뀐다</td>
+<td>M</td>
+</tr>
+<tr>
+<td>FR-508</td>
+<td>맞힌 문제와 통과한 단어마다 별 1개</td>
 <td>S</td>
-<td>P1</td>
+</tr>
+<tr>
+<td>FR-509</td>
+<td>하루에 여러 번 다시 할 수 있다</td>
+<td>S</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="6">6. 부모 모드</h2>
+<h2 id="6">6. 부모 탭</h2>
 <div class="tw"><table>
 <thead>
 <tr>
 <th>ID</th>
 <th>요구사항</th>
-<th>우선</th>
-<th>화면</th>
+<th>순위</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>FR-601</td>
-<td>부모 대시보드·설정·수동 체크는 부모 확인(3초 길게 누르기) 후 열린다. 확인은 10분 유지</td>
+<td>부모 확인 없이 바로 열린다</td>
 <td>M</td>
-<td>G1</td>
 </tr>
 <tr>
 <td>FR-602</td>
-<td>대시보드 요약: 오늘 진행, 연속일수, 이번 주 완료 수, 총 소리노출 시간</td>
+<td>요약 네 칸: 오늘 소리노출, 연속, 이번 주 루틴, 총 소리노출</td>
 <td>M</td>
-<td>P1</td>
 </tr>
 <tr>
 <td>FR-603</td>
-<td>주간 루틴표: 4행(루틴) × 7열(요일), 자동·수동 체크 구분</td>
+<td>오늘: 루틴별 상태와 분</td>
 <td>M</td>
-<td>P1</td>
 </tr>
 <tr>
 <td>FR-604</td>
-<td>부모가 빈칸을 수동 체크·해제할 수 있다. 자동 체크는 해제 불가, 미래 날짜 불가</td>
+<td>주간: 루틴(행) × 요일(열) 표. 종이 소리루틴표와 같은 모양. 이전·다음 주 이동</td>
 <td>M</td>
-<td>P1</td>
 </tr>
 <tr>
 <td>FR-605</td>
-<td>월간 달력: 날짜별 완료 수 표시, 탭하면 일별 상세</td>
+<td>월간: 달력에 다 한 날과 일부 한 날을 구분</td>
 <td>M</td>
-<td>P1</td>
 </tr>
 <tr>
 <td>FR-606</td>
-<td>통계: 루틴별 완료율, 주제 단어 정답률, 말하기 시도·통과</td>
-<td>S</td>
-<td>P1</td>
+<td>지난 칸을 눌러 ‘들었어요’를 표시·해제한다 (<code>parent</code>). TV로 들은 날을 위한 기능</td>
+<td>M</td>
 </tr>
 <tr>
 <td>FR-607</td>
-<td>설정: 알림 시각·켜짐, 아이 프로필, 하잉RTA 주말 스위치, 안내·FAQ, 계정</td>
+<td>앱에서 완료한 기록은 부모 탭에서 지울 수 없다. 미래 날짜는 표시할 수 없다</td>
 <td>M</td>
-<td>S1</td>
 </tr>
 <tr>
 <td>FR-608</td>
-<td>계정·기록·사진을 즉시 삭제하고 탈퇴할 수 있다</td>
+<td>이번 주 한눈에(루틴별 완료 막대), 모은 스티커 판</td>
 <td>M</td>
-<td>S1</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="7">7. 알림</h2>
+<h2 id="7">7. 설정·알림</h2>
 <div class="tw"><table>
 <thead>
 <tr>
 <th>ID</th>
 <th>요구사항</th>
-<th>우선</th>
-<th>화면</th>
+<th>순위</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>FR-701</td>
-<td>루틴 시각에 매일 알림. 이미 완료한 루틴은 보내지 않는다</td>
+<td>알림 전체 켜기·끄기, 루틴별 시각(10분 단위)</td>
 <td>M</td>
-<td>N1</td>
 </tr>
 <tr>
 <td>FR-702</td>
-<td>앱: 기기 로컬 예약 알림. 웹: 서비스워커 푸시 (VAPID)</td>
+<td>알림은 끝내지 않은 루틴에만 온다. 누르면 그 루틴 시트가 열린다</td>
 <td>M</td>
-<td>N1</td>
 </tr>
 <tr>
 <td>FR-703</td>
-<td>알림 탭 시 해당 루틴 시작 시트가 열린다</td>
-<td>M</td>
-<td>N1</td>
+<td>저녁 8시 리마인드: 남은 루틴이 있을 때만</td>
+<td>S</td>
 </tr>
 <tr>
 <td>FR-704</td>
-<td>저녁 리마인드(미완료 있을 때 20:00)</td>
-<td>S</td>
-<td>N1</td>
+<td>하잉RTA 주말 콘텐츠 스위치. 켤 때 확인 창. 기본 꺼짐</td>
+<td>M</td>
 </tr>
 <tr>
 <td>FR-705</td>
-<td>알림 테스트 보내기</td>
+<td>소리노출 가이드, 자주 묻는 질문, 문의, 약관 보기</td>
 <td>S</td>
-<td>S1</td>
+</tr>
+<tr>
+<td>FR-706</td>
+<td>로그아웃, 탈퇴</td>
+<td>M</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="8">8. 가이드·팝업</h2>
+<h2 id="8">8. 서버</h2>
 <div class="tw"><table>
 <thead>
 <tr>
 <th>ID</th>
 <th>요구사항</th>
-<th>우선</th>
-<th>화면</th>
+<th>순위</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>FR-801</td>
-<td>화면마다 첫 방문 가이드를 1회 보여주고, 설정에서 다시 볼 수 있다</td>
+<td>콘텐츠·계정·아이·기록을 관계형 테이블로 저장한다 (3정규형)</td>
 <td>M</td>
-<td>전체</td>
 </tr>
 <tr>
 <td>FR-802</td>
-<td>아이 화면 가이드는 그림 + 음성, 글자는 한 줄 이하</td>
+<td>외래키·유니크·체크 제약으로 DB가 직접 잘못된 값을 막는다</td>
 <td>M</td>
-<td>H1 L2 L3</td>
 </tr>
 <tr>
 <td>FR-803</td>
-<td>모든 확인·오류 팝업은 05 문서의 ID와 문구를 따른다</td>
+<td>기록 올리기는 멱등이다. 같은 요청을 여러 번 보내도 결과가 같다</td>
 <td>M</td>
-<td>전체</td>
 </tr>
-</tbody>
-</table></div>
-<h2 id="9">9. 데이터·운영</h2>
-<div class="tw"><table>
-<thead>
 <tr>
-<th>ID</th>
-<th>요구사항</th>
-<th>우선</th>
-<th>화면</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FR-901</td>
-<td>이벤트 로그: 레슨 시작·완료, 문항 결과, 말하기 결과, 알림 열람</td>
+<td>FR-804</td>
+<td>다른 부모의 아이에는 접근할 수 없다</td>
 <td>M</td>
-<td>—</td>
 </tr>
 <tr>
-<td>FR-902</td>
-<td>영상 링크 상태 점검과 대체 영상 목록</td>
-<td>L</td>
-<td>—</td>
+<td>FR-805</td>
+<td>매분 알림 시각을 확인해 Web Push를 보낸다</td>
+<td>S</td>
 </tr>
 <tr>
-<td>FR-903</td>
-<td>교사·기관 대시보드</td>
-<td>L</td>
-<td>—</td>
+<td>FR-806</td>
+<td>앱 콘텐츠 JSON을 읽어 참조 테이블을 채운다 (멱등 시드)</td>
+<td>M</td>
 </tr>
 </tbody>
 </table></div>
@@ -524,73 +423,63 @@ strong{font-weight:600}
 <thead>
 <tr>
 <th>ID</th>
-<th>항목</th>
+<th>요구사항</th>
 <th>기준</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>NFR-01</td>
-<td>성능</td>
-<td>저사양 안드로이드(RAM 3GB)에서 화면 전환 300ms 이내. 웹 첫 로드 3G에서 3초 이내</td>
+<td>반응형</td>
+<td>320–430 폭은 꽉 차게, 그 이상은 가운데 폰 틀(최대 430)</td>
 </tr>
 <tr>
 <td>NFR-02</td>
-<td>오프라인</td>
-<td>콘텐츠·그림·음성은 캐시. 진행 기록은 큐에 저장 후 온라인 시 동기화</td>
+<td>성능</td>
+<td>그림 WebP, 캐릭터 1장 30KB 안팎, 시작 영상 0.5MB</td>
 </tr>
 <tr>
 <td>NFR-03</td>
-<td>접근성</td>
-<td>터치 영역 56px 이상. 아이 화면 글자 20pt 이상, 부모 화면 16pt 이상. 색만으로 상태 구분 금지(아이콘 동반)</td>
+<td>오프라인</td>
+<td>영상 말고는 기기 저장만으로 동작</td>
 </tr>
 <tr>
 <td>NFR-04</td>
-<td>보안</td>
-<td>HTTPS, 비밀번호 argon2 해시, JWT(액세스 15분·리프레시 30일), 사진은 서명 URL</td>
+<td>개인정보</td>
+<td>아이는 이름·연령만. 사진은 기기에만. 광고·외부 분석 없음</td>
 </tr>
 <tr>
 <td>NFR-05</td>
-<td>개인정보</td>
-<td>최소 수집, 탈퇴 즉시 삭제, 사진 256px 축소본만 저장, 앱 밖 노출 없음</td>
+<td>접근성</td>
+<td>버튼 48pt 이상, 색만으로 상태를 말하지 않음, 움직임 줄이기 존중</td>
 </tr>
 <tr>
 <td>NFR-06</td>
-<td>호환</td>
-<td>iOS 15+, Android 8+, iOS Safari 16.4+(웹 푸시), Android Chrome 최신 2버전</td>
+<td>코드 품질</td>
+<td>TypeScript strict 오류 0, 하드코딩 없음, 단위 테스트 통과</td>
 </tr>
 <tr>
 <td>NFR-07</td>
-<td>유지보수</td>
-<td>콘텐츠·문구·디자인 토큰을 코드와 분리. Week 추가는 JSON 파일 하나</td>
+<td>보안</td>
+<td>비밀번호 argon2, JWT, 소유권 검사</td>
 </tr>
 <tr>
 <td>NFR-08</td>
-<td>테스트</td>
-<td>상태 계산·연속일수·문항 생성은 순수 함수로 단위 테스트</td>
-</tr>
-<tr>
-<td>NFR-09</td>
-<td>모션</td>
-<td>시스템 ‘동작 줄이기’ 설정을 존중</td>
-</tr>
-<tr>
-<td>NFR-10</td>
-<td>안전</td>
-<td>광고·외부 링크는 유튜브 이동 외 없음. 아이 화면에 결제·공유 요소 없음</td>
+<td>이식성</td>
+<td>SQLite(개발) ↔ PostgreSQL(운영) 같은 모델</td>
 </tr>
 </tbody>
 </table></div>
 <h2 id="_2">제약</h2>
 <ul>
-<li>유튜브 콘텐츠는 링크 이동만. 음원·영상 추출 금지 (이용약관, 지원서 약속)</li>
-<li>화면을 보지 않는 ‘듣기’는 기술로 강제할 수 없다. 앱은 시간만 잰다</li>
-<li>웹 푸시는 iOS에서 홈 화면 추가 후에만 동작한다</li>
+<li>영상은 유튜브에서 재생된다. 앱은 재생 여부를 알 수 없어 시간을 재는 방식으로 기록한다.</li>
+<li>웹의 음성 인식은 브라우저마다 다르다. 안 되면 도움 모드로 간다.</li>
+<li>iOS 웹 알림은 홈 화면에 추가한 뒤에만 된다.</li>
 </ul>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-  mermaid.initialize({ startOnLoad: true, theme: "neutral", fontFamily: "IBM Plex Sans KR, sans-serif" });
+  mermaid.initialize({ startOnLoad: true, theme: "base" });
 </script>
 </body>
 </html>
