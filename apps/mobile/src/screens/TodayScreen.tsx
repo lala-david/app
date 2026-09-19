@@ -49,7 +49,7 @@ export function TodayScreen() {
       <View style={styles.header}>
         <AssetImage name="brand/logo" width={146} height={42} />
         <Pressy onPress={() => router.push('/manage/child')} style={styles.nameChip} accessibilityLabel={child.nickname}>
-          <AppText variant="captionStrong" color={colors.nameChipInk} numberOfLines={1}>
+          <AppText variant="bodyStrong" color={colors.nameChipInk} numberOfLines={1}>
             {child.nickname.slice(0, 3)}
           </AppText>
         </Pressy>
@@ -69,10 +69,12 @@ export function TodayScreen() {
           <AppText variant="eyebrow" color={colors.inkMuted}>
             {strings.today.routineEyebrow}
           </AppText>
-          <AppText variant="sectionTitle">{strings.today.routineTitle}</AppText>
+          <AppText variant="sectionTitle" style={styles.sectionTitle}>
+            {strings.today.routineTitle}
+          </AppText>
         </View>
         {state.totalCount ? (
-          <AppText variant="captionStrong" color="#668078">
+          <AppText variant="label" color={colors.doneCount}>
             {fmt(strings.today.doneCount, { done: state.doneCount, total: state.totalCount })}
           </AppText>
         ) : null}
@@ -104,10 +106,11 @@ export function TodayScreen() {
 }
 
 const styles = StyleSheet.create({
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 21 },
   nameChip: { width: 45, height: 45, borderRadius: 17, backgroundColor: colors.nameChipBg, alignItems: 'center', justifyContent: 'center' },
-  greeting: { marginTop: 5, marginBottom: 18 },
-  heading: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 30, marginHorizontal: 2, marginBottom: 4 },
+  greeting: { marginTop: 5, marginBottom: 15 },
+  heading: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 34 },
+  sectionTitle: { marginTop: 4 },
   notice: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 16, padding: 14, borderRadius: 22, backgroundColor: colors.surface },
   finished: { alignItems: 'stretch', gap: 14, marginTop: 24, padding: 22, borderRadius: sizes.heroHeight / 10, backgroundColor: colors.surface },
 });

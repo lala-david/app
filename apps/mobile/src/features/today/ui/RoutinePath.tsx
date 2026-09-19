@@ -32,12 +32,12 @@ function DayHeader({ day }: { day: PathDay }) {
   return (
     <View style={styles.header}>
       <View style={styles.rule} />
-      <View style={[styles.dayPill, { backgroundColor: isToday ? colors.brand : '#EEE8DF' }]}>
-        <AppText variant="captionStrong" color={isToday ? colors.white : '#897E75'}>
+      <View style={[styles.dayPill, { backgroundColor: isToday ? colors.brand : colors.dayPillIdle }]}>
+        <AppText variant="smallStrong" color={isToday ? colors.white : colors.dayPillIdleInk}>
           {fmt(strings.today.day, { n: day.index })}
         </AppText>
       </View>
-      <AppText variant="label" color={isToday ? colors.ink : '#52655F'}>
+      <AppText variant="captionStrong" color={colors.dayDate}>
         {dayLabel(day)}
       </AppText>
       <View style={styles.rule} />
@@ -75,7 +75,7 @@ function StationRow({ item, onPress }: { item: Extract<PathItem, { kind: 'statio
   const label = big ? (
     <View style={[styles.label, mirrored && styles.labelRight]}>
       <View style={[styles.minutes, mirrored && styles.rowReverse]}>
-        <Icon name="clock" size={14} color={tone.c} strokeWidth={2.6} />
+        <Icon name="clock" size={13} color={tone.c} strokeWidth={2.8} />
         <AppText variant="captionStrong" color={tone.c}>
           {fmt(strings.common.minutes, { n: station.routine.targetMinutes })}
         </AppText>
@@ -83,7 +83,7 @@ function StationRow({ item, onPress }: { item: Extract<PathItem, { kind: 'statio
       <AppText variant="cardTitle" numberOfLines={1}>
         {station.routine.title}
       </AppText>
-      <AppText variant="caption" color="#6E7B77" numberOfLines={1}>
+      <AppText variant="caption" color={colors.heroSub} numberOfLines={1}>
         {station.routine.titleEn}
       </AppText>
     </View>
@@ -100,7 +100,7 @@ function StationRow({ item, onPress }: { item: Extract<PathItem, { kind: 'statio
 
   const action = big ? (
     <View style={[styles.play, { backgroundColor: done ? colors.brand : tone.c }]}>
-      <Icon name={done ? 'check' : 'play'} size={done ? 20 : 18} color={colors.white} strokeWidth={3.2} />
+      <Icon name={done ? 'check' : 'play'} size={done ? 18 : 16} color={colors.white} strokeWidth={3.2} />
     </View>
   ) : (
     <View style={[styles.dashed, done && { borderStyle: 'solid', borderColor: tone.c, backgroundColor: tone.c }]}>
@@ -162,15 +162,15 @@ const styles = StyleSheet.create({
   headerSlot: { position: 'absolute', left: 0, right: 0, justifyContent: 'center', backgroundColor: colors.ground },
   header: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   rule: { flex: 1, height: 1, backgroundColor: colors.line },
-  dayPill: { paddingVertical: 7, paddingHorizontal: 10, borderRadius: 20 },
+  dayPill: { height: 32, paddingHorizontal: 14, borderRadius: 16, justifyContent: 'center' },
   row: { position: 'absolute', left: 0, right: 0, flexDirection: 'row', alignItems: 'center', gap: 14 },
   rowReverse: { flexDirection: 'row-reverse' },
   stoneBase: { position: 'absolute', left: 0 },
   stoneTop: { position: 'absolute', left: 0, top: 0, borderWidth: 4 },
-  number: { position: 'absolute', left: -4, top: -6, width: 26, height: 26, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: colors.ground },
-  label: { flex: 1, gap: 1 },
+  number: { position: 'absolute', left: -4, top: -6, width: 25, height: 25, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: colors.ground },
+  label: { flex: 1, gap: 2 },
   labelRight: { alignItems: 'flex-end' },
   minutes: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  play: { width: 44, height: 44, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  play: { width: 40, height: 40, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   dashed: { width: 23, height: 23, borderRadius: 12, borderWidth: 2, borderStyle: 'dashed', borderColor: colors.dashed, alignItems: 'center', justifyContent: 'center', marginHorizontal: 10 },
 });

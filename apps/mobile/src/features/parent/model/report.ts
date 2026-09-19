@@ -82,5 +82,6 @@ export function stickerBoard(week: WeekDef, map: RecordMap) {
     id: routineRecordKey(record.date, record.routine),
     character: [...week.routines, ...week.weekendExtras].find((r) => r.key === record.routine)?.character ?? week.routines[0].character,
   }));
-  return { earned, slots: Math.max(config.stickerSlots, earned.length) };
+  const rows = Math.ceil(Math.max(config.stickerSlots, earned.length) / config.stickerColumns);
+  return { earned, slots: rows * config.stickerColumns };
 }

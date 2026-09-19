@@ -19,7 +19,12 @@ void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   // 글꼴은 프로젝트 자산으로 두고 불러온다. 실패해도 기본 글꼴로 앱을 띄운다
-  const [fontsLoaded, fontError] = useFonts({ BinggraeBold: require('@/assets/fonts/Binggrae-Bold.ttf') });
+  const [fontsLoaded, fontError] = useFonts({
+    BinggraeBold: require('@/assets/fonts/Binggrae-Bold.ttf'),
+    'Pretendard-Regular': require('@/assets/fonts/Pretendard-Regular.ttf'),
+    'Pretendard-Bold': require('@/assets/fonts/Pretendard-Bold.ttf'),
+    'Pretendard-ExtraBold': require('@/assets/fonts/Pretendard-ExtraBold.ttf'),
+  });
   const hydrated = useStoresHydrated();
   const signedIn = useSession((s) => !!s.userId);
   const onboarded = !!useChild()?.onboardingDone;

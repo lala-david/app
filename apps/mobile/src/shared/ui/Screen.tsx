@@ -12,14 +12,16 @@ interface Props {
   scroll?: boolean;
   footer?: ReactNode;
   contentStyle?: StyleProp<ViewStyle>;
+  /** 부모·설정 시안은 좌우 여백이 16 */
+  paddingX?: number;
 }
 
 /** 화면 바탕: 시안의 좌우 20, 위 22 여백. 스크롤·하단 고정 영역·키보드 처리 */
-export function Screen({ children, ground = colors.ground, withNav = false, scroll = true, footer, contentStyle }: Props) {
+export function Screen({ children, ground = colors.ground, withNav = false, scroll = true, footer, contentStyle, paddingX = sizes.screenPaddingX }: Props) {
   const insets = useSafeAreaInsets();
   const padding = {
     paddingTop: insets.top + sizes.screenPaddingTop,
-    paddingHorizontal: sizes.screenPaddingX,
+    paddingHorizontal: paddingX,
     paddingBottom: withNav ? sizes.navClearance + insets.bottom : sizes.screenPaddingTop + (footer ? 0 : insets.bottom),
   };
 

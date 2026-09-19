@@ -56,6 +56,8 @@ describe('summaries', () => {
     expect(view.full.size).toBe(0);
     const board = stickerBoard(week, map);
     expect(board.earned.map((s) => s.character)).toEqual(['chick', 'crocodile', 'chick']);
-    expect(board.slots).toBe(28);
+    // 시안처럼 6칸씩 3줄에서 시작하고, 넘치면 한 줄씩 늘어난다
+    expect(board.slots).toBe(18);
+    expect(board.slots % 6).toBe(0);
   });
 });

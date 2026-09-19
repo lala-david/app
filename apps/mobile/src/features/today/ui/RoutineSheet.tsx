@@ -78,16 +78,16 @@ function SheetBody({ station, onClose }: { station: Station; onClose: () => void
     <View>
       <View style={styles.head}>
         <View style={[styles.tile, { backgroundColor: tone.p }]}>
-          <Character name={routine.character} size={102} float={timer.running} />
+          <Character name={routine.character} size={101} float={timer.running} />
         </View>
         <View style={styles.headText}>
-          <AppText variant="captionStrong" color={tone.c}>
+          <AppText variant="smallStrong" color={tone.c}>
             {routine.titleEn.toUpperCase()}
           </AppText>
           <AppText variant="sheetTitle" style={styles.title}>
             {routine.title}
           </AppText>
-          <AppText variant="caption" color={colors.inkSoft}>
+          <AppText variant="guide" color={colors.sheetGuide}>
             {routine.guide}
           </AppText>
         </View>
@@ -98,18 +98,18 @@ function SheetBody({ station, onClose }: { station: Station; onClose: () => void
           <View style={[styles.dotCore, { backgroundColor: tone.c }]} />
         </View>
         <View style={styles.sentenceText}>
-          <AppText variant="caption" color={colors.inkMuted}>
+          <AppText variant="micro" color={colors.dayLabel}>
             {strings.sheet.sentence}
           </AppText>
-          <AppText variant="bodyStrong">{routine.sentence}</AppText>
+          <AppText variant="captionButton">{routine.sentence}</AppText>
         </View>
       </View>
 
       <View style={styles.timerRow}>
-        <AppText variant="bodyStrong" color="#52655F">
+        <AppText variant="captionStrong" color={colors.sheetTimer}>
           {formatClock(done ? timer.target : timer.elapsed)}
         </AppText>
-        <AppText variant="bodyStrong" color="#52655F">
+        <AppText variant="captionStrong" color={colors.sheetTimer}>
           {formatClock(timer.target)}
         </AppText>
       </View>
@@ -149,18 +149,18 @@ export function RoutineSheet({ station, onClose }: Props) {
 }
 
 const styles = StyleSheet.create({
-  head: { flexDirection: 'row', alignItems: 'center', gap: 16 },
+  head: { flexDirection: 'row', alignItems: 'flex-start', gap: 16 },
   tile: { width: sizes.playerTile, height: sizes.playerTile, borderRadius: 35, alignItems: 'center', justifyContent: 'center' },
-  headText: { flex: 1 },
-  title: { marginVertical: 6 },
-  sentence: { flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 23, padding: 16, borderWidth: 1, borderColor: colors.lineSoft, borderRadius: 20, backgroundColor: colors.surface },
-  dot: { width: 18, height: 18, borderRadius: 9, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
-  dotCore: { width: 10, height: 10, borderRadius: 5 },
-  sentenceText: { flex: 1, gap: 3 },
-  timerRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 20, marginBottom: 8, marginHorizontal: 2 },
-  track: { height: 10, borderRadius: 10, backgroundColor: colors.lineSoft, overflow: 'hidden' },
+  headText: { flex: 1, paddingTop: 9 },
+  title: { marginTop: 8, marginBottom: 7 },
+  sentence: { flexDirection: 'row', alignItems: 'flex-start', gap: 21, minHeight: 83, marginTop: 23, paddingTop: 12, paddingBottom: 12, paddingLeft: 17, paddingRight: 16, borderWidth: 1, borderColor: colors.lineSoft, borderRadius: 20, backgroundColor: colors.surface },
+  dot: { width: 16, height: 16, borderRadius: 8, borderWidth: 2, alignItems: 'center', justifyContent: 'center', marginTop: 13 },
+  dotCore: { width: 8, height: 8, borderRadius: 4 },
+  sentenceText: { flex: 1, gap: 8 },
+  timerRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 23, marginBottom: 11, marginHorizontal: 2 },
+  track: { height: 10, borderRadius: 5, backgroundColor: colors.lineSoft, overflow: 'hidden' },
   fill: { height: '100%', borderRadius: 10 },
   reopen: { alignSelf: 'center', paddingVertical: 10 },
   underline: { textDecorationLine: 'underline' },
-  actions: { marginTop: 24, gap: 10 },
+  actions: { marginTop: 29, gap: 11 },
 });

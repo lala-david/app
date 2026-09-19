@@ -68,17 +68,17 @@ interface ButtonProps {
 }
 
 /** 시안의 큰 버튼: 높이 58, 모서리 21 */
-export function PrimaryButton({ label, onPress, color = colors.brand, ink = colors.white, disabled, loading }: ButtonProps) {
+export function PrimaryButton({ label, onPress, color = colors.brand, ink = colors.white, disabled, loading, soft }: ButtonProps & { soft?: boolean }) {
   const inactive = disabled || loading;
   return (
     <Pressy onPress={onPress} disabled={inactive} accessibilityLabel={label} style={[styles.button, { backgroundColor: inactive ? colors.dayIdle : color }]}>
-      {loading ? <ActivityIndicator color={ink} /> : <AppText variant="button" color={inactive ? colors.inkFaint : ink}>{label}</AppText>}
+      {loading ? <ActivityIndicator color={ink} /> : <AppText variant={soft ? 'buttonSoft' : 'button'} color={inactive ? colors.inkFaint : ink}>{label}</AppText>}
     </Pressy>
   );
 }
 
 export function SoftButton({ label, onPress }: { label: string; onPress: () => void }) {
-  return <PrimaryButton label={label} onPress={onPress} color={colors.completeBg} ink={colors.completeInk} />;
+  return <PrimaryButton label={label} onPress={onPress} color={colors.completeBg} ink={colors.completeInk} soft />;
 }
 
 export function Chip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {

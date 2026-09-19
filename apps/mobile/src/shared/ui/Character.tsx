@@ -5,10 +5,11 @@ import Animated, { Easing, useAnimatedStyle, useReducedMotion, useSharedValue, w
 import { characterImage } from '@/entities/content/content';
 import type { CharacterKey } from '@/entities/content/types';
 import { AssetImage } from '@/entities/content/ui/AssetImage';
-import { motion, shadows } from '@/shared/theme/tokens';
+import { motion, shadows, sizes } from '@/shared/theme/tokens';
 
 interface Props {
   name: CharacterKey;
+  /** 시안의 그림 상자 크기. 캐릭터는 상자보다 조금 작게 그려진다 */
   size: number;
   /** 시안의 hero-float: 위아래로 7, 살짝 기울며 떠 있는다 */
   float?: boolean;
@@ -35,8 +36,8 @@ export function Character({ name, size, float = false, delay = 0, shadow = false
   const dropShadow = shadow && Platform.OS === 'web' ? ({ filter: `drop-shadow(${shadows.character})` } as object) : null;
 
   return (
-    <Animated.View style={[{ width: size, height: size }, dropShadow, style, animated]}>
-      <AssetImage name={characterImage(name)} size={size} />
+    <Animated.View style={[{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }, dropShadow, style, animated]}>
+      <AssetImage name={characterImage(name)} size={Math.round(size * sizes.characterFill)} />
     </Animated.View>
   );
 }

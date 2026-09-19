@@ -16,7 +16,7 @@ import { AppText } from '@/shared/ui/AppText';
 import { Icon } from '@/shared/ui/icons';
 import { Pressy } from '@/shared/ui/Pressy';
 import { Screen } from '@/shared/ui/Screen';
-import { colors } from '@/shared/theme/tokens';
+import { colors, sizes } from '@/shared/theme/tokens';
 
 type Period = 'today' | 'week' | 'month';
 
@@ -25,14 +25,14 @@ const monthKey = (date: Date) => date.getFullYear() * 12 + date.getMonth();
 function Pager({ label, onPrev, onNext, canPrev, canNext }: { label: string; onPrev: () => void; onNext: () => void; canPrev: boolean; canNext: boolean }) {
   return (
     <View style={styles.pager}>
-      <Pressy onPress={onPrev} disabled={!canPrev} style={[styles.pagerButton, !canPrev && styles.dim]} accessibilityLabel={strings.parent.prev}>
-        <Icon name="chevronLeft" size={20} color={colors.parentSoft} />
+      <Pressy onPress={onPrev} disabled={!canPrev} style={[styles.pagerButton, styles.pagerPrev, !canPrev && styles.dim]} accessibilityLabel={strings.parent.prev}>
+        <Icon name="chevronLeft" size={16} color={colors.parentSoft} />
       </Pressy>
-      <AppText variant="bodyStrong" color={colors.parentInk}>
+      <AppText variant="captionButton" color={colors.parentInk}>
         {label}
       </AppText>
-      <Pressy onPress={onNext} disabled={!canNext} style={[styles.pagerButton, !canNext && styles.dim]} accessibilityLabel={strings.parent.next}>
-        <Icon name="chevronRight" size={20} color={colors.parentSoft} />
+      <Pressy onPress={onNext} disabled={!canNext} style={[styles.pagerButton, styles.pagerNext, !canNext && styles.dim]} accessibilityLabel={strings.parent.next}>
+        <Icon name="chevronRight" size={16} color={colors.parentSoft} />
       </Pressy>
     </View>
   );
@@ -69,12 +69,12 @@ export function ParentScreen() {
   const shown = monthKey(new Date(month.y, month.m, 1));
 
   return (
-    <Screen withNav ground={colors.groundParent}>
+    <Screen withNav ground={colors.groundParent} paddingX={sizes.parentPaddingX}>
       <View style={styles.head}>
         <View style={styles.avatar}>
-          <AvatarView avatar={child.avatar} size={40} />
+          <AvatarView avatar={child.avatar} size={34} />
         </View>
-        <AppText variant="screenTitle" color={colors.parentInk} style={styles.title}>
+        <AppText variant="parentTitle" color={colors.parentInk}>
           {fmt(strings.parent.title, { name: child.nickname })}
         </AppText>
       </View>
@@ -86,7 +86,7 @@ export function ParentScreen() {
           </AppText>
         </StatTile>
         <StatTile label={strings.parent.stats.streak}>
-          <Icon name="flame" size={24} color={colors.streak} />
+          <Icon name="flame" size={22} color={colors.streak} />
           <AppText variant="stat" color={colors.streak}>
             {fmt(strings.parent.streakValue, { n: stats.streak })}
           </AppText>
@@ -134,7 +134,7 @@ export function ParentScreen() {
             canPrev={compareDateKeys(weekStart, startOfWeek(child.startDate)) > 0}
             canNext={compareDateKeys(weekStart, thisWeek) < 0}
           />
-          <Card>
+          <Card style={styles.tableCard}>
             <WeekGrid dates={data.table.dates} rows={data.table.rows} today={today} onCellPress={(date, routine, status) => void toggleCheck(date, routine, status)} />
           </Card>
         </>
@@ -149,17 +149,17 @@ export function ParentScreen() {
             canPrev={shown > monthKey(fromDateKey(child.startDate))}
             canNext={shown < monthKey(fromDateKey(today))}
           />
-          <Card>
+          <Card style={styles.monthCard}>
             <MonthGrid grid={data.month.grid} full={data.month.full} partial={data.month.partial} today={today} />
           </Card>
         </>
       ) : null}
 
-      <Card title={strings.parent.summaryTitle} caption={strings.parent.summaryCaption}>
+      <Card title={strings.parent.summaryTitle} caption={strings.parent.summaryCaption} style={styles.glanceCard}>
         <GlanceBars items={data.glance} />
       </Card>
 
-      <Card title={strings.parent.stickers}>
+      <Card title={strings.parent.stickers} style={styles.stickerCard}>
         <StickerBoard earned={data.stickers.earned} slots={data.stickers.slots} />
       </Card>
     </Screen>
@@ -167,13 +167,18 @@ export function ParentScreen() {
 }
 
 const styles = StyleSheet.create({
-  head: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 18 },
-  avatar: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#F1D4C4', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
-  title: { fontSize: 27, lineHeight: 34 },
-  statRow: { flexDirection: 'row', gap: 12 },
-  statRowGap: { marginTop: 12 },
-  cardBody: { marginTop: 8 },
-  pager: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 },
-  pagerButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+  head: { flexDirection: 'row', alignItems: 'center', gap: 14, marginLeft: 4, marginBottom: 20 },
+  avatar: { width: 42, height: 42, borderRadius: 21, backgroundColor: '#F1D4C4', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  statRow: { flexDirection: 'row', gap: 16 },
+  statRowGap: { marginTop: 16 },
+  cardBody: { marginTop: 4, marginBottom: -3 },
+  pager: { height: 18, marginTop: 22, alignItems: 'center', justifyContent: 'center' },
+  pagerButton: { position: 'absolute', top: -13, width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+  pagerPrev: { left: 0 },
+  pagerNext: { right: 0 },
+  tableCard: { marginTop: 19, paddingTop: 18, paddingBottom: 28 },
+  monthCard: { marginTop: 19, paddingTop: 17 },
+  glanceCard: { marginTop: 18, paddingBottom: 30 },
+  stickerCard: { marginTop: 27, paddingBottom: 26 },
   dim: { opacity: 0.3 },
 });

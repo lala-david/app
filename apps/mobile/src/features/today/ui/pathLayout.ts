@@ -3,8 +3,8 @@ import type { PathDay, Station } from '../model/todayState';
 /** 길 배치 수치. 오늘 정거장은 크게, 다음 날들은 작게 */
 export const PATH = {
   header: 58,
-  today: { row: 138, stone: 104, character: 92, inset: 60 },
-  future: { row: 96, stone: 62, character: 56, inset: 72 },
+  today: { row: 138, stone: 104, character: 104, inset: 60 },
+  future: { row: 96, stone: 62, character: 64, inset: 72 },
   bottomPad: 12,
 } as const;
 

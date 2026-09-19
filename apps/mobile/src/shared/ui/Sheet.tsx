@@ -29,7 +29,7 @@ export function Sheet({ visible, onClose, children, minHeight }: Props) {
         <Animated.View entering={SlideInDown.springify().damping(22).stiffness(190)} style={[styles.sheet, { minHeight, paddingBottom: insets.bottom + 25 }]}>
           <View style={styles.handle} />
           <Pressy onPress={onClose} style={styles.close} accessibilityLabel={strings.common.close}>
-            <Icon name="close" size={22} color={colors.inkMuted} strokeWidth={2.4} />
+            <Icon name="close" size={19} color={colors.dayLabel} strokeWidth={2.2} />
           </Pressy>
           {children}
         </Animated.View>
@@ -44,12 +44,12 @@ const styles = StyleSheet.create({
   sheet: {
     width: '100%',
     maxWidth: sizes.appMaxWidth,
-    paddingTop: 50,
+    paddingTop: 53,
     paddingHorizontal: 24,
     borderTopLeftRadius: radius.sheet,
     borderTopRightRadius: radius.sheet,
     backgroundColor: colors.ground,
   },
-  handle: { position: 'absolute', top: 16, alignSelf: 'center', width: 60, height: 5, borderRadius: 3, backgroundColor: colors.handle },
-  close: { position: 'absolute', right: 14, top: 12, width: sizes.touch, height: sizes.touch, alignItems: 'center', justifyContent: 'center' },
+  handle: { position: 'absolute', top: 15, alignSelf: 'center', width: 60, height: 5, borderRadius: 3, backgroundColor: colors.handle },
+  close: { position: 'absolute', right: 14, top: 18, width: sizes.touch, height: sizes.touch, alignItems: 'center', justifyContent: 'center' },
 });

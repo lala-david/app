@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
+import { config } from '@/entities/content/content';
 import type { CharacterKey, RoutineDef } from '@/entities/content/types';
 import type { DateKey } from '@/entities/course/calendar';
 import type { CellStatus } from '@/entities/progress/model/types';
@@ -19,7 +20,7 @@ const parentTone = (routine: RoutineDef) => tones[routine.tone].parent;
 export function StatTile({ label, children }: { label: string; children: ReactNode }) {
   return (
     <View style={[styles.stat, Platform.OS === 'web' && ({ boxShadow: shadows.stat } as object)]}>
-      <AppText variant="caption" color={colors.parentSoft}>
+      <AppText variant="small" color={colors.parentSoft}>
         {label}
       </AppText>
       <View style={styles.statValue}>{children}</View>
@@ -34,7 +35,7 @@ export function Segments<T extends string>({ options, value, onChange }: { optio
         const on = option.value === value;
         return (
           <Pressy key={option.value} onPress={() => onChange(option.value)} accessibilityRole="tab" accessibilityState={{ selected: on }} style={[styles.segment, on && styles.segmentOn]} pressedScale={0.98}>
-            <AppText variant={on ? 'bodyStrong' : 'body'} color={on ? colors.parentInk : colors.parentSoft}>
+            <AppText variant="segment" color={on ? colors.parentInk : colors.parentSoft}>
               {option.label}
             </AppText>
           </Pressy>
@@ -44,16 +45,16 @@ export function Segments<T extends string>({ options, value, onChange }: { optio
   );
 }
 
-export function Card({ title, caption, children }: { title?: string; caption?: string; children: ReactNode }) {
+export function Card({ title, caption, children, style }: { title?: string; caption?: string; children: ReactNode; style?: StyleProp<ViewStyle> }) {
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, style]}>
       {title ? (
-        <AppText variant="sectionTitle" color={colors.parentInk}>
+        <AppText variant="parentCardTitle" color={colors.parentInk} style={styles.cardTitle}>
           {title}
         </AppText>
       ) : null}
       {caption ? (
-        <AppText variant="caption" color={colors.parentSoft} style={styles.cardCaption}>
+        <AppText variant="microSoft" color={colors.parentSoft} style={styles.cardCaption}>
           {caption}
         </AppText>
       ) : null}
@@ -62,16 +63,17 @@ export function Card({ title, caption, children }: { title?: string; caption?: s
   );
 }
 
-/** 오늘의 루틴 한 줄: 캐릭터 · 이름 · 루틴 색 동그라미 */
+/** 오늘의 루틴 한 줄: 캐릭터 · 이름 · 루틴 색 동그라미 (시안 03A) */
 export function TodayRow({ routine, done, last, onPress }: { routine: RoutineDef; done: boolean; last: boolean; onPress: () => void }) {
   const color = parentTone(routine);
   return (
-    <Pressy onPress={onPress} pressedScale={0.99} style={[styles.todayRow, !last && styles.todayRowLine]} accessibilityLabel={routine.title} accessibilityState={{ checked: done }}>
-      <Character name={routine.character} size={48} />
-      <AppText variant="bodyStrong" color={colors.parentInk} style={styles.flex}>
+    <Pressy onPress={onPress} pressedScale={0.99} style={styles.todayRow} accessibilityLabel={routine.title} accessibilityState={{ checked: done }}>
+      <Character name={routine.character} size={34} />
+      <AppText variant="label" color={colors.parentInk} style={styles.flex}>
         {routine.title}
       </AppText>
-      <View style={[styles.ring, { borderColor: color }, done && { backgroundColor: color }]}>{done ? <Icon name="check" size={16} color={colors.white} strokeWidth={3.2} /> : null}</View>
+      <View style={[styles.ring, { borderColor: color }, done && { backgroundColor: color }]}>{done ? <Icon name="check" size={13} color={colors.white} strokeWidth={3.4} /> : null}</View>
+      {last ? null : <View style={styles.todayRowLine} />}
     </Pressy>
   );
 }
@@ -79,15 +81,14 @@ export function TodayRow({ routine, done, last, onPress }: { routine: RoutineDef
 /** 주간 표 (시안 03B) */
 export function WeekGrid({ dates, rows, today, onCellPress }: { dates: DateKey[]; rows: ReportRow[]; today: DateKey; onCellPress: (date: DateKey, routine: RoutineDef, status: CellStatus) => void }) {
   return (
-    <View>
-      <View style={styles.gridRow}>
+    <View style={styles.grid}>
+      <View style={[styles.gridRow, styles.gridHeadRow]}>
         <View style={styles.gridLabel} />
         {dates.map((date, i) => (
           <View key={date} style={styles.gridCell}>
-            <AppText variant="micro" color={date === today ? colors.parentInk : colors.parentSoft}>
+            <AppText variant="gridHead" color={date === today ? colors.parentInk : colors.parentSoft} align="center">
               {WEEKDAY_LABELS_MON_FIRST[i]}
-            </AppText>
-            <AppText variant="micro" color={date === today ? colors.parentInk : colors.parentSoft}>
+              {'\n'}
               {Number(date.slice(8))}
             </AppText>
           </View>
@@ -99,29 +100,29 @@ export function WeekGrid({ dates, rows, today, onCellPress }: { dates: DateKey[]
           <View key={row.routine.key} style={[styles.gridRow, styles.gridBodyRow]}>
             <View style={styles.gridLabel}>
               <Character name={row.routine.character} size={34} />
-              <AppText variant="micro" color={colors.parentSoft} numberOfLines={1}>
+              <AppText variant="tiny" color={colors.parentSoft} numberOfLines={1} style={styles.gridLabelText}>
                 {row.routine.shortTitle}
               </AppText>
             </View>
             {row.cells.map((cell) => {
               const filled = cell.status === 'app' || cell.status === 'parent';
               const tappable = cell.status !== 'future' && cell.status !== 'none';
+              // 주말 전용 루틴의 평일 칸만 비운다. 나머지는 시안처럼 늘 동그라미가 보인다
+              if (cell.status === 'none' && row.routine.requiresFaith) return <View key={cell.date} style={styles.gridCell} />;
               return (
                 <View key={cell.date} style={styles.gridCell}>
-                  {cell.status === 'none' ? null : (
-                    <Pressy
-                      disabled={!tappable}
-                      onPress={() => onCellPress(cell.date, row.routine, cell.status)}
-                      style={styles.gridHit}
-                      pressedScale={0.88}
-                      accessibilityLabel={`${row.routine.title} ${cell.date}`}
-                      accessibilityState={{ checked: filled }}
-                    >
-                      <View style={[styles.gridDot, filled && { backgroundColor: color, borderColor: color }, cell.status === 'parent' && styles.parentChecked, cell.status === 'future' && styles.futureDot]}>
-                        {filled ? <Icon name="check" size={13} color={colors.white} strokeWidth={3.4} /> : null}
-                      </View>
-                    </Pressy>
-                  )}
+                  <Pressy
+                    disabled={!tappable}
+                    onPress={() => onCellPress(cell.date, row.routine, cell.status)}
+                    style={styles.gridHit}
+                    pressedScale={0.88}
+                    accessibilityLabel={`${row.routine.title} ${cell.date}`}
+                    accessibilityState={{ checked: filled, disabled: !tappable }}
+                  >
+                    <View style={[styles.gridDot, filled && { backgroundColor: color, borderColor: color }, cell.status === 'parent' && styles.parentChecked]}>
+                      {filled ? <Icon name="check" size={12} color={colors.white} strokeWidth={3.6} /> : null}
+                    </View>
+                  </Pressy>
                 </View>
               );
             })}
@@ -136,7 +137,7 @@ export function WeekGrid({ dates, rows, today, onCellPress }: { dates: DateKey[]
 export function MonthGrid({ grid, full, partial, today }: { grid: (DateKey | null)[][]; full: Set<DateKey>; partial: Set<DateKey>; today: DateKey }) {
   return (
     <View style={styles.month}>
-      <View style={styles.monthRow}>
+      <View style={styles.monthHead}>
         {strings.journey.weekdays.map((d) => (
           <View key={d} style={styles.monthCell}>
             <AppText variant="micro" color={colors.parentSoft}>
@@ -151,7 +152,7 @@ export function MonthGrid({ grid, full, partial, today }: { grid: (DateKey | nul
             <View key={date ?? `blank-${j}`} style={styles.monthCell}>
               {date ? (
                 <View style={[styles.monthDay, full.has(date) && { backgroundColor: colors.calendarDone }, date === today && !full.has(date) && styles.monthToday]}>
-                  <AppText variant={full.has(date) ? 'bodyStrong' : 'body'} color={full.has(date) ? colors.white : colors.parentInk}>
+                  <AppText variant="small" color={full.has(date) ? colors.white : colors.parentInk}>
                     {Number(date.slice(8))}
                   </AppText>
                   {partial.has(date) ? <View style={styles.partialDot} /> : null}
@@ -170,11 +171,11 @@ export function GlanceBars({ items }: { items: { routine: RoutineDef; done: numb
     <View style={styles.glance}>
       {items.map(({ routine, done, total }) => (
         <View key={routine.key} style={styles.glanceRow}>
-          <Character name={routine.character} size={34} />
+          <Character name={routine.character} size={28} />
           <View style={styles.glanceTrack}>
             <View style={[styles.glanceFill, { width: `${total ? (done / total) * 100 : 0}%`, backgroundColor: parentTone(routine) }]} />
           </View>
-          <AppText variant="caption" color={colors.parentSoft} style={styles.glanceCount}>
+          <AppText variant="microSoft" color={colors.parentSoft} style={styles.glanceCount}>
             {done}/{total}
           </AppText>
         </View>
@@ -190,45 +191,51 @@ export function StickerBoard({ earned, slots }: { earned: { id: string; characte
     <View style={styles.stickers}>
       {cells.map((sticker, i) => (
         <View key={sticker?.id ?? `slot-${i}`} style={styles.stickerCell}>
-          {sticker ? <Character name={sticker.character} size={42} /> : <View style={styles.stickerEmpty} />}
+          {sticker ? <Character name={sticker.character} size={36} /> : <View style={styles.stickerEmpty} />}
         </View>
       ))}
     </View>
   );
 }
 
+const STICKER_CELL = 53;
+
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  stat: { flex: 1, minHeight: 94, padding: 15, borderRadius: radius.lg, backgroundColor: colors.surface },
-  statValue: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 9 },
-  segments: { flexDirection: 'row', gap: 5, marginVertical: 17, padding: 5, borderRadius: 18, backgroundColor: colors.segmentBg },
-  segment: { flex: 1, height: 44, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },
+  stat: { flex: 1, height: 90, paddingTop: 15, paddingHorizontal: 16, borderRadius: 20, backgroundColor: colors.surface },
+  statValue: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 12 },
+  segments: { flexDirection: 'row', height: 50, marginTop: 18, padding: 5, paddingLeft: 4, borderRadius: 16, backgroundColor: colors.parentSunken },
+  segment: { flex: 1, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   segmentOn: { backgroundColor: colors.surface },
-  card: { marginTop: 14, padding: 17, borderRadius: radius.xl, backgroundColor: colors.surface },
-  cardCaption: { marginTop: 6, marginBottom: 2 },
-  todayRow: { flexDirection: 'row', alignItems: 'center', gap: 11, paddingVertical: 8, minHeight: 64 },
-  todayRowLine: { borderBottomWidth: 1, borderBottomColor: colors.parentLine },
-  ring: { width: 30, height: 30, borderRadius: 15, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  card: { marginTop: 22, paddingTop: 19, paddingHorizontal: 16, paddingBottom: 30, borderRadius: radius.lg, backgroundColor: colors.surface },
+  cardTitle: { marginLeft: 1 },
+  cardCaption: { marginTop: 5 },
+  todayRow: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 42, paddingRight: 7 },
+  todayRowLine: { position: 'absolute', left: 3, right: 2, bottom: 0, height: 1, backgroundColor: colors.parentLine },
+  ring: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  grid: { marginHorizontal: -2, minHeight: 294 },
   gridRow: { flexDirection: 'row', alignItems: 'center' },
-  gridBodyRow: { marginTop: 14 },
-  gridLabel: { width: 46, alignItems: 'center', gap: 1 },
-  gridCell: { flex: 1, alignItems: 'center' },
-  gridHit: { width: 40, height: 44, alignItems: 'center', justifyContent: 'center' },
-  gridDot: { width: 28, height: 28, borderRadius: 14, borderWidth: 2, borderColor: colors.parentLine, alignItems: 'center', justifyContent: 'center' },
-  parentChecked: { opacity: 0.55 },
-  futureDot: { opacity: 0.45 },
-  month: { gap: 6, marginTop: 8 },
-  monthRow: { flexDirection: 'row' },
-  monthCell: { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 40 },
-  monthDay: { width: 38, height: 36, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
-  monthToday: { borderWidth: 2, borderColor: colors.calendarToday },
-  partialDot: { position: 'absolute', bottom: 3, width: 4, height: 4, borderRadius: 2, backgroundColor: colors.calendarDone },
-  glance: { marginTop: 6 },
-  glanceRow: { flexDirection: 'row', alignItems: 'center', gap: 9, marginVertical: 5 },
-  glanceTrack: { flex: 1, height: 10, borderRadius: 10, backgroundColor: '#F4EEE4', overflow: 'hidden' },
-  glanceFill: { height: '100%', borderRadius: 10 },
-  glanceCount: { width: 33, textAlign: 'right' },
-  stickers: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 12, rowGap: 8 },
-  stickerCell: { width: `${100 / 6}%`, alignItems: 'center', justifyContent: 'center', height: 48 },
-  stickerEmpty: { width: 40, height: 40, borderRadius: 20, borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.parentLine },
+  gridHeadRow: { marginBottom: 21 },
+  gridBodyRow: { height: 62, alignItems: 'flex-start' },
+  gridLabel: { width: 33, alignItems: 'flex-start' },
+  gridLabelText: { width: 34, textAlign: 'center', marginTop: -3 },
+  gridCell: { width: 42, alignItems: 'center' },
+  gridHit: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center' },
+  gridDot: { width: 24, height: 24, borderRadius: 12, borderWidth: 1.5, borderColor: colors.parentLine, alignItems: 'center', justifyContent: 'center', marginTop: 5 },
+  parentChecked: { opacity: 0.6 },
+  month: { marginHorizontal: -1 },
+  monthHead: { flexDirection: 'row', marginBottom: 9 },
+  monthRow: { flexDirection: 'row', height: 48 },
+  monthCell: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  monthDay: { width: 32, height: 32, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  monthToday: { borderWidth: 1, borderColor: colors.calendarToday, backgroundColor: colors.surface },
+  partialDot: { position: 'absolute', bottom: 2, width: 4, height: 4, borderRadius: 2, backgroundColor: colors.calendarDone },
+  glance: { marginTop: 12, marginBottom: 3 },
+  glanceRow: { flexDirection: 'row', alignItems: 'center', height: 35 },
+  glanceTrack: { width: 235, maxWidth: '72%', height: 8, marginLeft: 10, borderRadius: 4, backgroundColor: colors.parentSunken, overflow: 'hidden' },
+  glanceFill: { height: '100%', borderRadius: 4 },
+  glanceCount: { flex: 1, textAlign: 'right', marginRight: 9 },
+  stickers: { flexDirection: 'row', flexWrap: 'wrap', width: STICKER_CELL * config.stickerColumns, marginTop: 9, marginLeft: 2, marginBottom: -2 },
+  stickerCell: { width: STICKER_CELL, height: 44, alignItems: 'flex-start', justifyContent: 'center' },
+  stickerEmpty: { width: 33, height: 33, borderRadius: 17, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.parentLine },
 });

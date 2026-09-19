@@ -37,13 +37,13 @@ export function JourneyScreen() {
 
   return (
     <Screen withNav>
-      <AppText variant="eyebrow" color={colors.inkMuted}>
+      <AppText variant="eyebrow" color={colors.inkMuted} style={{ marginTop: 6 }}>
         {strings.journey.eyebrow}
       </AppText>
-      <AppText variant="screenTitle" style={{ marginTop: 5 }}>
+      <AppText variant="screenTitle" style={{ marginTop: 6 }}>
         {journey.title}
       </AppText>
-      <AppText variant="body" color={colors.inkSoft} style={{ marginTop: 6, marginBottom: 18 }}>
+      <AppText variant="body" color={colors.inkSoft} style={{ marginTop: 4, marginBottom: 23 }}>
         {journey.lead}
       </AppText>
 

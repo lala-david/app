@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, View } from 'react-native';
 
 import type { WeekDef } from '@/entities/content/types';
@@ -14,23 +13,23 @@ interface Props {
   percent: number;
 }
 
-/** 시안 01의 캐릭터 배치. 뒤에서 앞 순서로 그린다 */
+/** 시안 01의 캐릭터 배치(카드 왼쪽 위 기준). 뒤에서 앞 순서로 그린다 */
 const CAST = [
-  { name: 'crocodile', size: 122, right: 4, bottom: 138, delay: 1250 },
-  { name: 'rabbit', size: 88, right: 130, bottom: 42, delay: 2700 },
-  { name: 'cat', size: 96, right: -8, bottom: 54, delay: 2100 },
-  { name: 'chick', size: 132, right: 50, bottom: 18, delay: 400 },
+  { name: 'crocodile', size: 126, left: 219, top: 39, delay: 1250 },
+  { name: 'rabbit', size: 99, left: 129, top: 162, delay: 2700 },
+  { name: 'cat', size: 107, left: 259, top: 142, delay: 2100 },
+  { name: 'chick', size: 148, left: 173, top: 138, delay: 400 },
 ] as const;
 
 /** 오늘 탭의 노란 히어로 카드 (시안 01) */
 export function HeroCard({ week, minutes, percent }: Props) {
   return (
-    <LinearGradient colors={[colors.heroFrom, colors.heroTo]} start={{ x: 0.15, y: 0 }} end={{ x: 0.85, y: 1 }} style={styles.hero}>
+    <View style={styles.hero}>
       <View style={styles.bubbleTop} />
       <View style={styles.bubbleBottom} />
 
       {CAST.map((c) => (
-        <Character key={c.name} name={c.name} size={c.size} float delay={c.delay} shadow style={{ position: 'absolute', right: c.right, bottom: c.bottom }} />
+        <Character key={c.name} name={c.name} size={c.size} float delay={c.delay} shadow style={{ position: 'absolute', left: c.left, top: c.top }} />
       ))}
 
       <View style={styles.badge}>
@@ -39,7 +38,7 @@ export function HeroCard({ week, minutes, percent }: Props) {
       <AppText variant="heroTitle" style={styles.title}>
         {week.headline}
       </AppText>
-      <AppText variant="label" color={colors.inkSoft}>
+      <AppText variant="label" color={colors.heroSub}>
         {week.subline}
       </AppText>
 
@@ -52,18 +51,18 @@ export function HeroCard({ week, minutes, percent }: Props) {
           <View style={[styles.fill, { width: `${percent}%` }]} />
         </View>
       </View>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  hero: { height: sizes.heroHeight, borderRadius: radius.hero, padding: 22, overflow: 'hidden' },
-  bubbleTop: { position: 'absolute', width: 190, height: 190, right: -47, top: -66, borderRadius: 95, backgroundColor: 'rgba(255,255,255,0.3)' },
-  bubbleBottom: { position: 'absolute', width: 225, height: 165, right: -24, bottom: 25, borderRadius: 90, backgroundColor: 'rgba(255,255,255,0.46)', transform: [{ rotate: '-7deg' }] },
-  badge: { alignSelf: 'flex-start', paddingVertical: 7, paddingHorizontal: 10, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.6)' },
-  title: { marginTop: 12, marginBottom: 7 },
-  progress: { position: 'absolute', left: 20, right: 20, bottom: 14 },
-  progressLabels: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
-  track: { height: 10, borderRadius: 8, backgroundColor: 'rgba(255,255,255,0.72)', overflow: 'hidden' },
-  fill: { height: '100%', borderRadius: 8, backgroundColor: colors.brand },
+  hero: { height: sizes.heroHeight, borderRadius: radius.hero, paddingTop: 22, paddingHorizontal: 20, overflow: 'hidden', backgroundColor: colors.hero },
+  bubbleTop: { position: 'absolute', width: 170, height: 170, left: 220, top: -21, borderRadius: 85, backgroundColor: colors.heroBubble },
+  bubbleBottom: { position: 'absolute', width: 202, height: 116, left: 168, top: 124, borderRadius: 50, backgroundColor: colors.heroBlob },
+  badge: { alignSelf: 'flex-start', height: 30, paddingHorizontal: 15, borderRadius: 15, justifyContent: 'center', backgroundColor: colors.heroBadge },
+  title: { marginTop: 16, marginBottom: 4 },
+  progress: { position: 'absolute', left: 20, right: 10, bottom: 17 },
+  progressLabels: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
+  track: { height: 11, borderRadius: 5.5, backgroundColor: colors.white, overflow: 'hidden' },
+  fill: { height: '100%', borderRadius: 5.5, backgroundColor: colors.brand },
 });

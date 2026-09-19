@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -15,17 +14,19 @@ import { colors, radius, sizes, stageColors } from '@/shared/theme/tokens';
 /** 노란 주차 카드 (시안 02 상단) */
 export function WeekCard({ week, percent }: { week: WeekDef; percent: number }) {
   return (
-    <LinearGradient colors={[colors.weekFrom, colors.weekTo]} start={{ x: 0.15, y: 0 }} end={{ x: 0.85, y: 1 }} style={styles.week}>
+    <View style={styles.week}>
       <View style={styles.weekBubble} />
-      <View>
-        <AppText variant="captionStrong">{fmt(strings.journey.weekNow, { n: week.week })}</AppText>
-        <AppText variant="weekTitle" style={styles.weekTitle}>
-          {week.theme}
-        </AppText>
-        <AppText variant="bodyStrong">{fmt(strings.journey.todayPercent, { n: percent })}</AppText>
-      </View>
-      <Character name={week.routines[0].character} size={142} float shadow />
-    </LinearGradient>
+      <AppText variant="micro" color={colors.weekLabel}>
+        {fmt(strings.journey.weekNow, { n: week.week })}
+      </AppText>
+      <AppText variant="weekTitle" style={styles.weekTitle}>
+        {week.theme}
+      </AppText>
+      <AppText variant="label" style={styles.weekPercent}>
+        {fmt(strings.journey.todayPercent, { n: percent })}
+      </AppText>
+      <Character name={week.routines[0].character} size={142} float shadow style={styles.weekCharacter} />
+    </View>
   );
 }
 
@@ -34,18 +35,20 @@ export function ActivityCard({ week, done, onStart }: { week: WeekDef; done: boo
   return (
     <View style={styles.activity}>
       <View style={styles.activityText}>
-        <AppText variant="captionStrong" color="#8A6D00">
+        <AppText variant="micro" color={colors.activityLabel}>
           {strings.journey.activityLabel}
         </AppText>
-        <AppText variant="bodyStrong" style={styles.activityTitle}>
+        <AppText variant="activityTitle" style={styles.activityTitle}>
           {week.activity.title}
         </AppText>
-        <AppText variant="caption" color={colors.inkSoft}>
+        <AppText variant="small" color={colors.heroSub}>
           {week.activity.focusWords.join(' · ')}
         </AppText>
       </View>
       <Pressy onPress={onStart} style={styles.activityButton} accessibilityLabel={week.activity.title}>
-        <AppText variant="bodyStrong">{done ? strings.journey.again : strings.journey.start}</AppText>
+        <AppText variant="smallStrong" color={colors.activityButtonInk}>
+          {done ? strings.journey.again : strings.journey.start}
+        </AppText>
       </Pressy>
     </View>
   );
@@ -64,14 +67,14 @@ export function WeekdayRow({ cells }: { cells: WeekdayCell[] }) {
       {cells.map((cell) => (
         <View key={cell.label} style={styles.dayCell}>
           <View style={[styles.dayBox, cell.state === 'done' && { backgroundColor: colors.star }, cell.state === 'now' && { backgroundColor: colors.dayNow }]}>
-            {cell.state === 'done' ? <Icon name="star" size={16} color={colors.white} /> : null}
+            {cell.state === 'done' ? <Icon name="star" size={15} color={colors.white} /> : null}
             {cell.state === 'now' ? (
-              <AppText variant="bodyStrong" color={colors.white}>
+              <AppText variant="dayCount" color={colors.white}>
                 {cell.count}
               </AppText>
             ) : null}
           </View>
-          <AppText variant="caption" color={colors.inkSoft}>
+          <AppText variant="micro" color={colors.dayLabel}>
             {cell.label}
           </AppText>
         </View>
@@ -88,27 +91,29 @@ export function StageList({ currentWeek }: { currentWeek: number }) {
         const current = currentWeek >= stage.fromWeek && currentWeek <= stage.toWeek;
         const color = stageColors[i % stageColors.length];
         return (
-          <View key={stage.name} style={[styles.stage, current && { backgroundColor: '#FFF8D9', borderColor: color }]}>
+          <View key={stage.name} style={[styles.stage, current && { backgroundColor: colors.stageNowBg, borderColor: color }]}>
             <View style={[styles.stageBadge, { backgroundColor: color }]}>
-              <AppText variant="captionStrong" color={colors.white}>
+              <AppText variant="smallStrong" color={colors.white}>
                 {i + 1}
               </AppText>
             </View>
             <View style={styles.stageText}>
-              <AppText variant="caption" color={colors.inkMuted}>
+              <AppText variant="micro" color={colors.stageWeeks}>
                 {stage.weeks}
               </AppText>
-              <AppText variant="bodyStrong" color={color} style={styles.stageName}>
+              <AppText variant="stageName" color={color} style={styles.stageName}>
                 {stage.name}
               </AppText>
-              <AppText variant="label">{stage.themes}</AppText>
-              <AppText variant="caption" color={colors.inkSoft} style={styles.stageNote}>
+              <AppText variant="smallStrong" color={colors.stageThemes} style={styles.stageThemes}>
+                {stage.themes}
+              </AppText>
+              <AppText variant="microSoft" color={colors.stageNote} style={styles.stageNote}>
                 {stage.note}
               </AppText>
             </View>
             {current ? (
               <View style={styles.now}>
-                <AppText variant="micro" color="#5B4B12">
+                <AppText variant="tiny" color={colors.weekLabel}>
                   {strings.journey.now}
                 </AppText>
               </View>
@@ -128,12 +133,19 @@ export function PreviewCard() {
 
   return (
     <View style={styles.preview}>
-      <AppText variant="micro" color={colors.previewInk}>
-        {preview.label}
-      </AppText>
-      <AppText variant="bodyStrong" style={styles.previewQuestion}>
-        {answer ? (answer.correct ? preview.correctMessage : preview.wrongMessage) : preview.question}
-      </AppText>
+      <View style={styles.previewHead}>
+        <View style={styles.previewIcon}>
+          <View style={styles.previewIconDot} />
+        </View>
+        <View style={styles.previewText}>
+          <AppText variant="tiny" color={colors.previewLabel}>
+            {preview.label}
+          </AppText>
+          <AppText variant="bodyStrong" color={colors.previewQuestion} style={styles.previewQuestion}>
+            {answer ? (answer.correct ? preview.correctMessage : preview.wrongMessage) : preview.question}
+          </AppText>
+        </View>
+      </View>
       <View style={styles.previewOptions}>
         {preview.options.map((option, i) => (
           <Pressy
@@ -142,7 +154,7 @@ export function PreviewCard() {
             style={[styles.previewButton, picked === i && { borderColor: option.correct ? colors.brand : colors.danger }]}
             accessibilityState={{ selected: picked === i }}
           >
-            <AppText variant="bodyStrong" color={colors.previewInk}>
+            <AppText variant="captionButton" color={colors.previewInk}>
               {option.text}
             </AppText>
           </Pressy>
@@ -153,25 +165,32 @@ export function PreviewCard() {
 }
 
 const styles = StyleSheet.create({
-  week: { height: sizes.weekHeight, borderRadius: radius.hero, paddingLeft: 24, paddingRight: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', overflow: 'hidden' },
-  weekBubble: { position: 'absolute', width: 158, height: 158, right: -22, top: -48, borderRadius: 79, backgroundColor: 'rgba(255,255,255,0.34)' },
-  weekTitle: { marginVertical: 5 },
-  activity: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 14, padding: 17, borderWidth: 2, borderColor: colors.activityBorder, borderRadius: radius.lg, backgroundColor: colors.surface },
+  week: { height: sizes.weekHeight, borderRadius: radius.hero, paddingTop: 25, paddingLeft: 24, overflow: 'hidden', backgroundColor: colors.week },
+  weekBubble: { position: 'absolute', width: 170, height: 170, left: 208, top: -18, borderRadius: 85, backgroundColor: colors.heroBubble },
+  weekTitle: { marginTop: 9 },
+  weekPercent: { marginTop: 6 },
+  weekCharacter: { position: 'absolute', left: 210, top: 8 },
+  activity: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 14, minHeight: 92, paddingLeft: 17, paddingRight: 16, borderWidth: 2, borderColor: colors.activityBorder, borderRadius: radius.lg, backgroundColor: colors.surface },
   activityText: { flex: 1 },
-  activityTitle: { marginTop: 4, marginBottom: 5 },
-  activityButton: { borderRadius: 15, backgroundColor: colors.activityButton, paddingHorizontal: 14, minHeight: 46, justifyContent: 'center' },
-  days: { flexDirection: 'row', marginTop: 15, paddingVertical: 16, paddingHorizontal: 12, borderRadius: 24, backgroundColor: colors.surface },
-  dayCell: { flex: 1, alignItems: 'center', gap: 5 },
+  activityTitle: { marginTop: 3, marginBottom: 5 },
+  activityButton: { width: 58, height: 46, borderRadius: 15, backgroundColor: colors.activityButton, alignItems: 'center', justifyContent: 'center' },
+  days: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 15, paddingTop: 18, paddingBottom: 14, paddingHorizontal: 11, borderRadius: 24, borderWidth: 1, borderColor: colors.daysBorder, backgroundColor: colors.surface },
+  dayCell: { width: 37, alignItems: 'center', gap: 4 },
   dayBox: { width: 37, height: 37, borderRadius: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.dayIdle },
-  stages: { gap: 10, marginTop: 18 },
-  stage: { flexDirection: 'row', gap: 10, paddingVertical: 15, paddingLeft: 8, paddingRight: 12, borderWidth: 1, borderColor: '#E8E5DF', borderRadius: radius.lg, backgroundColor: colors.surface },
-  stageBadge: { width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginHorizontal: 8 },
+  stages: { gap: 11, marginTop: 21 },
+  stage: { flexDirection: 'row', minHeight: 101, paddingTop: 14, paddingBottom: 11, paddingLeft: 11, paddingRight: 14, borderWidth: 1, borderColor: colors.stageBorder, borderRadius: radius.lg, backgroundColor: colors.surface },
+  stageBadge: { width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginTop: 3, marginRight: 16 },
   stageText: { flex: 1 },
-  stageName: { marginVertical: 3 },
-  stageNote: { marginTop: 4 },
-  now: { alignSelf: 'flex-start', paddingHorizontal: 6, paddingVertical: 4, borderRadius: 8, backgroundColor: '#FFF4B7' },
-  preview: { marginTop: 16, padding: 18, borderRadius: radius.xl, backgroundColor: colors.previewBg },
-  previewQuestion: { marginTop: 6, marginBottom: 14 },
-  previewOptions: { flexDirection: 'row', gap: 8 },
+  stageName: { marginTop: 3 },
+  stageThemes: { marginTop: 4 },
+  stageNote: { marginTop: 5 },
+  now: { alignSelf: 'flex-start', width: 36, height: 22, borderRadius: 8, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.stageNowChip },
+  preview: { marginTop: 24, paddingTop: 17, paddingHorizontal: 18, paddingBottom: 20, borderRadius: radius.xl, backgroundColor: colors.previewBg },
+  previewHead: { flexDirection: 'row', gap: 15 },
+  previewIcon: { width: 16, height: 16, borderRadius: 8, borderWidth: 2, borderColor: colors.previewLabel, alignItems: 'center', justifyContent: 'center', marginTop: 7 },
+  previewIconDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.previewLabel },
+  previewText: { flex: 1 },
+  previewQuestion: { marginTop: 4, marginBottom: 17 },
+  previewOptions: { flexDirection: 'row', gap: 12 },
   previewButton: { flex: 1, height: 48, borderRadius: 16, borderWidth: 2, borderColor: 'transparent', backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center' },
 });

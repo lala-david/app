@@ -51,10 +51,10 @@ strong{font-weight:600}
 <main>
 <div class="docmeta">SoundsFun Bridge · MVP 문서 v2 · 09</div>
 <h1 id="_1">디자인 가이드</h1>
-<p>차진숙 디자이너의 시안(SF 폴더 SVG 11장)과 시안 사이트의 CSS에서 값을 가져왔습니다. 모든 값은 <code>apps/mobile/src/shared/theme/tokens.ts</code> 한 파일에 있고, 화면 코드는 이름으로만 씁니다.</p>
+<p>차진숙 디자이너의 시안(SF 폴더 SVG 11장)에서 값을 가져왔습니다. 시안 SVG는 피그마에서 뽑은 것이라 모든 도형의 좌표·크기·색이 정확히 들어 있어, 도형은 그대로 읽고 글자는 글꼴을 입혀 폭과 높이를 맞춰 보는 방식으로 크기를 역산했습니다. 모든 값은 <code>apps/mobile/src/shared/theme/tokens.ts</code> 한 파일에 있고, 화면 코드는 이름으로만 씁니다.</p>
 <h2 id="_2">원칙</h2>
 <ol>
-<li>시안과 같게. 눈대중이 아니라 시안에서 잰 값을 쓴다.</li>
+<li>시안과 같게. 눈대중이 아니라 시안 SVG에서 읽은 값을 쓴다. 시안과 앱을 나란히 붙인 비교 이미지로 확인한다.</li>
 <li>아이 화면은 밝고 둥글게, 부모 화면은 차분하고 또렷하게.</li>
 <li>글보다 그림. 상태는 색과 모양 둘 다로 알린다.</li>
 <li>새로 디자인한 것은 <strong>루틴 길</strong> 하나. 나머지는 시안 그대로.</li>
@@ -76,9 +76,9 @@ strong{font-weight:600}
 <td>오늘·소리여행 바탕</td>
 </tr>
 <tr>
-<td>groundParent</td>
-<td><code>#F7F3EC</code></td>
-<td>부모·설정 바탕</td>
+<td>groundParent / groundSettings</td>
+<td><code>#F8F4EC</code> / <code>#F7F3EC</code></td>
+<td>부모 / 설정 바탕</td>
 </tr>
 <tr>
 <td>frame</td>
@@ -185,13 +185,13 @@ strong{font-weight:600}
 </thead>
 <tbody>
 <tr>
-<td>heroFrom → heroTo</td>
-<td><code>#FFE472</code> → <code>#FFCD33</code></td>
-<td>인사 카드</td>
+<td>hero / heroBubble / heroBlob</td>
+<td><code>#FFD84E</code> / <code>#FFEFA3</code> / <code>#FFF4BD</code></td>
+<td>인사 카드 바탕, 뒤의 원, 아래 덩어리</td>
 </tr>
 <tr>
-<td>weekFrom → weekTo</td>
-<td><code>#FFE981</code> → <code>#FFD33F</code></td>
+<td>week</td>
+<td><code>#FFD94F</code></td>
 <td>이번 주 카드</td>
 </tr>
 <tr>
@@ -205,24 +205,19 @@ strong{font-weight:600}
 <td>48주 네 단계</td>
 </tr>
 <tr>
-<td>streak</td>
-<td><code>#FF765D</code></td>
-<td>연속일</td>
-</tr>
-<tr>
 <td>calendarDone / calendarToday</td>
-<td><code>#43B37E</code> / <code>#FF7058</code></td>
+<td><code>#4DB584</code> / <code>#FF765D</code></td>
 <td>월간 달력</td>
 </tr>
 <tr>
 <td>toggleOn / toggleOff</td>
-<td><code>#39B6A8</code> / <code>#D8D2CA</code></td>
+<td><code>#A7D7D1</code> / <code>#D8D2CA</code></td>
 <td>스위치</td>
 </tr>
 <tr>
-<td>danger</td>
-<td><code>#EE5745</code></td>
-<td>탈퇴</td>
+<td>streak</td>
+<td><code>#FF765D</code></td>
+<td>연속일, 탈퇴</td>
 </tr>
 </tbody>
 </table></div>
@@ -237,14 +232,14 @@ strong{font-weight:600}
 </thead>
 <tbody>
 <tr>
-<td>큰 제목(화면 제목, 인사, 주차, 단어)</td>
+<td>큰 제목(인사, 화면 제목, 인사 카드, 단어)</td>
 <td>빙그레체 Bold</td>
 <td><code>assets/fonts/Binggrae-Bold.ttf</code></td>
 </tr>
 <tr>
-<td>본문</td>
-<td>시스템 글꼴</td>
-<td>굵기는 400과 700 두 가지만</td>
+<td>그 밖의 모든 글자</td>
+<td>Pretendard Regular · Bold · ExtraBold</td>
+<td>시안의 본문 글꼴. 한글 2,350자 + 라틴만 남겨 한 굵기 400KB. 굵기마다 파일이 달라 <code>fontWeight</code> 대신 글꼴 이름으로 고른다</td>
 </tr>
 </tbody>
 </table></div>
@@ -252,70 +247,110 @@ strong{font-weight:600}
 <thead>
 <tr>
 <th>이름</th>
-<th>크기 / 줄 높이</th>
+<th>글꼴 · 크기 / 줄 높이</th>
 <th>쓰는 곳</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td>greeting</td>
+<td>빙그레 23 / 30</td>
+<td>오늘 탭 인사</td>
+</tr>
+<tr>
 <td>screenTitle</td>
-<td>31 / 39</td>
-<td>탭 제목</td>
+<td>빙그레 29 / 37</td>
+<td>소리여행 제목</td>
+</tr>
+<tr>
+<td>pageTitle</td>
+<td>빙그레 26 / 33</td>
+<td>설정 제목</td>
 </tr>
 <tr>
 <td>heroTitle</td>
-<td>28 / 33</td>
+<td>빙그레 28 / 33</td>
 <td>인사 카드</td>
 </tr>
 <tr>
-<td>greeting</td>
-<td>25 / 32</td>
-<td>인사</td>
+<td>parentTitle</td>
+<td>Bold 23 / 29</td>
+<td>“○○의 기록”</td>
+</tr>
+<tr>
+<td>weekTitle</td>
+<td>Bold 32 / 38</td>
+<td>이번 주 카드의 <code>Colors</code></td>
 </tr>
 <tr>
 <td>sheetTitle</td>
-<td>25 / 31</td>
-<td>시트 제목</td>
-</tr>
-<tr>
-<td>stat</td>
-<td>23 / 29</td>
-<td>부모 요약 숫자</td>
+<td>Bold 26 / 32</td>
+<td>루틴 시트 제목</td>
 </tr>
 <tr>
 <td>sectionTitle</td>
-<td>21 / 27</td>
-<td>구역 제목</td>
+<td>Bold 22 / 27</td>
+<td>“오늘의 소리 놀이”</td>
 </tr>
 <tr>
-<td>cardTitle</td>
-<td>18 / 24</td>
-<td>카드 제목</td>
+<td>stat</td>
+<td>Bold 23 / 28</td>
+<td>부모 요약 숫자</td>
 </tr>
 <tr>
-<td>button</td>
-<td>17 / 22</td>
+<td>cardTitle · parentCardTitle</td>
+<td>ExtraBold · Bold 19 / 24</td>
+<td>루틴 이름, 부모 카드 제목</td>
+</tr>
+<tr>
+<td>activityTitle</td>
+<td>Bold 17 / 22</td>
+<td>소리활동 카드</td>
+</tr>
+<tr>
+<td>button · buttonSoft</td>
+<td>ExtraBold 17 · Bold 16</td>
 <td>버튼</td>
 </tr>
 <tr>
-<td>body</td>
-<td>15 / 22</td>
-<td>본문</td>
+<td>body · bodyStrong · rowTitle</td>
+<td>15</td>
+<td>본문, 설정 줄 제목</td>
 </tr>
 <tr>
-<td>label · caption · micro</td>
-<td>13 · 12 · 11</td>
-<td>작은 글</td>
+<td>stageName</td>
+<td>ExtraBold 15 / 20</td>
+<td>LISTEN + PLAY</td>
 </tr>
 <tr>
-<td>word</td>
-<td>34 / 42</td>
-<td>소리활동의 단어</td>
+<td>segment</td>
+<td>Bold 14</td>
+<td>오늘·주간·월간</td>
 </tr>
 <tr>
-<td>eyebrow</td>
-<td>12, 자간 1.1</td>
-<td><code>PARENT REPORT</code> 같은 머리말</td>
+<td>label · labelSoft · captionButton</td>
+<td>13</td>
+<td>작은 제목, 기간, 보기 버튼</td>
+</tr>
+<tr>
+<td>caption · captionStrong · guide</td>
+<td>12</td>
+<td>영어 이름, 분, 안내</td>
+</tr>
+<tr>
+<td>eyebrow · small · smallStrong</td>
+<td>11</td>
+<td>머리말, 요약 칸 이름, 단계 주제</td>
+</tr>
+<tr>
+<td>micro · microSoft · gridHead</td>
+<td>10</td>
+<td>탭 이름, 설명, 요일</td>
+</tr>
+<tr>
+<td>tiny</td>
+<td>ExtraBold 9</td>
+<td>NOW, WEEK 13 PREVIEW</td>
 </tr>
 </tbody>
 </table></div>
@@ -338,7 +373,7 @@ strong{font-weight:600}
 </tr>
 <tr>
 <td>화면 여백</td>
-<td>좌우 20, 위 22, 아래 110(탭 막대 자리)</td>
+<td>오늘·소리여행 좌우 20, 부모·설정 좌우 16, 위 20, 아래 110(탭 막대 자리)</td>
 </tr>
 <tr>
 <td>앱 최대 폭</td>
@@ -358,7 +393,23 @@ strong{font-weight:600}
 </tr>
 <tr>
 <td>시트 높이</td>
-<td>600</td>
+<td>599, 좌우 24, 위 53</td>
+</tr>
+<tr>
+<td>부모 요약 칸</td>
+<td>171×90, 모서리 20, 사이 16</td>
+</tr>
+<tr>
+<td>부모 카드</td>
+<td>모서리 22, 안쪽 위 19 · 좌우 16</td>
+</tr>
+<tr>
+<td>설정 줄 높이</td>
+<td>설명 있는 줄 68, 안내 53(선 있음), 계정 54. 아이콘 상자 40, 모서리 12</td>
+</tr>
+<tr>
+<td>스위치</td>
+<td>42×24, 손잡이 18</td>
 </tr>
 <tr>
 <td>버튼 높이</td>
@@ -428,40 +479,41 @@ strong{font-weight:600}
 </tr>
 </tbody>
 </table></div>
-<p>원본 PNG(약 1MB)를 640×640 WebP(약 30KB)로 바꿔 씁니다. 인사 카드 안의 위치는 시안에서 잰 값입니다.</p>
+<p>원본 PNG(약 1MB)를 640×640 WebP(약 30KB)로 바꿔 씁니다. 디자이너 원본에는 둘레 여백이 있어서, 시안의 그림 상자 크기를 그대로 받고 캐릭터는 상자의 88%로 그립니다(<code>sizes.characterFill</code>).</p>
+<p>인사 카드 안의 위치는 시안 SVG에 들어 있는 캐릭터 그림의 실제 그림 영역을 계산해 맞췄습니다(카드 왼쪽 위 기준, 뒤에서 앞 순서).</p>
 <div class="tw"><table>
 <thead>
 <tr>
 <th>캐릭터</th>
-<th>크기</th>
-<th>오른쪽에서</th>
-<th>아래에서</th>
+<th>상자 크기</th>
+<th>왼쪽</th>
+<th>위</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>악어</td>
-<td>122</td>
-<td>4</td>
-<td>138</td>
+<td>126</td>
+<td>219</td>
+<td>39</td>
 </tr>
 <tr>
 <td>토끼</td>
-<td>88</td>
-<td>130</td>
-<td>42</td>
+<td>99</td>
+<td>129</td>
+<td>162</td>
 </tr>
 <tr>
 <td>고양이</td>
-<td>96</td>
-<td>-8</td>
-<td>54</td>
+<td>107</td>
+<td>259</td>
+<td>142</td>
 </tr>
 <tr>
 <td>병아리</td>
-<td>132</td>
-<td>50</td>
-<td>18</td>
+<td>148</td>
+<td>173</td>
+<td>138</td>
 </tr>
 </tbody>
 </table></div>

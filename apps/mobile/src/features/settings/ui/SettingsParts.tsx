@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
-import { Children, isValidElement } from 'react';
+import type { ReactElement, ReactNode } from 'react';
+import { Children, cloneElement, isValidElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
@@ -8,15 +8,19 @@ import { Icon, type IconName } from '@/shared/ui/icons';
 import { Pressy } from '@/shared/ui/Pressy';
 import { colors, motion } from '@/shared/theme/tokens';
 
-/** 시안 04의 토글: 44×25, 켜지면 청록 */
+/** 시안 04의 토글: 42×24 */
 export function Toggle({ on }: { on: boolean }) {
-  const knob = useAnimatedStyle(() => ({ transform: [{ translateX: withTiming(on ? 19 : 0, { duration: motion.fast }) }] }));
+  const knob = useAnimatedStyle(() => ({ transform: [{ translateX: withTiming(on ? 18 : 0, { duration: motion.fast }) }] }));
   return (
     <View style={[styles.toggle, { backgroundColor: on ? colors.toggleOn : colors.toggleOff }]}>
       <Animated.View style={[styles.knob, knob]} />
     </View>
   );
 }
+
+/** 시안의 세 묶음은 줄 높이와 선이 다르다: 설명이 있는 줄 68, 안내 53(선 있음), 계정 54 */
+export type RowKind = 'detail' | 'plain' | 'account';
+const ROW_HEIGHT: Record<RowKind, number> = { detail: 68, plain: 53, account: 54 };
 
 interface RowProps {
   icon: IconName;
@@ -26,71 +30,70 @@ interface RowProps {
   onPress?: () => void;
   /** 주면 화살표 대신 토글을 그린다 */
   toggle?: boolean;
-  value?: string;
+  /** SettingsGroup 이 채운다 */
+  kind?: RowKind;
+  divider?: boolean;
 }
 
-export function SettingsRow({ icon, title, desc, danger, onPress, toggle, value }: RowProps) {
-  const ink = danger ? colors.danger : colors.settingsInk;
+export function SettingsRow({ icon, title, desc, danger, onPress, toggle, kind = 'detail', divider = false }: RowProps) {
+  const ink = danger ? colors.streak : colors.settingsInk;
+  const iconInk = danger ? colors.streak : kind === 'account' ? colors.settingsInk : colors.settingsIcon;
   return (
     <Pressy
       onPress={onPress}
       disabled={!onPress}
       pressedScale={0.99}
-      style={styles.row}
+      style={[styles.row, { height: ROW_HEIGHT[kind] }]}
       accessibilityRole={toggle === undefined ? 'button' : 'switch'}
       accessibilityState={toggle === undefined ? undefined : { checked: toggle }}
       accessibilityLabel={title}
     >
+      {divider ? <View style={styles.divider} /> : null}
       <View style={styles.iconBox}>
-        <Icon name={icon} size={21} color={ink} />
+        <Icon name={icon} size={23} color={iconInk} />
       </View>
       <View style={styles.texts}>
-        <AppText variant="bodyStrong" color={ink}>
+        <AppText variant="rowTitle" color={ink} numberOfLines={1}>
           {title}
         </AppText>
         {desc ? (
-          <AppText variant="micro" color={colors.settingsSoft} style={styles.desc}>
+          <AppText variant="microSoft" color={colors.settingsSoft} style={styles.desc} numberOfLines={2}>
             {desc}
           </AppText>
         ) : null}
       </View>
-      {value ? (
-        <AppText variant="caption" color={colors.settingsSoft}>
-          {value}
-        </AppText>
-      ) : null}
-      {toggle !== undefined ? <Toggle on={toggle} /> : onPress && !danger ? <Icon name="chevronRight" size={16} color={colors.settingsSoft} strokeWidth={2.2} /> : null}
+      {toggle !== undefined ? <Toggle on={toggle} /> : onPress && kind !== 'account' ? <Icon name="chevronRight" size={13} color={colors.settingsSoft} strokeWidth={2.4} /> : null}
     </Pressy>
   );
 }
 
-/** 흰 묶음 카드. 줄 사이에 가는 선을 넣는다 */
-export function SettingsGroup({ title, children }: { title: string; children: ReactNode }) {
-  const rows = Children.toArray(children).filter(isValidElement);
+/** 흰 묶음 카드 */
+export function SettingsGroup({ title, kind, children }: { title: string; kind: RowKind; children: ReactNode }) {
+  const rows = Children.toArray(children).filter(isValidElement) as ReactElement<RowProps>[];
   return (
     <View>
-      <AppText variant="label" color={colors.settingsHeading} style={styles.groupTitle}>
+      <AppText variant="labelSoft" color={colors.settingsSoft} style={styles.groupTitle}>
         {title}
       </AppText>
-      <View style={styles.group}>
-        {rows.map((row, i) => (
-          <View key={i} style={i < rows.length - 1 ? styles.divider : undefined}>
-            {row}
-          </View>
-        ))}
-      </View>
+      <View style={[styles.group, groupPadding[kind]]}>{rows.map((row, i) => cloneElement(row, { kind, divider: kind === 'plain' && i > 0 }))}</View>
     </View>
   );
 }
 
+const groupPadding = StyleSheet.create({
+  detail: { paddingBottom: 8 },
+  plain: { paddingBottom: 19 },
+  account: { paddingTop: 2, paddingBottom: 20 },
+});
+
 const styles = StyleSheet.create({
-  toggle: { width: 44, height: 25, padding: 3, borderRadius: 999 },
-  knob: { width: 19, height: 19, borderRadius: 10, backgroundColor: colors.white },
-  row: { minHeight: 67, flexDirection: 'row', alignItems: 'center', gap: 11, paddingVertical: 10, paddingHorizontal: 15 },
-  iconBox: { width: 39, height: 39, borderRadius: 13, backgroundColor: colors.settingsIconBg, alignItems: 'center', justifyContent: 'center' },
+  toggle: { width: 42, height: 24, padding: 3, borderRadius: 12 },
+  knob: { width: 18, height: 18, borderRadius: 9, backgroundColor: colors.white },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingLeft: 14, paddingRight: 17 },
+  divider: { position: 'absolute', left: 66, right: 32, top: 3, height: 1, backgroundColor: colors.parentLine },
+  iconBox: { width: 40, height: 40, borderRadius: 12, backgroundColor: colors.parentSunken, alignItems: 'center', justifyContent: 'center' },
   texts: { flex: 1 },
-  desc: { marginTop: 3, fontWeight: '400' },
-  groupTitle: { marginTop: 22, marginBottom: 9, marginHorizontal: 8 },
-  group: { borderRadius: 24, backgroundColor: colors.surface, overflow: 'hidden' },
-  divider: { borderBottomWidth: 1, borderBottomColor: colors.settingsLine },
+  desc: { marginTop: 2 },
+  groupTitle: { marginTop: 27, marginBottom: 7, marginLeft: 9 },
+  group: { borderRadius: 22, backgroundColor: colors.surface, overflow: 'hidden' },
 });

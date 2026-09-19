@@ -16,7 +16,7 @@ import { mailto, openExternal } from '@/shared/platform/links';
 import { notificationScheduler } from '@/shared/platform/notifications';
 import { AppText } from '@/shared/ui/AppText';
 import { Screen } from '@/shared/ui/Screen';
-import { colors } from '@/shared/theme/tokens';
+import { colors, sizes } from '@/shared/theme/tokens';
 
 /** 알림을 켤 때 기기 권한을 확인한다. 거절돼 있으면 방법을 안내한다 */
 async function ensureNotificationPermission(): Promise<boolean> {
@@ -65,15 +65,15 @@ export function SettingsScreen() {
   };
 
   return (
-    <Screen withNav ground={colors.groundParent}>
-      <AppText variant="eyebrow" color={colors.parentMuted}>
+    <Screen withNav ground={colors.groundSettings} paddingX={sizes.parentPaddingX}>
+      <AppText variant="micro" color={colors.settingsSoft} style={styles.eyebrow}>
         {strings.settings.eyebrow}
       </AppText>
-      <AppText variant="screenTitle" color={colors.settingsInk} style={styles.title}>
+      <AppText variant="pageTitle" color={colors.settingsInk} style={styles.title}>
         {strings.settings.title}
       </AppText>
 
-      <SettingsGroup title={strings.settings.learning}>
+      <SettingsGroup title={strings.settings.learning} kind="detail">
         <SettingsRow icon="bell" title={strings.settings.notifications} desc={strings.settings.notificationsDesc} toggle={child.notificationsEnabled} onPress={toggleNotifications} />
         <SettingsRow icon="clock" title={strings.settings.notificationTimes} desc={strings.settings.notificationTimesDesc} onPress={() => router.push('/manage/notifications')} />
         <SettingsRow icon="moon" title={strings.settings.eveningReminder} desc={strings.settings.eveningReminderDesc} toggle={child.eveningReminder} onPress={() => updateChild({ eveningReminder: !child.eveningReminder })} />
@@ -81,7 +81,7 @@ export function SettingsScreen() {
         <SettingsRow icon="heart" title={strings.settings.faith} desc={strings.settings.faithDesc} toggle={child.faithEnabled} onPress={toggleFaith} />
       </SettingsGroup>
 
-      <SettingsGroup title={strings.settings.guideSection}>
+      <SettingsGroup title={strings.settings.guideSection} kind="plain">
         <SettingsRow icon="book" title={strings.settings.guidebook} onPress={() => router.push({ pathname: '/manage/guide', params: { tab: 'guide' } })} />
         <SettingsRow icon="help" title={strings.settings.faq} onPress={() => router.push({ pathname: '/manage/guide', params: { tab: 'faq' } })} />
         <SettingsRow icon="image" title={strings.settings.replayIntro} onPress={replaySplash} />
@@ -96,17 +96,17 @@ export function SettingsScreen() {
         <SettingsRow icon="mail" title={strings.settings.contact} onPress={() => void openExternal(mailto(config.links.contactEmail, strings.appName))} />
       </SettingsGroup>
 
-      <SettingsGroup title={strings.settings.accountSection}>
+      <SettingsGroup title={strings.settings.accountSection} kind="account">
         <SettingsRow icon="mail" title={email ?? ''} />
         <SettingsRow icon="logout" title={strings.settings.logout} onPress={confirmLogout} />
         <SettingsRow icon="trash" title={strings.settings.deleteAccount} danger onPress={confirmDelete} />
       </SettingsGroup>
 
       <View style={styles.footer}>
-        <AppText variant="caption" color={colors.footer} align="center">
+        <AppText variant="microSoft" color={colors.settingsSoft} align="center">
           {fmt(strings.settings.footer, { v: config.appVersion, w: getWeek().week })}
         </AppText>
-        <AppText variant="caption" color={colors.footer} align="center" style={styles.link} onPress={() => void openExternal(config.links.privacyPolicy)}>
+        <AppText variant="microSoft" color={colors.settingsSoft} align="center" style={styles.link} onPress={() => void openExternal(config.links.privacyPolicy)}>
           {strings.settings.privacy}
         </AppText>
       </View>
@@ -115,7 +115,8 @@ export function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  title: { marginTop: 5, marginBottom: 2 },
-  footer: { padding: 25, gap: 4 },
+  eyebrow: { marginTop: 4, marginLeft: 6, letterSpacing: 0.3 },
+  title: { marginTop: 5, marginLeft: 7, marginBottom: -13 },
+  footer: { paddingTop: 18, paddingBottom: 8, gap: 2 },
   link: { textDecorationLine: 'underline' },
 });
