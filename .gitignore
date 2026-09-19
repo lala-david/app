@@ -18,3 +18,8 @@ reference/
 # local tooling
 .claude/
 .DS_Store
+
+# original documents and raw design deliveries dropped in the project root (keep out of the public repo)
+/*.docx
+/*.pdf
+/*.zip
