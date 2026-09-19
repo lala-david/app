@@ -23,3 +23,7 @@ reference/
 /*.docx
 /*.pdf
 /*.zip
+
+# raw design deliveries (the app uses processed copies under apps/mobile/assets)
+/SF/
+/soundsfun-*/

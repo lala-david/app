@@ -1,17 +1,31 @@
 import type { ToneName } from '@/shared/theme/tokens';
 
 export type RoutineKey = 'morning' | 'theme' | 'dinner' | 'bedtime' | 'faithSong' | 'faithStory';
-export type RoutineKind = 'listen' | 'play';
+export type CharacterKey = 'chick' | 'crocodile' | 'cat' | 'rabbit';
 export type AgeBand = '6' | '7' | '8' | '9-10';
 export type QuestionType = 'pickImage' | 'pickWord' | 'match' | 'sentenceColor';
 
 export interface VideoRef {
-  provider: 'youtube';
   videoId?: string;
   playlistId?: string;
   title: string;
   channel: string;
   durationSec?: number;
+}
+
+export interface RoutineDef {
+  key: RoutineKey;
+  order: number;
+  tone: ToneName;
+  character: CharacterKey;
+  title: string;
+  shortTitle: string;
+  titleEn: string;
+  targetMinutes: number;
+  guide: string;
+  sentence: string;
+  video: VideoRef;
+  requiresFaith?: boolean;
 }
 
 export interface SentenceItem {
@@ -20,41 +34,29 @@ export interface SentenceItem {
   audio: string;
 }
 
-export interface QuizDef {
-  mix: Record<QuestionType, number>;
-  optionsByAge: Record<AgeBand, Record<QuestionType, number>>;
-  hideWordTextFor: AgeBand[];
-}
-
-export interface RoutineDef {
-  key: RoutineKey;
-  kind: RoutineKind;
-  order: number;
-  tone: ToneName;
-  icon: string;
-  sticker: string;
-  targetMinutes: number;
-  video: VideoRef;
-  titleKo: string;
-  /** 표처럼 좁은 곳에 쓰는 짧은 이름 */
-  shortKo: string;
-  parentTip: string;
-  phrases: string[];
-  words?: string[];
-  sentences?: SentenceItem[];
-  quiz?: QuizDef;
-  speakWords?: string[];
-  requiresFaith?: boolean;
+export interface ActivityDef {
+  title: string;
+  words: string[];
+  focusWords: string[];
+  sentences: SentenceItem[];
+  quiz: {
+    mix: Record<QuestionType, number>;
+    optionsByAge: Record<AgeBand, Record<QuestionType, number>>;
+    hideWordTextFor: AgeBand[];
+  };
 }
 
 export interface WeekDef {
   id: string;
   week: number;
   theme: string;
-  themeKo: string;
   days: number;
+  headline: string;
+  subline: string;
+  playlistId: string;
   routines: RoutineDef[];
   weekendExtras: RoutineDef[];
+  activity: ActivityDef;
 }
 
 export interface WordDef {

@@ -34,5 +34,5 @@ export function AssetImage({ name, size, width, height, fit = 'contain', style, 
 }
 
 const styles = StyleSheet.create({
-  placeholder: { backgroundColor: colors.surfaceSunken, borderRadius: radius.md },
+  placeholder: { backgroundColor: colors.dayIdle, borderRadius: radius.md },
 });

@@ -4,25 +4,16 @@ import { persist } from 'zustand/middleware';
 
 import type { RoutineKey } from '@/entities/content/types';
 import type { DateKey } from '@/entities/course/calendar';
-import type { StepKey } from '@/entities/course/course';
 import { useSession } from '@/entities/session/model/sessionStore';
 import { persistStorage, storageKey } from '@/shared/lib/storage';
 
-import { createRecord } from '../lib/progress';
+import { createRoutineRecord, elapsedSec } from '../lib/progress';
 
-import type { LessonRecord, QuizAnswer, Reward, SpeakAttempt } from './types';
+import { activityRecordKey, routineRecordKey, type ActivityRecord, type CompletionKind, type QuizAnswer, type RoutineRecord, type SpeakAttempt } from './types';
 
 interface UserProgress {
-  records: Record<string, LessonRecord>;
-  rewards: Reward[];
-}
-
-interface LessonIdentity {
-  key: string;
-  run: number;
-  day: number;
-  date: DateKey;
-  routine: RoutineKey;
+  routines: Record<string, RoutineRecord>;
+  activities: Record<string, ActivityRecord>;
 }
 
 interface ProgressState {
@@ -31,7 +22,7 @@ interface ProgressState {
   removeUser: (userId: string) => void;
 }
 
-const EMPTY: UserProgress = { records: {}, rewards: [] };
+const EMPTY: UserProgress = { routines: {}, activities: {} };
 
 export const useProgressStore = create<ProgressState>()(
   persist(
@@ -43,16 +34,9 @@ export const useProgressStore = create<ProgressState>()(
         set({ byUser: rest });
       },
     }),
-    { name: storageKey('progress'), storage: persistStorage, partialize: ({ byUser }) => ({ byUser }) },
+    { name: storageKey('progress-v2'), storage: persistStorage, partialize: ({ byUser }) => ({ byUser }) },
   ),
 );
-
-function withRecord(userId: string, lesson: LessonIdentity, update: (record: LessonRecord) => LessonRecord) {
-  useProgressStore.getState().mutate(userId, (progress) => {
-    const record = progress.records[lesson.key] ?? createRecord(lesson);
-    return { ...progress, records: { ...progress.records, [lesson.key]: update(record) } };
-  });
-}
 
 function requireUser(): string {
   const userId = useSession.getState().userId;
@@ -60,89 +44,74 @@ function requireUser(): string {
   return userId;
 }
 
-/** 진행 기록 변경은 모두 여기로 모은다 */
+function withRoutine(date: DateKey, routine: RoutineKey, update: (record: RoutineRecord) => RoutineRecord | null) {
+  const key = routineRecordKey(date, routine);
+  useProgressStore.getState().mutate(requireUser(), (progress) => {
+    const next = update(progress.routines[key] ?? createRoutineRecord(date, routine));
+    const { [key]: _old, ...rest } = progress.routines;
+    return { ...progress, routines: next ? { ...rest, [key]: next } : rest };
+  });
+}
+
+function withActivity(week: number, date: DateKey, update: (record: ActivityRecord) => ActivityRecord) {
+  const key = activityRecordKey(week, date);
+  useProgressStore.getState().mutate(requireUser(), (progress) => {
+    const current = progress.activities[key] ?? { week, date, quiz: [], speak: [], stars: 0, completedAt: null };
+    return { ...progress, activities: { ...progress.activities, [key]: update(current) } };
+  });
+}
+
+/** 기록을 바꾸는 동작은 모두 여기로 모은다 */
 export const progressActions = {
-  startVideo(lesson: LessonIdentity, startedAt: number) {
-    withRecord(requireUser(), lesson, (r) => ({ ...r, videoStartedAt: r.videoStartedAt ?? startedAt }));
+  startTimer(date: DateKey, routine: RoutineKey, now: number) {
+    withRoutine(date, routine, (r) => (r.runningSince != null || r.completedAt ? r : { ...r, runningSince: now }));
   },
 
-  /** 다시 하기: 완료 기록은 두고 듣기 타이머만 비운다 */
-  resetVideoTimer(lesson: LessonIdentity) {
-    withRecord(requireUser(), lesson, (r) => ({ ...r, videoStartedAt: null }));
+  pauseTimer(date: DateKey, routine: RoutineKey, now: number) {
+    withRoutine(date, routine, (r) => (r.runningSince == null ? r : { ...r, accumulatedSec: elapsedSec(r, now), runningSince: null }));
   },
 
-  completeStep(lesson: LessonIdentity, step: StepKey, patch: Partial<LessonRecord> = {}) {
-    withRecord(requireUser(), lesson, (r) => ({
-      ...r,
-      ...patch,
-      steps: r.steps.includes(step) ? r.steps : [...r.steps, step],
-      stars: r.stars + (patch.stars ?? 0),
-    }));
-  },
-
-  addQuizAnswer(lesson: LessonIdentity, answer: QuizAnswer) {
-    withRecord(requireUser(), lesson, (r) => ({ ...r, quiz: [...r.quiz.filter((a) => a.questionId !== answer.questionId), answer] }));
-  },
-
-  addSpeakAttempt(lesson: LessonIdentity, attempt: SpeakAttempt) {
-    withRecord(requireUser(), lesson, (r) => ({ ...r, speak: [...r.speak.filter((a) => a.word !== attempt.word), attempt] }));
-  },
-
-  completeLesson(lesson: LessonIdentity, completedAt: number, bonusStars: number) {
-    withRecord(requireUser(), lesson, (r) => (r.completedAt ? r : { ...r, completedAt, stars: r.stars + bonusStars }));
-  },
-
-  /** 부모 대시보드 수동 체크 */
-  setParentCheck(lesson: LessonIdentity, checked: boolean, at: number, listenedMin: number) {
-    const userId = requireUser();
-    useProgressStore.getState().mutate(userId, (progress) => {
-      const existing = progress.records[lesson.key];
-      if (!checked) {
-        if (!existing || existing.source !== 'parentCheck') return progress;
-        const { [lesson.key]: _removed, ...rest } = progress.records;
-        return { ...progress, records: rest };
-      }
-      const record = createRecord({
-        ...lesson,
-        ...existing,
-        source: existing?.completedAt ? existing.source : 'parentCheck',
-        videoStatus: existing?.videoStatus === 'auto' ? 'auto' : 'manual',
-        listenedMin: Math.max(existing?.listenedMin ?? 0, listenedMin),
-        completedAt: existing?.completedAt ?? at,
-      });
-      return { ...progress, records: { ...progress.records, [lesson.key]: record } };
+  complete(date: DateKey, routine: RoutineKey, kind: CompletionKind, targetMinutes: number, now: number) {
+    withRoutine(date, routine, (r) => {
+      if (r.completedAt) return r;
+      // 시안과 같이, 완료한 루틴은 그 루틴의 목표 시간만큼 소리노출로 센다
+      return { ...r, runningSince: null, accumulatedSec: elapsedSec(r, now), listenedMin: targetMinutes, completion: kind, completedAt: now };
     });
   },
 
-  addReward(reward: Reward) {
-    useProgressStore.getState().mutate(requireUser(), (progress) =>
-      progress.rewards.some((r) => r.id === reward.id) ? progress : { ...progress, rewards: [...progress.rewards, reward] },
-    );
+  /** 부모 탭: 표시 해제. 부모가 표시한 기록만 지울 수 있다 */
+  clearParentCheck(date: DateKey, routine: RoutineKey) {
+    withRoutine(date, routine, (r) => (r.completion === 'parent' ? null : r));
   },
 
-  resetLesson(lessonKey: string) {
-    useProgressStore.getState().mutate(requireUser(), (progress) => {
-      const { [lessonKey]: _removed, ...rest } = progress.records;
-      return { ...progress, records: rest };
-    });
+  addQuizAnswer(week: number, date: DateKey, answer: QuizAnswer) {
+    withActivity(week, date, (a) => ({ ...a, quiz: [...a.quiz.filter((q) => q.questionId !== answer.questionId), answer] }));
+  },
+
+  addSpeakAttempt(week: number, date: DateKey, attempt: SpeakAttempt) {
+    withActivity(week, date, (a) => ({ ...a, speak: [...a.speak.filter((s) => s.word !== attempt.word), attempt] }));
+  },
+
+  restartActivity(week: number, date: DateKey) {
+    withActivity(week, date, (a) => ({ ...a, quiz: [], speak: [], stars: 0, completedAt: null }));
+  },
+
+  completeActivity(week: number, date: DateKey, stars: number, now: number) {
+    withActivity(week, date, (a) => ({ ...a, stars, completedAt: now }));
   },
 };
 
-export function useProgress(): { records: LessonRecord[]; recordMap: Record<string, LessonRecord>; rewards: Reward[] } {
+export function useProgress() {
   const userId = useSession((s) => s.userId);
   const progress = useProgressStore((s) => (userId ? s.byUser[userId] : undefined));
   return useMemo(() => {
-    const recordMap = progress?.records ?? EMPTY.records;
-    return { recordMap, records: Object.values(recordMap), rewards: progress?.rewards ?? EMPTY.rewards };
+    const routineMap = progress?.routines ?? EMPTY.routines;
+    const activityMap = progress?.activities ?? EMPTY.activities;
+    return { routineMap, activityMap, routines: Object.values(routineMap), activities: Object.values(activityMap) };
   }, [progress]);
 }
 
-export function getRecord(key: string): LessonRecord | undefined {
+export function getRoutineMap(): Record<string, RoutineRecord> {
   const userId = useSession.getState().userId;
-  return userId ? useProgressStore.getState().byUser[userId]?.records[key] : undefined;
-}
-
-export function getAllRecords(): LessonRecord[] {
-  const userId = useSession.getState().userId;
-  return userId ? Object.values(useProgressStore.getState().byUser[userId]?.records ?? {}) : [];
+  return userId ? (useProgressStore.getState().byUser[userId]?.routines ?? {}) : {};
 }

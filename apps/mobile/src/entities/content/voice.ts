@@ -10,7 +10,7 @@ export function playSfx(name: SfxName): void {
   if (source) playSound(source, { interrupt: false });
 }
 
-/** 캐릭터 대사 (assets/audio/mascot/*.mp3) */
+/** 캐릭터 대사. 음성 파일이 없으면 조용히 넘어간다 */
 export function playMascot(line: string): void {
   const source = audioSource(`mascot/${line}`);
   if (source) playSound(source);

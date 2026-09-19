@@ -1,9 +1,22 @@
 import type { QuestionType, RoutineKey } from '@/entities/content/types';
 import type { DateKey } from '@/entities/course/calendar';
-import type { StepKey } from '@/entities/course/course';
 
-export type VideoStatus = 'none' | 'auto' | 'manual';
-export type RecordSource = 'app' | 'parentCheck';
+/** timer: 앱 타이머로 목표 시간을 채움 · manual: ‘오늘 완료했어요’ · parent: 부모 탭에서 표시 */
+export type CompletionKind = 'timer' | 'manual' | 'parent';
+
+/** 하루의 루틴 하나에 대한 기록. (date, routine) 이 유일 키 */
+export interface RoutineRecord {
+  date: DateKey;
+  routine: RoutineKey;
+  /** 타이머가 도는 중이면 시작 시각(ms), 멈춰 있으면 null */
+  runningSince: number | null;
+  /** 멈추기 전까지 쌓인 초 */
+  accumulatedSec: number;
+  listenedMin: number;
+  completion: CompletionKind | null;
+  completedAt: number | null;
+}
+
 export type SpeakResult = 'pass' | 'passAfterRetry' | 'passByParent' | 'given' | 'skipped';
 
 export interface QuizAnswer {
@@ -21,33 +34,18 @@ export interface SpeakAttempt {
   result: SpeakResult;
 }
 
-export interface LessonRecord {
-  key: string;
-  run: number;
-  day: number;
+/** 이번 주 소리활동(단어 맞추기·말하기) 한 번의 기록. (week, date) 가 유일 키 */
+export interface ActivityRecord {
+  week: number;
   date: DateKey;
-  routine: RoutineKey;
-  source: RecordSource;
-  videoStatus: VideoStatus;
-  videoStartedAt: number | null;
-  listenedMin: number;
-  steps: StepKey[];
   quiz: QuizAnswer[];
   speak: SpeakAttempt[];
   stars: number;
   completedAt: number | null;
 }
 
-export type RewardKind = 'sticker' | 'dayBadge' | 'weekTrophy';
+export type StationState = 'done' | 'open' | 'running' | 'upcoming' | 'missed';
+export type CellStatus = 'app' | 'parent' | 'empty' | 'future' | 'none';
 
-export interface Reward {
-  id: string;
-  kind: RewardKind;
-  image: string;
-  date: DateKey;
-  lessonKey?: string;
-  earnedAt: number;
-}
-
-export type NodeState = 'locked' | 'open' | 'inProgress' | 'done' | 'missed';
-export type CellStatus = 'auto' | 'manual' | 'empty' | 'future';
+export const routineRecordKey = (date: DateKey, routine: RoutineKey) => `${date}:${routine}`;
+export const activityRecordKey = (week: number, date: DateKey) => `w${week}:${date}`;

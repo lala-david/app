@@ -1,8 +1,6 @@
-import type { RoutineDef, RoutineKey, RoutineKind, WeekDef } from '@/entities/content/types';
+import type { RoutineDef, WeekDef } from '@/entities/content/types';
 
 import { addDays, diffDays, isWeekend, type DateKey } from './calendar';
-
-export type StepKey = 'video' | 'quiz' | 'speak';
 
 export interface CourseDay {
   index: number;
@@ -10,30 +8,17 @@ export interface CourseDay {
   routines: RoutineDef[];
 }
 
-const STEPS_BY_KIND: Record<RoutineKind, StepKey[]> = {
-  listen: ['video'],
-  play: ['video', 'quiz', 'speak'],
-};
-
-export function stepsOf(kind: RoutineKind): StepKey[] {
-  return STEPS_BY_KIND[kind];
+/** 시작일 기준으로 date 가 몇 번째 Day인지. 1부터, 범위 밖일 수 있다 */
+export function dayIndexOf(runStart: DateKey, date: DateKey): number {
+  return diffDays(runStart, date) + 1;
 }
 
-export function lessonKey(run: number, day: number, routine: RoutineKey): string {
-  return `r${run}-d${day}-${routine}`;
+export function isCourseDay(week: WeekDef, runStart: DateKey, date: DateKey): boolean {
+  const index = dayIndexOf(runStart, date);
+  return index >= 1 && index <= week.days;
 }
 
-export function parseLessonKey(key: string): { run: number; day: number; routine: RoutineKey } | null {
-  const match = /^r(\d+)-d(\d+)-([a-zA-Z]+)$/.exec(key);
-  if (!match) return null;
-  return { run: Number(match[1]), day: Number(match[2]), routine: match[3] as RoutineKey };
-}
-
-/** 회차 시작일 기준 오늘이 몇 번째 Day인지. 1부터, 범위 밖일 수 있다 */
-export function dayIndexOf(runStart: DateKey, today: DateKey): number {
-  return diffDays(runStart, today) + 1;
-}
-
+/** 그날 할 루틴. 주말 신앙 콘텐츠는 부모가 켰을 때만 붙는다 */
 export function routinesForDate(week: WeekDef, date: DateKey, faithEnabled: boolean): RoutineDef[] {
   const extras = faithEnabled && isWeekend(date) ? week.weekendExtras : [];
   return [...week.routines, ...extras].sort((a, b) => a.order - b.order);
@@ -44,8 +29,4 @@ export function buildCourse(week: WeekDef, runStart: DateKey, faithEnabled: bool
     const date = addDays(runStart, i);
     return { index: i + 1, date, routines: routinesForDate(week, date, faithEnabled) };
   });
-}
-
-export function findRoutine(week: WeekDef, key: RoutineKey): RoutineDef | undefined {
-  return [...week.routines, ...week.weekendExtras].find((r) => r.key === key);
 }

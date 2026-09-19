@@ -6,10 +6,10 @@ import { publicPath } from '@/shared/platform/publicPath';
 const HEAD_TAGS: { tag: 'link' | 'meta'; attrs: Record<string, string> }[] = [
   { tag: 'link', attrs: { rel: 'manifest', href: publicPath('manifest.json') } },
   { tag: 'link', attrs: { rel: 'apple-touch-icon', href: publicPath('icons/pwa-192.png') } },
-  { tag: 'meta', attrs: { name: 'theme-color', content: colors.primary } },
+  { tag: 'meta', attrs: { name: 'theme-color', content: colors.heroTo } },
   { tag: 'meta', attrs: { name: 'apple-mobile-web-app-capable', content: 'yes' } },
   { tag: 'meta', attrs: { name: 'mobile-web-app-capable', content: 'yes' } },
-  { tag: 'meta', attrs: { name: 'apple-mobile-web-app-title', content: '사운즈펀' } },
+  { tag: 'meta', attrs: { name: 'apple-mobile-web-app-title', content: 'SoundsFun' } },
 ];
 
 /** 홈 화면 추가(PWA)에 필요한 head 태그 */

@@ -1,22 +1,23 @@
 import appConfig from '@/content/app-config.json';
+import journeyData from '@/content/journey.json';
 import week1 from '@/content/weeks/week1.json';
 import wordBook from '@/content/words.json';
 
-import type { AgeBand, RoutineKey, WeekDef, WordBook, WordDef } from './types';
+import type { AgeBand, CharacterKey, RoutineDef, RoutineKey, WeekDef, WordBook, WordDef } from './types';
 
-const WEEKS: Record<number, WeekDef> = {
-  1: week1 as WeekDef,
-};
+const WEEKS: Record<number, WeekDef> = { 1: week1 as WeekDef };
 
 export const config = appConfig;
+export const journey = journeyData;
+export const words = wordBook as WordBook;
+export const ageBands = config.ageBands as AgeBand[];
+export const characters = config.characters as CharacterKey[];
 
 export function getWeek(week: number = config.currentWeek): WeekDef {
   const found = WEEKS[week];
   if (!found) throw new Error(`Week ${week} content is missing`);
   return found;
 }
-
-export const words = wordBook as WordBook;
 
 export function getWord(id: string): WordDef {
   const word = words[id];
@@ -28,7 +29,11 @@ export function colorWordsOf(ids: readonly string[]): string[] {
   return ids.filter((id) => words[id]?.group === 'color');
 }
 
-export const ageBands = config.ageBands as AgeBand[];
+export function findRoutine(week: WeekDef, key: RoutineKey): RoutineDef | undefined {
+  return [...week.routines, ...week.weekendExtras].find((r) => r.key === key);
+}
 
 export const coreRoutineOrder = (week: WeekDef): RoutineKey[] =>
   [...week.routines].sort((a, b) => a.order - b.order).map((r) => r.key);
+
+export const characterImage = (key: CharacterKey) => `characters/${key}`;

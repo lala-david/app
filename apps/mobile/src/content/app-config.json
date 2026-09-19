@@ -1,5 +1,7 @@
 {
+  "appVersion": "0.2.0",
   "currentWeek": 1,
+  "dailyTargetMinutes": 90,
   "defaultSchedule": [
     { "routine": "morning", "time": "07:30", "enabled": true },
     { "routine": "theme", "time": "17:30", "enabled": true },
@@ -8,18 +10,20 @@
     { "routine": "faithSong", "time": "10:00", "enabled": true },
     { "routine": "faithStory", "time": "20:00", "enabled": true }
   ],
+  "eveningReminder": { "time": "20:00", "enabled": true },
   "startDateMaxOffsetDays": 7,
   "timeStepMinutes": 10,
   "nicknameMaxLength": 8,
   "passwordMinLength": 8,
   "ageBands": ["6", "7", "8", "9-10"],
   "defaultAgeBand": "7",
-  "parentGate": { "holdMs": 3000, "unlockMinutes": 10 },
-  "listen": { "skipMinuteOptions": [5, 10, 15], "reachedHapticRepeat": 1 },
+  "characters": ["chick", "crocodile", "cat", "rabbit"],
+  "defaultCharacter": "chick",
+  "stickerSlots": 28,
+  "pathPreviewDays": 3,
   "speech": { "lang": "en-US", "passThreshold": 0.7, "maxTries": 2, "listenTimeoutMs": 6000 },
-  "stars": { "videoStep": 3, "quizCorrect": 1, "speakPass": 1, "lessonBonus": 2 },
-  "eveningReminder": { "time": "20:00", "enabled": true },
-  "consentVersion": "2026-09-16",
+  "stars": { "quizCorrect": 1, "speakPass": 1 },
+  "consentVersion": "2026-09-19",
   "photo": { "size": 256, "quality": 0.85 },
   "links": {
     "youtubeWatch": "https://www.youtube.com/watch?v=",

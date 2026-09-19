@@ -1,118 +1,72 @@
 import type { RoutineKey } from '@/entities/content/types';
 import { addDays, compareDateKeys, type DateKey } from '@/entities/course/calendar';
-import type { StepKey } from '@/entities/course/course';
 
-import type { CellStatus, LessonRecord, NodeState } from '../model/types';
+import type { ActivityRecord, CellStatus, RoutineRecord, StationState } from '../model/types';
 
-type RecordList = readonly LessonRecord[];
+type Records = readonly RoutineRecord[];
 
-export function createRecord(init: Pick<LessonRecord, 'key' | 'run' | 'day' | 'date' | 'routine'> & Partial<LessonRecord>): LessonRecord {
-  return {
-    source: 'app',
-    videoStatus: 'none',
-    videoStartedAt: null,
-    listenedMin: 0,
-    steps: [],
-    quiz: [],
-    speak: [],
-    stars: 0,
-    completedAt: null,
-    ...init,
-  };
+export function createRoutineRecord(date: DateKey, routine: RoutineKey, patch: Partial<RoutineRecord> = {}): RoutineRecord {
+  return { date, routine, runningSince: null, accumulatedSec: 0, listenedMin: 0, completion: null, completedAt: null, ...patch };
 }
 
-export function isComplete(record: LessonRecord | undefined): boolean {
-  return record?.completedAt != null;
+export const isDone = (record: RoutineRecord | undefined): boolean => record?.completedAt != null;
+
+/** 지금까지 들은 초: 쌓인 시간 + 돌고 있는 구간 */
+export function elapsedSec(record: RoutineRecord | undefined, now: number): number {
+  if (!record) return 0;
+  const running = record.runningSince == null ? 0 : Math.max(0, (now - record.runningSince) / 1000);
+  return record.accumulatedSec + running;
 }
 
-export function nextStep(record: LessonRecord | undefined, steps: readonly StepKey[]): StepKey | null {
-  return steps.find((step) => !record?.steps.includes(step)) ?? null;
+export function stationState(record: RoutineRecord | undefined, date: DateKey, today: DateKey): StationState {
+  if (isDone(record)) return 'done';
+  const order = compareDateKeys(date, today);
+  if (order > 0) return 'upcoming';
+  if (order < 0) return 'missed';
+  return record?.runningSince != null || (record?.accumulatedSec ?? 0) > 0 ? 'running' : 'open';
 }
 
-export function nodeState(record: LessonRecord | undefined, dayIndex: number, todayIndex: number): NodeState {
-  if (isComplete(record)) return 'done';
-  if (dayIndex > todayIndex) return 'locked';
-  if (dayIndex < todayIndex) return 'missed';
-  const started = !!record && (record.steps.length > 0 || record.videoStartedAt != null);
-  return started ? 'inProgress' : 'open';
-}
+export const recordsOn = (records: Records, date: DateKey) => records.filter((r) => r.date === date);
+export const doneOn = (records: Records, date: DateKey) => recordsOn(records, date).filter(isDone);
+export const minutesOn = (records: Records, date: DateKey) => doneOn(records, date).reduce((sum, r) => sum + r.listenedMin, 0);
+export const totalMinutes = (records: Records) => records.filter(isDone).reduce((sum, r) => sum + r.listenedMin, 0);
 
-export function recordsOn(records: RecordList, date: DateKey): LessonRecord[] {
-  return records.filter((r) => r.date === date);
-}
-
-export function minutesOn(records: RecordList, date: DateKey): number {
-  return recordsOn(records, date).reduce((sum, r) => sum + r.listenedMin, 0);
-}
-
-export function totalMinutes(records: RecordList): number {
-  return records.reduce((sum, r) => sum + r.listenedMin, 0);
-}
-
-export function completedOn(records: RecordList, date: DateKey): LessonRecord[] {
-  return recordsOn(records, date).filter(isComplete);
-}
-
-export function totalStars(records: RecordList): number {
-  return records.reduce((sum, r) => sum + r.stars, 0);
-}
-
-/** 앱에서 실제로 루틴을 1개 이상 끝낸 날만 연속으로 센다 (부모 수동 체크 제외) */
-export function streakDays(records: RecordList, today: DateKey): number {
-  const activeDays = new Set(records.filter((r) => isComplete(r) && r.source === 'app').map((r) => r.date));
-  let cursor = activeDays.has(today) ? today : addDays(today, -1);
+/** 루틴을 1개 이상 끝낸 날이 이어진 일수. 오늘 아직 안 했으면 어제까지로 센다 */
+export function streakDays(records: Records, today: DateKey): number {
+  const active = new Set(records.filter(isDone).map((r) => r.date));
+  let cursor = active.has(today) ? today : addDays(today, -1);
   let count = 0;
-  while (activeDays.has(cursor)) {
+  while (active.has(cursor)) {
     count += 1;
     cursor = addDays(cursor, -1);
   }
   return count;
 }
 
-export function streakCalendar(records: RecordList, today: DateKey, length: number): { date: DateKey; active: boolean }[] {
-  const activeDays = new Set(records.filter((r) => isComplete(r) && r.source === 'app').map((r) => r.date));
-  return Array.from({ length }, (_, i) => {
-    const date = addDays(today, i - length + 1);
-    return { date, active: activeDays.has(date) };
-  });
-}
-
-export function cellStatus(record: LessonRecord | undefined, date: DateKey, today: DateKey): CellStatus {
+export function cellStatus(record: RoutineRecord | undefined, date: DateKey, today: DateKey): CellStatus {
   if (compareDateKeys(date, today) > 0) return 'future';
-  if (!isComplete(record)) return 'empty';
-  return record!.source === 'parentCheck' || record!.videoStatus === 'manual' ? 'manual' : 'auto';
+  if (!isDone(record)) return 'empty';
+  return record!.completion === 'parent' ? 'parent' : 'app';
 }
 
-export function quizAccuracy(records: RecordList): { correct: number; total: number } {
-  const answers = records.flatMap((r) => r.quiz);
-  return { correct: answers.filter((a) => a.correct).length, total: answers.length };
-}
-
-export function speakSummary(records: RecordList): { attempted: number; passed: number; total: number } {
-  const attempts = records.flatMap((r) => r.speak);
-  return {
-    total: attempts.length,
-    attempted: attempts.filter((a) => a.result !== 'skipped').length,
-    passed: attempts.filter((a) => a.result === 'pass' || a.result === 'passAfterRetry').length,
-  };
-}
-
-export function routineCompletionRate(
-  records: RecordList,
-  routine: RoutineKey,
-  dates: readonly DateKey[],
-): { done: number; total: number } {
-  const done = dates.filter((date) => records.some((r) => r.date === date && r.routine === routine && isComplete(r))).length;
+export function completionRate(records: Records, routine: RoutineKey, dates: readonly DateKey[]): { done: number; total: number } {
+  const done = dates.filter((date) => records.some((r) => r.date === date && r.routine === routine && isDone(r))).length;
   return { done, total: dates.length };
 }
 
-export function wordStats(records: RecordList): { word: string; correct: number; total: number }[] {
-  const byWord = new Map<string, { correct: number; total: number }>();
-  for (const answer of records.flatMap((r) => r.quiz)) {
-    const entry = byWord.get(answer.word) ?? { correct: 0, total: 0 };
-    entry.total += 1;
-    if (answer.correct) entry.correct += 1;
-    byWord.set(answer.word, entry);
-  }
-  return [...byWord.entries()].map(([word, s]) => ({ word, ...s }));
+/** 모은 스티커 = 끝낸 루틴. 끝낸 순서대로 */
+export function earnedStickers(records: Records): RoutineRecord[] {
+  return records.filter(isDone).sort((a, b) => (a.completedAt ?? 0) - (b.completedAt ?? 0));
+}
+
+export function activityStats(activities: readonly ActivityRecord[]) {
+  const answers = activities.flatMap((a) => a.quiz);
+  const attempts = activities.flatMap((a) => a.speak);
+  return {
+    quizCorrect: answers.filter((a) => a.correct).length,
+    quizTotal: answers.length,
+    speakTried: attempts.filter((a) => a.result !== 'skipped').length,
+    speakPassed: attempts.filter((a) => a.result === 'pass' || a.result === 'passAfterRetry').length,
+    stars: activities.reduce((sum, a) => sum + a.stars, 0),
+  };
 }

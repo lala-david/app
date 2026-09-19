@@ -2,12 +2,13 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { config } from '@/entities/content/content';
+import type { AgeBand, CharacterKey } from '@/entities/content/types';
 import type { RoutineSchedule } from '@/entities/schedule/schedule';
 import { useSession } from '@/entities/session/model/sessionStore';
 import { clock } from '@/shared/lib/clock';
 import { persistStorage, storageKey } from '@/shared/lib/storage';
 
-import type { AvatarConfig, ChildProfile } from './types';
+import type { ChildProfile } from './types';
 
 interface ChildState {
   profiles: Record<string, ChildProfile>;
@@ -19,8 +20,8 @@ export function createDefaultProfile(): ChildProfile {
   const today = clock.today();
   return {
     nickname: '',
-    ageBand: config.defaultAgeBand as ChildProfile['ageBand'],
-    avatar: { kind: 'builder', seed: String(clock.now()), options: {} },
+    ageBand: config.defaultAgeBand as AgeBand,
+    avatar: { kind: 'character', character: config.defaultCharacter as CharacterKey },
     schedules: config.defaultSchedule as RoutineSchedule[],
     startDate: today,
     run: 1,
@@ -45,7 +46,7 @@ export const useChildStore = create<ChildState>()(
         set({ profiles: rest });
       },
     }),
-    { name: storageKey('children'), storage: persistStorage, partialize: ({ profiles }) => ({ profiles }) },
+    { name: storageKey('children-v2'), storage: persistStorage, partialize: ({ profiles }) => ({ profiles }) },
   ),
 );
 
@@ -55,16 +56,12 @@ export function useChild(): ChildProfile | undefined {
   return useChildStore((s) => (userId ? s.profiles[userId] : undefined));
 }
 
-export function updateChild(patch: Partial<ChildProfile>): void {
-  const userId = useSession.getState().userId;
-  if (userId) useChildStore.getState().save(userId, patch);
-}
-
-export function updateAvatar(avatar: AvatarConfig): void {
-  updateChild({ avatar });
-}
-
 export function getChild(): ChildProfile | undefined {
   const userId = useSession.getState().userId;
   return userId ? useChildStore.getState().profiles[userId] : undefined;
+}
+
+export function updateChild(patch: Partial<ChildProfile>): void {
+  const userId = useSession.getState().userId;
+  if (userId) useChildStore.getState().save(userId, patch);
 }

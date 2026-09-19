@@ -1,1 +1,1 @@
-export { ManageChildScreen as default } from '@/screens/settings/ManageChildScreen';
+export { ManageChildScreen as default } from '@/screens/ChildScreens';

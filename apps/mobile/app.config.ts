@@ -12,13 +12,13 @@ function normalizeBaseUrl(raw: string | undefined): string | undefined {
 
 const baseUrl = normalizeBaseUrl(process.env.EXPO_PUBLIC_BASE_URL);
 
-const BRAND = { coral: '#FF7A59', cream: '#FFF8EA' };
+const BRAND = { yellow: '#FFD640', ground: '#FAF8F5', splash: '#2D1B68' };
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: '사운즈펀 브릿지',
+  name: 'SoundsFun',
   slug: 'soundsfun-bridge',
-  version: '0.1.0',
+  version: '0.2.0',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   scheme: 'soundsfun',
@@ -30,7 +30,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: 'kr.or.rta.soundsfun',
     adaptiveIcon: {
-      backgroundColor: BRAND.coral,
+      backgroundColor: BRAND.yellow,
       foregroundImage: './assets/images/android-icon-foreground.png',
       backgroundImage: './assets/images/android-icon-background.png',
       monochromeImage: './assets/images/android-icon-monochrome.png',
@@ -40,16 +40,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   web: {
     output: 'single',
     favicon: './assets/images/favicon.png',
-    name: '사운즈펀 브릿지',
-    shortName: '사운즈펀',
-    themeColor: BRAND.coral,
-    backgroundColor: BRAND.cream,
+    name: 'SoundsFun',
+    shortName: 'SoundsFun',
+    themeColor: BRAND.yellow,
+    backgroundColor: BRAND.ground,
     lang: 'ko',
   },
   plugins: [
     'expo-router',
-    ['expo-splash-screen', { backgroundColor: BRAND.cream, image: './assets/images/splash-icon.png', imageWidth: 200 }],
-    ['expo-notifications', { color: BRAND.coral }],
+    'expo-video',
+    ['expo-splash-screen', { backgroundColor: BRAND.splash, image: './assets/images/splash-icon.png', imageWidth: 200 }],
+    ['expo-notifications', { color: BRAND.yellow }],
     ['expo-image-picker', { photosPermission: '아이 프로필 사진을 고르기 위해 사진 보관함에 접근해요.' }],
     [
       'expo-speech-recognition',

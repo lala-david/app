@@ -1,1 +1,1 @@
-export { ManageNotificationsScreen as default } from '@/screens/settings/ManageNotificationsScreen';
+export { ManageNotificationsScreen as default } from '@/screens/ManageScreens';

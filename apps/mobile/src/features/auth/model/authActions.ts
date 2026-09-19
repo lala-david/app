@@ -5,6 +5,11 @@ import { useSession } from '@/entities/session/model/sessionStore';
 import { useAnalytics } from '@/shared/analytics/analytics';
 import { notificationScheduler } from '@/shared/platform/notifications';
 
+function startSession(userId: string) {
+  useSession.getState().signIn(userId);
+  useAnalytics.getState().setUser(userId);
+}
+
 export async function signUp(input: SignUpInput) {
   const result = await accountRepository.signUp(input);
   if (result.ok) startSession(result.value.id);
@@ -23,7 +28,7 @@ export async function logOut() {
   useSession.getState().signOut();
 }
 
-/** 계정과 이 계정의 모든 기록을 기기에서 지운다 */
+/** 계정과 이 계정의 모든 기록·사진을 기기에서 지운다 */
 export async function deleteAccount() {
   const userId = useSession.getState().userId;
   if (!userId) return;
@@ -34,9 +39,4 @@ export async function deleteAccount() {
   await accountRepository.remove(userId);
   useAnalytics.getState().setUser(null);
   useSession.getState().signOut();
-}
-
-function startSession(userId: string) {
-  useSession.getState().signIn(userId);
-  useAnalytics.getState().setUser(userId);
 }

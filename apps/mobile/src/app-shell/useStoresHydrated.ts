@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 
 import { useAccountStore } from '@/entities/account/model/accountStore';
 import { useChildStore } from '@/entities/child/model/childStore';
-import { useGuideStore } from '@/entities/guide/model/guideStore';
 import { useProgressStore } from '@/entities/progress/model/progressStore';
 import { useSession } from '@/entities/session/model/sessionStore';
+import { useHelpStore } from '@/features/help/ui/HelpCards';
 import { useAnalytics } from '@/shared/analytics/analytics';
 
-const persistedStores = [useSession, useAccountStore, useChildStore, useProgressStore, useGuideStore, useAnalytics];
+const persistedStores = [useSession, useAccountStore, useChildStore, useProgressStore, useHelpStore, useAnalytics];
 
 const allHydrated = () => persistedStores.every((store) => store.persist.hasHydrated());
 

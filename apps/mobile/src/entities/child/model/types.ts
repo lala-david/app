@@ -1,18 +1,16 @@
-import type { AgeBand } from '@/entities/content/types';
+import type { AgeBand, CharacterKey } from '@/entities/content/types';
 import type { DateKey } from '@/entities/course/calendar';
 import type { RoutineSchedule } from '@/entities/schedule/schedule';
 
-export type PhotoFrame = 'none' | 'cloud' | 'star' | 'flower';
-
-export type AvatarConfig =
-  | { kind: 'builder'; seed: string; options: Record<string, string> }
-  | { kind: 'photo'; dataUri: string; frame: PhotoFrame; backdrop: string };
+/** 아이 프로필 그림: 캐릭터 4명 중 하나, 또는 기기에만 저장되는 사진 */
+export type Avatar = { kind: 'character'; character: CharacterKey } | { kind: 'photo'; dataUri: string };
 
 export interface ChildProfile {
   nickname: string;
   ageBand: AgeBand;
-  avatar: AvatarConfig;
+  avatar: Avatar;
   schedules: RoutineSchedule[];
+  /** 학습 시작일 = Day 1 */
   startDate: DateKey;
   run: number;
   runStartDate: DateKey;
