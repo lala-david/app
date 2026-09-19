@@ -65,6 +65,8 @@ export const colors = {
   shade: 'rgba(37, 67, 61, 0.3)',
   handle: '#DED7CE',
   splash: '#2D1B68',
+  splashTop: '#412369',
+  splashBottom: '#683EA2',
 
   /** 부모·설정 */
   parentInk: '#3D332D',
