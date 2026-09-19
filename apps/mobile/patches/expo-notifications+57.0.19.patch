@@ -1,0 +1,19 @@
+diff --git a/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java b/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java
+index 191b64e..9c4c67d 100644
+--- a/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java
++++ b/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java
+@@ -103,6 +103,14 @@ public class NotificationContent implements Parcelable, Serializable, INotificat
+   @Nullable
+   @Override
+   public Object getImage(@NonNull Context context, @NonNull Continuation<? super Bitmap> $completion) {
++    // SoundsFun: data.largeIcon names a drawable, so each routine shows its own character
++    String largeIconName = mBody != null ? mBody.optString("largeIcon", "") : "";
++    if (!largeIconName.isEmpty()) {
++      int namedId = context.getResources().getIdentifier(largeIconName, "drawable", context.getPackageName());
++      if (namedId != 0) {
++        return BitmapFactory.decodeResource(context.getResources(), namedId);
++      }
++    }
+     try {
+       ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+       if (ai.metaData.containsKey(META_DATA_LARGE_ICON_KEY)) {

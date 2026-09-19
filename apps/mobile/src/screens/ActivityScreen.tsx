@@ -5,10 +5,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useChild } from '@/entities/child/model/childStore';
 import { config, getWeek } from '@/entities/content/content';
+import { AssetImage } from '@/entities/content/ui/AssetImage';
 import { playSfx } from '@/entities/content/voice';
 import { progressActions, useProgress } from '@/entities/progress/model/progressStore';
 import { activityRecordKey } from '@/entities/progress/model/types';
 import { quizFor } from '@/features/activity/model/activityQuiz';
+import { buildSpeakRounds } from '@/features/activity/model/speakGame';
 import { QuizPhase } from '@/features/activity/ui/QuizPhase';
 import { SpeakPhase } from '@/features/activity/ui/SpeakPhase';
 import { track } from '@/shared/analytics/analytics';
@@ -43,6 +45,7 @@ export function ActivityScreen() {
   const answered = fresh ? 0 : (record?.quiz.length ?? 0);
 
   const questions = useMemo(() => (child ? quizFor(week.activity, `${week.id}:${today}`, child.ageBand) : []), [child, week, today]);
+  const rounds = useMemo(() => (child ? buildSpeakRounds(week.activity, child.ageBand) : []), [child, week]);
   const [phase, setPhase] = useState<Phase>(answered >= questions.length && questions.length > 0 ? 'speak' : 'quiz');
   const [fraction, setFraction] = useState(0);
 
@@ -94,10 +97,11 @@ export function ActivityScreen() {
         ) : null}
         {phase === 'speak' ? (
           <SpeakPhase
-            words={week.activity.focusWords}
+            game={week.activity.speakGame}
+            rounds={rounds}
             onAttempt={(attempt) => {
               progressActions.addSpeakAttempt(week.week, today, attempt);
-              track('speak_result', { word: attempt.word, result: attempt.result });
+              track('speak_result', { word: attempt.word, mode: attempt.mode ?? 'word', result: attempt.result });
             }}
             onProgress={setFraction}
             onDone={finish}
@@ -105,7 +109,11 @@ export function ActivityScreen() {
         ) : null}
         {phase === 'finish' ? (
           <View style={styles.finish}>
-            <Character name="crocodile" size={190} float shadow />
+            <View style={styles.finishArt}>
+              <AssetImage name="game/rainbow" size={250} />
+              <Character name="crocodile" size={170} float shadow style={styles.finishCroc} />
+              <AssetImage name="game/medal" size={84} style={styles.finishMedal} />
+            </View>
             <AppText variant="screenTitle" align="center">
               {strings.activity.finishTitle}
             </AppText>
@@ -130,5 +138,8 @@ const styles = StyleSheet.create({
   fill: { height: '100%', borderRadius: 10, backgroundColor: tones.theme.c },
   body: { flex: 1, paddingTop: 12 },
   finish: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14 },
+  finishArt: { width: 280, height: 290, alignItems: 'center' },
+  finishCroc: { position: 'absolute', bottom: 0 },
+  finishMedal: { position: 'absolute', right: 8, bottom: 6, transform: [{ rotate: '12deg' }] },
   stars: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: colors.starSoft, borderRadius: 999, paddingHorizontal: 20, paddingVertical: 10 },
 });

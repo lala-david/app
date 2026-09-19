@@ -29,6 +29,8 @@ export interface QuizAnswer {
 
 export interface SpeakAttempt {
   word: string;
+  /** 단어만 말했는지, 문장으로 말했는지. 예전 기록에는 없다(단어) */
+  mode?: 'word' | 'sentence';
   heard: string;
   score: number;
   result: SpeakResult;

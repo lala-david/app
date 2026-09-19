@@ -25,6 +25,7 @@ const ICONS = {
   chevronRight: [{ d: 'M9 5l7 7-7 7' }],
   chevronLeft: [{ d: 'M15 5l-7 7 7 7' }],
   check: [{ d: 'M5 12.5l4.5 4.5L19 7.5' }],
+  lock: [{ rect: [5, 11, 14, 10, 3] }, { d: 'M8 11V8a4 4 0 0 1 8 0v3' }],
   plus: [{ d: 'M12 5v14M5 12h14' }],
   minus: [{ d: 'M5 12h14' }],
   camera: [{ d: 'M4 8h3l2-3h6l2 3h3v11H4z' }, { circle: [12, 13, 3.5] }],

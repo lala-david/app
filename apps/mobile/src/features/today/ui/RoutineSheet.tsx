@@ -62,6 +62,8 @@ function SheetBody({ station, onClose }: { station: Station; onClose: () => void
       title: fmt(strings.notifications.timerTitle, { n: routine.targetMinutes }),
       body: strings.notifications.timerBody,
       url: '/today',
+      art: 'star',
+      color: tone.c,
     });
   };
 

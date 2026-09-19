@@ -8,7 +8,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const APP = resolve(ROOT, '../../apps/mobile');
 const OUT = join(APP, 'src/content/generated/assets.ts');
 
-const IMAGE_GROUPS = ['characters', 'brand', 'words'];
+const IMAGE_GROUPS = ['characters', 'brand', 'words', 'gray', 'game', 'scenes', 'icons'];
 const IMAGE_EXT = new Set(['.webp', '.png', '.jpg']);
 const AUDIO_EXT = new Set(['.mp3', '.wav']);
 

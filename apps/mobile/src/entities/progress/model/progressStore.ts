@@ -89,7 +89,7 @@ export const progressActions = {
   },
 
   addSpeakAttempt(week: number, date: DateKey, attempt: SpeakAttempt) {
-    withActivity(week, date, (a) => ({ ...a, speak: [...a.speak.filter((s) => s.word !== attempt.word), attempt] }));
+    withActivity(week, date, (a) => ({ ...a, speak: [...a.speak.filter((s) => s.word !== attempt.word || (s.mode ?? 'word') !== (attempt.mode ?? 'word')), attempt] }));
   },
 
   restartActivity(week: number, date: DateKey) {

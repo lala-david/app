@@ -81,12 +81,13 @@ async function download(url) {
 
 function buildPrompt(group, item) {
   const subject = group.useMascot ? `${manifest.mascotPrompt}, ${item.prompt}` : item.prompt;
-  return `${subject}. ${manifest.stylePrompt}`;
+  return `${subject}. ${group.stylePrompt ?? manifest.stylePrompt}`;
 }
 
 async function produce(group, item) {
   const out = join(outputRoot, group.name, `${item.id}.png`);
-  if (!force && (await exists(out))) return { id: item.id, skipped: true };
+  // 앱에 넣을 때 WebP로 바꾸고 PNG는 지우므로, WebP가 있어도 이미 만든 것으로 본다
+  if (!force && ((await exists(out)) || (await exists(out.replace(/\.png$/, '.webp'))))) return { id: item.id, skipped: true };
 
   let image = await withRetry(`${group.name}/${item.id}`, () => generate(buildPrompt(group, item), group.size));
   if (group.removeBackground) {

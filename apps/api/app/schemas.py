@@ -129,6 +129,7 @@ class QuizAnswerIn(CamelModel):
 
 class SpeakAttemptIn(CamelModel):
     word: str
+    mode: Literal["word", "sentence"] = "word"
     heard: str = Field(default="", max_length=64)
     score: float = Field(default=0, ge=0, le=1)
     result: SpeakResult

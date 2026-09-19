@@ -12,6 +12,8 @@
     "voice": "python src/generate_voice.py",
     "sfx": "node src/generate-sfx.mjs",
     "registry": "node src/build-registry.mjs",
+    "game-art": "node src/build-game-art.mjs",
+    "notification-art": "node src/build-notification-icon.mjs && node src/build-notification-art.mjs",
     "contact": "node src/contact-sheet.mjs",
     "assets": "npm run brand && npm run optimize && npm run voice && npm run sfx && npm run registry"
   },

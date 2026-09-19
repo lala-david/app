@@ -2,13 +2,15 @@ import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { useChild } from '@/entities/child/model/childStore';
-import { getWeek } from '@/entities/content/content';
+import { config, getWeek, getWord } from '@/entities/content/content';
 import { addDays, compareDateKeys, fromDateKey, startOfWeek, type DateKey } from '@/entities/course/calendar';
+import { AssetImage } from '@/entities/content/ui/AssetImage';
 import { useProgress } from '@/entities/progress/model/progressStore';
 import { AvatarView } from '@/features/child-profile/ui/ChildForm';
 import { toggleCheck } from '@/features/parent/model/parentCheck';
 import { monthView, stickerBoard, summaryStats, todayRows, weekGlance, weekTable } from '@/features/parent/model/report';
-import { Card, GlanceBars, MonthGrid, Segments, StatTile, StickerBoard, TodayRow, WeekGrid } from '@/features/parent/ui/ParentParts';
+import { hardWords, hasActivity } from '@/features/parent/model/insights';
+import { Card, HardWordList, TalkTips, GlanceBars, MonthGrid, Segments, StatTile, StickerBoard, TodayRow, WeekGrid } from '@/features/parent/ui/ParentParts';
 import { strings } from '@/shared/i18n/strings.ko';
 import { clock } from '@/shared/lib/clock';
 import { fmt, shortDate, splitMinutes } from '@/shared/lib/format';
@@ -41,7 +43,7 @@ function Pager({ label, onPrev, onNext, canPrev, canNext }: { label: string; onP
 /** 시안 03A·B·C · 부모 */
 export function ParentScreen() {
   const child = useChild();
-  const { routineMap } = useProgress();
+  const { routineMap, activities } = useProgress();
   const week = getWeek();
   const today = clock.today();
   const thisWeek = startOfWeek(today);
@@ -63,6 +65,7 @@ export function ParentScreen() {
   }, [child, week, routineMap, today, thisWeek, weekStart, month]);
 
   if (!child || !data) return null;
+  const hard = hardWords(activities, week.week, config.hardWordLimit);
   const { stats } = data;
   const total = splitMinutes(stats.totalMinutes);
   const shiftMonth = (delta: number) => setMonth(({ y, m }) => ({ y: new Date(y, m + delta, 1).getFullYear(), m: new Date(y, m + delta, 1).getMonth() }));
@@ -86,7 +89,7 @@ export function ParentScreen() {
           </AppText>
         </StatTile>
         <StatTile label={strings.parent.stats.streak}>
-          <Icon name="flame" size={22} color={colors.streak} />
+          <AssetImage name="icons/flame" size={26} />
           <AppText variant="stat" color={colors.streak}>
             {fmt(strings.parent.streakValue, { n: stats.streak })}
           </AppText>
@@ -162,6 +165,20 @@ export function ParentScreen() {
       <Card title={strings.parent.stickers} style={styles.stickerCard}>
         <StickerBoard earned={data.stickers.earned} slots={data.stickers.slots} />
       </Card>
+
+      <Card title={strings.parent.hardTitle} caption={strings.parent.hardCaption} style={styles.glanceCard}>
+        {hard.length ? (
+          <HardWordList items={hard.map((h) => ({ ...getWord(h.word), misses: h.misses }))} />
+        ) : (
+          <AppText variant="small" color={colors.parentSoft} style={styles.emptyNote}>
+            {hasActivity(activities, week.week) ? strings.parent.hardEmpty : strings.parent.hardNone}
+          </AppText>
+        )}
+      </Card>
+
+      <Card title={strings.parent.talkTitle} caption={strings.parent.talkCaption} style={styles.glanceCard}>
+        <TalkTips tips={week.parentGuide.tips} />
+      </Card>
     </Screen>
   );
 }
@@ -179,6 +196,7 @@ const styles = StyleSheet.create({
   tableCard: { marginTop: 19, paddingTop: 18, paddingBottom: 28 },
   monthCard: { marginTop: 19, paddingTop: 17 },
   glanceCard: { marginTop: 18, paddingBottom: 30 },
+  emptyNote: { marginTop: 10 },
   stickerCard: { marginTop: 27, paddingBottom: 26 },
   dim: { opacity: 0.3 },
 });

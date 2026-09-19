@@ -27,3 +27,8 @@ reference/
 # raw design deliveries (the app uses processed copies under apps/mobile/assets)
 /SF/
 /soundsfun-*/
+
+*.apk
+*.log
+~*.tmp
+~$*

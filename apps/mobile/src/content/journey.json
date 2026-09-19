@@ -3,17 +3,55 @@
   "title": "소리에서 읽기까지",
   "lead": "매일 같은 90분 루틴 위에 12주마다 새로운 힘을 더해요.",
   "stages": [
-    { "weeks": "W1–12", "fromWeek": 1, "toWeek": 12, "name": "LISTEN", "themes": "Colors · Family · Shapes · Clothes", "note": "매일 90분 소리 루틴 만들기" },
-    { "weeks": "W13–24", "fromWeek": 13, "toWeek": 24, "name": "LISTEN + PLAY", "themes": "School · Body Parts · Animals · Food", "note": "음소인식 1–2단계 + SoundsFun 1" },
-    { "weeks": "W25–36", "fromWeek": 25, "toWeek": 36, "name": "LISTEN + READ", "themes": "Feelings · Nature · Opposites · Weather", "note": "음소인식 3–4단계 + English Library" },
-    { "weeks": "W37–48", "fromWeek": 37, "toWeek": 48, "name": "LISTEN + CONNECT", "themes": "Numbers · Transportation · Jobs · Seasons", "note": "음소인식 5–6단계 + Linking to Letters" }
+    {
+      "weeks": "W1–12",
+      "fromWeek": 1,
+      "toWeek": 12,
+      "name": "LISTEN",
+      "themes": "Colors · Family · Shapes · Clothes",
+      "note": "매일 90분 소리 루틴 만들기",
+      "icon": "icons/stage-listen"
+    },
+    {
+      "weeks": "W13–24",
+      "fromWeek": 13,
+      "toWeek": 24,
+      "name": "LISTEN + PLAY",
+      "themes": "School · Body Parts · Animals · Food",
+      "note": "음소인식 1–2단계 + SoundsFun 1",
+      "icon": "icons/stage-play"
+    },
+    {
+      "weeks": "W25–36",
+      "fromWeek": 25,
+      "toWeek": 36,
+      "name": "LISTEN + READ",
+      "themes": "Feelings · Nature · Opposites · Weather",
+      "note": "음소인식 3–4단계 + English Library",
+      "icon": "icons/stage-read"
+    },
+    {
+      "weeks": "W37–48",
+      "fromWeek": 37,
+      "toWeek": 48,
+      "name": "LISTEN + CONNECT",
+      "themes": "Numbers · Transportation · Jobs · Seasons",
+      "note": "음소인식 5–6단계 + Linking to Letters",
+      "icon": "icons/stage-connect"
+    }
   ],
   "preview": {
     "label": "WEEK 13 PREVIEW",
     "question": "어떤 두 단어가 같은 소리로 끝날까요?",
     "options": [
-      { "text": "cat + hat", "correct": true },
-      { "text": "cat + sun", "correct": false }
+      {
+        "text": "cat + hat",
+        "correct": true
+      },
+      {
+        "text": "cat + sun",
+        "correct": false
+      }
     ],
     "correctMessage": "맞아요! cat과 hat은 같은 소리로 끝나요",
     "wrongMessage": "cat과 hat이 같은 소리로 끝나요"

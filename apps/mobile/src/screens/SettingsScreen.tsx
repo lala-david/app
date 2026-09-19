@@ -77,6 +77,7 @@ export function SettingsScreen() {
         <SettingsRow icon="bell" title={strings.settings.notifications} desc={strings.settings.notificationsDesc} toggle={child.notificationsEnabled} onPress={toggleNotifications} />
         <SettingsRow icon="clock" title={strings.settings.notificationTimes} desc={strings.settings.notificationTimesDesc} onPress={() => router.push('/manage/notifications')} />
         <SettingsRow icon="moon" title={strings.settings.eveningReminder} desc={strings.settings.eveningReminderDesc} toggle={child.eveningReminder} onPress={() => updateChild({ eveningReminder: !child.eveningReminder })} />
+        <SettingsRow icon="image" title={strings.settings.dataSaver} desc={strings.settings.dataSaverDesc} toggle={!!child.dataSaver} onPress={() => updateChild({ dataSaver: !child.dataSaver })} />
         <SettingsRow icon="user" title={strings.settings.child} desc={strings.settings.childDesc} onPress={() => router.push('/manage/child')} />
         <SettingsRow icon="heart" title={strings.settings.faith} desc={strings.settings.faithDesc} toggle={child.faithEnabled} onPress={toggleFaith} />
       </SettingsGroup>

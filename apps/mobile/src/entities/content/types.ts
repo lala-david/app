@@ -34,11 +34,24 @@ export interface SentenceItem {
   audio: string;
 }
 
+export type SpeakMode = 'word' | 'sentence';
+
+/** 말하기 게임: 색 단어를 말하면 그림(paint)에 그 색이 입혀진다 */
+export interface SpeakGameDef {
+  title: string;
+  titleEn: string;
+  intro: string;
+  question: { text: string; audio: string };
+  rounds: { color: string; paint: string }[];
+  levelsByAge: Record<AgeBand, SpeakMode[]>;
+}
+
 export interface ActivityDef {
   title: string;
   words: string[];
   focusWords: string[];
   sentences: SentenceItem[];
+  speakGame: SpeakGameDef;
   quiz: {
     mix: Record<QuestionType, number>;
     optionsByAge: Record<AgeBand, Record<QuestionType, number>>;
@@ -57,6 +70,8 @@ export interface WeekDef {
   routines: RoutineDef[];
   weekendExtras: RoutineDef[];
   activity: ActivityDef;
+  /** 보호자가 생활 속에서 건넬 말. 장면(when)과 묻는 말·대답 */
+  parentGuide: { tips: { when: string; ask: string; answer: string }[] };
 }
 
 export interface WordDef {

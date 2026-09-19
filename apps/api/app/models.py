@@ -291,7 +291,9 @@ class QuizAnswer(Base):
 class SpeakAttempt(Base):
     __tablename__ = "speak_attempts"
     __table_args__ = (
-        UniqueConstraint("activity_id", "word_id", name="uq_speak_attempts_word"),
+        # 같은 단어를 단어로 한 번, 문장으로 한 번 말한다 (말하기 게임의 두 단계)
+        UniqueConstraint("activity_id", "word_id", "mode", name="uq_speak_attempts_word_mode"),
+        CheckConstraint("mode IN ('word', 'sentence')", name="ck_speak_attempts_mode"),
         CheckConstraint(_in("result", SPEAK_RESULTS), name="ck_speak_attempts_result"),
         CheckConstraint("score BETWEEN 0 AND 1", name="ck_speak_attempts_score"),
     )
@@ -299,6 +301,7 @@ class SpeakAttempt(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     activity_id: Mapped[str] = mapped_column(ForeignKey("activity_records.id", ondelete="CASCADE"), nullable=False, index=True)
     word_id: Mapped[str] = mapped_column(ForeignKey("words.id", ondelete="RESTRICT"), nullable=False)
+    mode: Mapped[str] = mapped_column(String(8), nullable=False, default="word")
     heard: Mapped[str] = mapped_column(String(64), nullable=False, default="")
     score: Mapped[float] = mapped_column(Float, nullable=False, default=0)
     result: Mapped[str] = mapped_column(String(16), nullable=False)

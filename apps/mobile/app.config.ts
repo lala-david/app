@@ -36,6 +36,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       monochromeImage: './assets/images/android-icon-monochrome.png',
     },
     predictiveBackGestureEnabled: false,
+    // 정한 시각에 정확히 울리게 하고, 재부팅 뒤에도 예약을 되살린다
+    permissions: ['android.permission.POST_NOTIFICATIONS', 'android.permission.SCHEDULE_EXACT_ALARM', 'android.permission.RECEIVE_BOOT_COMPLETED', 'android.permission.VIBRATE', 'android.permission.RECORD_AUDIO'],
   },
   web: {
     output: 'single',
@@ -50,7 +52,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     'expo-router',
     'expo-video',
     ['expo-splash-screen', { backgroundColor: BRAND.splash, image: './assets/images/splash-icon.png', imageWidth: 200 }],
-    ['expo-notifications', { color: BRAND.yellow }],
+    './plugins/withNotificationArt',
+    ['expo-notifications', { icon: './assets/images/notification-icon.png', color: '#35AD86', defaultChannel: 'routines' }],
     ['expo-image-picker', { photosPermission: '아이 프로필 사진을 고르기 위해 사진 보관함에 접근해요.' }],
     [
       'expo-speech-recognition',

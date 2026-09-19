@@ -14,7 +14,8 @@ import { strings } from '@/shared/i18n/strings.ko';
 import { fmt } from '@/shared/lib/format';
 import { AppText } from '@/shared/ui/AppText';
 import { Character } from '@/shared/ui/Character';
-import { BackBar, PrimaryButton } from '@/shared/ui/Form';
+import { notificationScheduler } from '@/shared/platform/notifications';
+import { BackBar, PrimaryButton, SoftButton } from '@/shared/ui/Form';
 import { Icon } from '@/shared/ui/icons';
 import { Pressy } from '@/shared/ui/Pressy';
 import { Screen } from '@/shared/ui/Screen';
@@ -39,6 +40,8 @@ function Stepper({ label, onMinus, onPlus }: { label: string; onMinus: () => voi
   );
 }
 
+const TEST_DELAY_SEC = 5;
+
 /** 설정 › 알림 시간 */
 export function ManageNotificationsScreen() {
   const router = useRouter();
@@ -53,6 +56,15 @@ export function ManageNotificationsScreen() {
   const title = (key: RoutineKey) => routines.find((r) => r.key === key)?.title ?? key;
   const violation = findOrderViolation(schedules, coreRoutineOrder(week));
   const update = (key: RoutineKey, patch: Partial<RoutineSchedule>) => setSchedules((list) => list.map((s) => (s.routine === key ? { ...s, ...patch } : s)));
+
+  // 알림이 실제로 어떻게 오는지 바로 확인한다
+  const sendTest = async () => {
+    const permission = await notificationScheduler.getPermission();
+    const granted = permission === 'granted' || (permission === 'undetermined' && (await notificationScheduler.requestPermission()) === 'granted');
+    if (!granted) return toast(strings.settings.permissionDenied);
+    await notificationScheduler.scheduleIn('test', TEST_DELAY_SEC, { title: strings.notifications.testTitle, body: strings.notifications.testBody, url: '/today', art: 'bell' });
+    toast(fmt(strings.settings.testScheduled, { n: TEST_DELAY_SEC }));
+  };
 
   const save = () => {
     updateChild({ schedules });
@@ -87,6 +99,7 @@ export function ManageNotificationsScreen() {
             </View>
           );
         })}
+        <SoftButton label={strings.settings.testNotification} onPress={sendTest} />
         {violation ? (
           <AppText variant="caption" color={colors.danger} accessibilityLiveRegion="polite">
             {fmt(strings.settings.orderError, { routine: title(violation.routine), previous: title(violation.previous) })}

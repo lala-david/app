@@ -18,7 +18,12 @@
       "targetMinutes": 20,
       "guide": "등원 준비를 하며 신나는 아침 인사를 들어요",
       "sentence": "Good morning! Are you ready?",
-      "video": { "videoId": "CCClRXsYiik", "title": "Good Morning Mr. Rooster + More", "channel": "Super Simple Songs", "durationSec": 3944 }
+      "video": {
+        "videoId": "CCClRXsYiik",
+        "title": "Good Morning Mr. Rooster + More",
+        "channel": "Super Simple Songs",
+        "durationSec": 3944
+      }
     },
     {
       "key": "theme",
@@ -31,7 +36,12 @@
       "targetMinutes": 30,
       "guide": "이번 주 색깔 단어를 보고 듣고 따라 말해요",
       "sentence": "What color is it? It’s red!",
-      "video": { "videoId": "v-BvRlsbUiU", "title": "Red Yellow Green Blue + More", "channel": "Super Simple Songs", "durationSec": 3120 }
+      "video": {
+        "videoId": "v-BvRlsbUiU",
+        "title": "Red Yellow Green Blue + More",
+        "channel": "Super Simple Songs",
+        "durationSec": 3120
+      }
     },
     {
       "key": "dinner",
@@ -44,7 +54,12 @@
       "targetMinutes": 20,
       "guide": "식사 시간에 음식과 행동 표현을 자연스럽게 들어요",
       "sentence": "Let’s get ready for dinner time.",
-      "video": { "videoId": "nY6j2LB6QSk", "title": "This is the Way Song (Dinner Time)", "channel": "CoComelon", "durationSec": 2731 }
+      "video": {
+        "videoId": "nY6j2LB6QSk",
+        "title": "This is the Way Song (Dinner Time)",
+        "channel": "CoComelon",
+        "durationSec": 2731
+      }
     },
     {
       "key": "bedtime",
@@ -57,7 +72,12 @@
       "targetMinutes": 20,
       "guide": "불을 낮추고 편안하게 영어 이야기를 들어요",
       "sentence": "Which color do you like?",
-      "video": { "videoId": "S8vcDXuZvmE", "title": "Color Stories for Kids!", "channel": "Vooks", "durationSec": 2396 }
+      "video": {
+        "videoId": "S8vcDXuZvmE",
+        "title": "Color Stories for Kids!",
+        "channel": "Vooks",
+        "durationSec": 2396
+      }
     }
   ],
   "weekendExtras": [
@@ -73,7 +93,11 @@
       "guide": "율동을 따라 하며 찬양을 들어요",
       "sentence": "Praise Him!",
       "requiresFaith": true,
-      "video": { "playlistId": "PLpw2Kv-fs8gAlxnJNsnflxx0wSzJIFG1a", "title": "하잉RTA 찬양율동", "channel": "하잉RTA" }
+      "video": {
+        "playlistId": "PLpw2Kv-fs8gAlxnJNsnflxx0wSzJIFG1a",
+        "title": "하잉RTA 찬양율동",
+        "channel": "하잉RTA"
+      }
     },
     {
       "key": "faithStory",
@@ -87,28 +111,152 @@
       "guide": "잠들기 전에 성경 이야기를 들어요",
       "sentence": "God made everything.",
       "requiresFaith": true,
-      "video": { "playlistId": "PLpw2Kv-fs8gBfxMi6pToFPD9HuwyaDT_i", "title": "하잉RTA 바이블스토리", "channel": "하잉RTA" }
+      "video": {
+        "playlistId": "PLpw2Kv-fs8gBfxMi6pToFPD9HuwyaDT_i",
+        "title": "하잉RTA 바이블스토리",
+        "channel": "하잉RTA"
+      }
     }
   ],
   "activity": {
     "title": "색깔을 듣고, 찾고, 말해요",
-    "words": ["red", "yellow", "green", "blue", "apple", "sun", "clover", "sky"],
-    "focusWords": ["red", "yellow", "green", "blue"],
+    "words": [
+      "red",
+      "yellow",
+      "green",
+      "blue",
+      "apple",
+      "sun",
+      "clover",
+      "sky"
+    ],
+    "focusWords": [
+      "red",
+      "yellow",
+      "green",
+      "blue"
+    ],
     "sentences": [
-      { "text": "It's red.", "answer": "red", "audio": "sentences/its-red" },
-      { "text": "It's yellow.", "answer": "yellow", "audio": "sentences/its-yellow" },
-      { "text": "It's green.", "answer": "green", "audio": "sentences/its-green" },
-      { "text": "It's blue.", "answer": "blue", "audio": "sentences/its-blue" }
+      {
+        "text": "It's red.",
+        "answer": "red",
+        "audio": "sentences/its-red"
+      },
+      {
+        "text": "It's yellow.",
+        "answer": "yellow",
+        "audio": "sentences/its-yellow"
+      },
+      {
+        "text": "It's green.",
+        "answer": "green",
+        "audio": "sentences/its-green"
+      },
+      {
+        "text": "It's blue.",
+        "answer": "blue",
+        "audio": "sentences/its-blue"
+      }
     ],
     "quiz": {
-      "mix": { "pickImage": 3, "pickWord": 2, "match": 1, "sentenceColor": 2 },
-      "optionsByAge": {
-        "6": { "pickImage": 3, "pickWord": 2, "match": 3, "sentenceColor": 3 },
-        "7": { "pickImage": 4, "pickWord": 2, "match": 4, "sentenceColor": 4 },
-        "8": { "pickImage": 4, "pickWord": 3, "match": 4, "sentenceColor": 4 },
-        "9-10": { "pickImage": 4, "pickWord": 3, "match": 4, "sentenceColor": 4 }
+      "mix": {
+        "pickImage": 3,
+        "pickWord": 2,
+        "match": 1,
+        "sentenceColor": 2
       },
-      "hideWordTextFor": ["6"]
+      "optionsByAge": {
+        "6": {
+          "pickImage": 3,
+          "pickWord": 2,
+          "match": 3,
+          "sentenceColor": 3
+        },
+        "7": {
+          "pickImage": 4,
+          "pickWord": 2,
+          "match": 4,
+          "sentenceColor": 4
+        },
+        "8": {
+          "pickImage": 4,
+          "pickWord": 3,
+          "match": 4,
+          "sentenceColor": 4
+        },
+        "9-10": {
+          "pickImage": 4,
+          "pickWord": 3,
+          "match": 4,
+          "sentenceColor": 4
+        }
+      },
+      "hideWordTextFor": [
+        "6"
+      ]
+    },
+    "speakGame": {
+      "title": "색깔 마법",
+      "titleEn": "Color Magic",
+      "intro": "색깔을 말하면 그림에 색이 입혀져요",
+      "question": {
+        "text": "What color is it?",
+        "audio": "prompts/what-color"
+      },
+      "rounds": [
+        {
+          "color": "red",
+          "paint": "apple"
+        },
+        {
+          "color": "yellow",
+          "paint": "sun"
+        },
+        {
+          "color": "green",
+          "paint": "clover"
+        },
+        {
+          "color": "blue",
+          "paint": "sky"
+        }
+      ],
+      "levelsByAge": {
+        "6": [
+          "word"
+        ],
+        "7": [
+          "word",
+          "sentence"
+        ],
+        "8": [
+          "word",
+          "sentence"
+        ],
+        "9-10": [
+          "word",
+          "sentence"
+        ]
+      }
     }
+  },
+  "parentGuide": {
+    "tips": [
+      {
+        "when": "밥 먹을 때 사과나 김치를 가리키며",
+        "ask": "What color is it?",
+        "answer": "It's red!"
+      },
+      {
+        "when": "신호등 앞에서",
+        "ask": "What color is it?",
+        "answer": "It's green!"
+      },
+      {
+        "when": "자기 전에 오늘 본 색을 떠올리며",
+        "ask": "Which color do you like?",
+        "answer": "I like blue!"
+      }
+    ]
   }
 }

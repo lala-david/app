@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>원칙 점검과 보완 설계</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Jua&display=swap">
+<style>
+:root{--bg:#F3F6F4;--sf:#fff;--sf2:#E9EFEB;--ink:#1B2B25;--mut:#5E6E67;--ln:#D5DED9;--ac:#1F7A5C;--ac2:#DDEFE6;--co:#E8603F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+main{max-width:1000px;margin:0 auto;padding:24px 20px 80px}
+.docnav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln);padding:0 20px}
+.docnav ul{list-style:none;margin:0 auto;padding:0;max-width:1000px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.docnav a{display:block;padding:10px 9px;font-size:.82rem;color:var(--mut);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent}
+.docnav a.cur,.docnav a:hover{color:var(--ac);border-color:var(--ac)}
+.docmeta{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:600;margin-top:18px}
+h1,h2,h3,h4{font-family:"Jua","IBM Plex Sans KR",sans-serif;font-weight:400;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:2.3rem;line-height:1.15;margin:6px 0 10px}
+h2{font-size:1.6rem;margin-top:48px;padding-top:16px;border-top:1px solid var(--ln)}
+h3{font-size:1.2rem;margin-top:28px;color:#145A43}
+h4{font-size:1rem;margin-top:18px;font-family:inherit;font-weight:600}
+p{margin:10px 0;max-width:72ch}
+a{color:var(--ac)}
+ul,ol{margin:8px 0;padding-left:22px;max-width:76ch}li{margin:3px 0}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em;background:var(--sf2);padding:1px 5px;border-radius:4px}
+pre{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:.82rem;line-height:1.55}
+pre code{background:none;padding:0}
+pre.mermaid{text-align:center}
+.diagram{max-width:none;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+.diagram img{max-width:100%;height:auto}
+figure.fig{margin:16px 0;text-align:center;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px}
+figure.fig img{max-width:100%;height:auto;border-radius:8px}
+figure.screens{display:inline-block;width:230px;margin:6px;vertical-align:top}
+figcaption{font-size:.8rem;color:var(--mut);margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--sf);margin:14px 0}
+.tw{overflow-x:auto;border:1px solid var(--ln);border-radius:10px;margin:14px 0}
+.tw table{margin:0}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--ln)}
+th{background:var(--sf2);font-weight:600;font-size:.8rem;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+blockquote{margin:14px 0;padding:10px 16px;border-left:3px solid var(--co);background:var(--sf);border-radius:0 10px 10px 0}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--ln);margin:32px 0}
+strong{font-weight:600}
+@media print{.docnav{display:none}body{background:#fff}main{padding:0}}
+</style>
+</head>
+<body>
+<nav class="docnav"><ul><li><a class="" href="00-지원서-분석.html">00 지원서 분석</a></li><li><a class="" href="01-비전과-범위.html">01 비전과 범위</a></li><li><a class="" href="02-요구사항-명세서.html">02 요구사항 명세서 (SRS)</a></li><li><a class="" href="03-유즈케이스-명세서.html">03 유즈케이스 명세서</a></li><li><a class="" href="04-화면-명세서.html">04 화면 명세서</a></li><li><a class="" href="05-데이터베이스-설계서.html">05 데이터베이스 설계서</a></li><li><a class="" href="06-API-명세서.html">06 API 명세서</a></li><li><a class="" href="07-설계-모델-UML.html">07 설계 모델 (UML)</a></li><li><a class="" href="08-아키텍처-코드규칙.html">08 아키텍처·코드 규칙</a></li><li><a class="" href="09-디자인-가이드.html">09 디자인 가이드</a></li><li><a class="" href="10-테스트-계획.html">10 테스트 계획</a></li><li><a class="" href="11-결정기록-오픈이슈.html">11 결정 기록·오픈 이슈</a></li><li><a class="cur" href="12-원칙-점검과-보완.html">12 원칙 점검과 보완 설계</a></li></ul></nav>
+<main>
+<div class="docmeta">SoundsFun Bridge · MVP 문서 v2 · 12</div>
+<h1 id="_1">원칙 점검과 보완 설계</h1>
+<p>지원서의 <strong>핵심 설계 원칙 8가지</strong>와 <strong>MVP 기능</strong>을 지금 앱과 하나씩 대조하고, 빠진 것은 만들거나 설계했습니다. 이 문서에는 그 결과와 함께 새로 만든 말하기 게임 ‘색깔 마법’, 휴대폰 알림, 안드로이드 앱 설치 방법이 들어 있습니다.</p>
+<h2 id="1">1. 핵심 설계 원칙 점검</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>지원서 원칙</th>
+<th>앱에 있는 것</th>
+<th>상태</th>
+<th>이번에 보완한 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>단계별·주제별 연계 교육과정</td>
+<td>48주 4단계, 주차 콘텐츠는 JSON 한 벌, 영상 → 맞추기 → 말하기가 같은 단어로 이어짐</td>
+<td>충족</td>
+<td>단계 카드에 단계 아이콘, 주제 칩(이번 주 주제 강조, <code>W1–3</code>), 12주 눈금, 잠금 표시</td>
+</tr>
+<tr>
+<td>2</td>
+<td>자발적 참여를 부르는 게임형·보상형</td>
+<td>단어 맞추기 4유형, 별, 스티커, 연속일</td>
+<td>보완</td>
+<td><strong>말하기 게임 ‘색깔 마법’</strong> 새로 설계 (아래 2장)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>‘많이’보다 ‘매일’: 출석·반복·작은 성취</td>
+<td>번호 길, 같은 영상 한 주 반복, 요일 별, 주간 표, 연속일</td>
+<td>충족</td>
+<td>저녁 알림에 “연속 n일째! 하나만 해도 이어져요”</td>
+</tr>
+<tr>
+<td>4</td>
+<td>같은 시간에 깨우는 알림</td>
+<td>루틴별 시각, 끝낸 루틴은 안 보냄, 저녁 리마인드</td>
+<td>보완</td>
+<td><strong>휴대폰 알림을 제대로</strong> (아래 3장): 캐릭터 그림, 전용 아이콘, 정확한 시각, ‘지금 시작’ 버튼, 시험 버튼</td>
+</tr>
+<tr>
+<td>5</td>
+<td>공공 영어과정과 신앙과정의 분리</td>
+<td>하잉RTA는 기본 꺼짐, 켤 때 확인 창, 주말에만</td>
+<td>충족</td>
+<td>–</td>
+</tr>
+<tr>
+<td>6</td>
+<td>저사양 스마트폰, 모바일 우선</td>
+<td>WebP 그림, 글꼴 줄임, 영상은 유튜브로</td>
+<td>보완</td>
+<td><strong>데이터 아끼기</strong>(저용량 모드): 시작 영상 대신 그림</td>
+</tr>
+<tr>
+<td>7</td>
+<td>개인정보 최소, 보호자 동의, 광고 없음</td>
+<td>아이는 이름·연령만, 사진은 기기에만, 가입 때 동의, 광고·외부 분석 없음</td>
+<td>충족</td>
+<td>알림·마이크 권한 문구를 쉬운 말로</td>
+</tr>
+<tr>
+<td>8</td>
+<td>쉬운 한국어·그림 안내, 보호자 선택권</td>
+<td>짧은 해요체, 캐릭터·아이콘 위주, 스위치로 선택</td>
+<td>일부</td>
+<td>다언어 안내는 설계만 (아래 5장)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="2-color-magic">2. 말하기 게임 ‘색깔 마법 (Color Magic)’</h2>
+<p>지원서: “핵심은 영상에서 들은 영어를 직접 말하며 활용하는 과정을 게임 형태로 제공하는 것 … 어휘와 문장을 게임 속 말하기 활동에서 사용하도록 구성”.</p>
+<h3 id="_2">놀이 방법</h3>
+<p>미술실에서 악어(‘오늘의 주제’ 캐릭터)가 캔버스 앞에 서 있습니다. 캔버스에는 <strong>색이 없는 밑그림</strong>이 있고, 아이가 색깔 말을 하면 그 색이 번지며 그림이 완성됩니다.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>단계</th>
+<th>아이가 듣는 말</th>
+<th>아이가 하는 말</th>
+<th>화면에서 일어나는 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 단어</td>
+<td><code>red</code></td>
+<td>“red”</td>
+<td>회색 사과에 빨강이 번진다. 별이 튀고 팔레트 한 칸이 찬다</td>
+</tr>
+<tr>
+<td>2. 문장</td>
+<td><code>What color is it?</code> → <code>It’s red.</code></td>
+<td>“It’s red.”</td>
+<td>완성된 그림에 칭찬 메달이 찍힌다</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>1주차 영상 <em>Red Yellow Green Blue</em>의 네 색을 그대로 씁니다: red–사과, yellow–해, green–클로버, blue–하늘.</li>
+<li>문장 단계의 묻는 말은 ‘오늘의 주제’ 루틴의 한 문장(“What color is it? It’s red!”)과 같습니다. <strong>영상 → 단어 → 문장</strong>으로 이어집니다.</li>
+<li>6세는 단어 단계만 합니다(<code>levelsByAge</code>). 7세부터 문장 단계가 붙습니다.</li>
+<li>단어 단계가 끝나면 무지개 화면에서 “이번엔 문장으로 말해요”라고 알려 줍니다.</li>
+</ul>
+<p><img alt="단어 단계: 회색 밑그림" src="../assets/screens/31-game-word.png" />
+<img alt="말하면 색이 입혀진다" src="../assets/screens/32-game-painted.png" />
+<img alt="문장 단계: 칭찬 메달" src="../assets/screens/33-game-sentence.png" />
+<img alt="마침" src="../assets/screens/34-game-finish.png" /></p>
+<h3 id="_3">틀렸다는 말이 없는 규칙</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>상황</th>
+<th>동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>잘 말함 (0.7 이상)</td>
+<td>색칠·메달, 별 1개</td>
+</tr>
+<tr>
+<td>첫 번째에 안 됨</td>
+<td>“한 번 더?” 하고 다시 들려준다</td>
+</tr>
+<tr>
+<td>두 번째도 안 됨</td>
+<td>같이 다시 듣고 색을 입혀 준다 (<code>given</code>)</td>
+</tr>
+<tr>
+<td>마이크를 못 씀</td>
+<td>도움 모드: 어른이 듣고 “말했어요”를 누른다</td>
+</tr>
+<tr>
+<td>하기 싫음</td>
+<td>건너뛰기</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_4">그림</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>그림</th>
+<th>만든 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>미술실 배경, 팔레트, 붓, 무지개, 메달</td>
+<td>Recraft AI (단어 그림과 같은 그림책 화풍)</td>
+</tr>
+<tr>
+<td>회색 밑그림</td>
+<td>이번 주 단어 그림을 흑백으로 바꿔 자동 생성. 윤곽이 같아 색이 입혀지는 연출이 자연스럽다</td>
+</tr>
+<tr>
+<td>악어</td>
+<td>디자이너의 클레이 캐릭터</td>
+</tr>
+<tr>
+<td>캔버스·말풍선·팔레트 칸·버튼</td>
+<td>앱의 디자인 토큰(둥근 카드, 루틴 색)으로 직접 그림</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_5">데이터</h3>
+<p><code>week1.json › activity.speakGame</code>에 제목, 묻는 말, 색–그림 짝, 나이별 단계가 있습니다. 차례는 순수 함수 <code>buildSpeakRounds()</code>가 만들고 단위 테스트가 있습니다. 기록에는 <code>mode</code>(word · sentence)가 추가되었고, 서버 <code>speak_attempts</code> 테이블도 <code>UNIQUE(activity_id, word_id, mode)</code>로 바뀌었습니다.</p>
+<h2 id="3">3. 휴대폰 알림</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>작은 아이콘</td>
+<td>병아리 윤곽(눈이 뚫린 흰색 단색). 상태 표시줄에 뜬다</td>
+</tr>
+<tr>
+<td>큰 그림</td>
+<td>알림 오른쪽에 <strong>그 루틴의 캐릭터</strong>: 아침 병아리, 주제 악어, 저녁 고양이, 잠자리 토끼. 저녁 리마인드는 불꽃(연속일) 또는 달, 다 들었을 때는 별, 시험 알림은 종</td>
+</tr>
+<tr>
+<td>색</td>
+<td>루틴 색이 아이콘과 앱 이름에 입혀진다</td>
+</tr>
+<tr>
+<td>문구</td>
+<td>캐릭터가 아이를 부른다: “하이, 병아리가 기다리고 있어요 · 20분”. 날마다 돌아가며 바뀐다. 이모지는 쓰지 않는다</td>
+</tr>
+<tr>
+<td>버튼</td>
+<td>‘지금 시작’ — 누르면 앱이 열리고 그 루틴 시트가 뜬다</td>
+</tr>
+<tr>
+<td>시각</td>
+<td>정확한 알람 권한으로 정한 시각에 울린다. 재부팅 뒤에도 유지</td>
+</tr>
+<tr>
+<td>보내지 않는 경우</td>
+<td>이미 끝낸 루틴, 꺼 둔 루틴, 7일이 끝난 뒤</td>
+</tr>
+<tr>
+<td>확인</td>
+<td>설정 › 알림 시간 › <strong>알림 시험해 보기</strong> (5초 뒤 도착)</td>
+</tr>
+</tbody>
+</table></div>
+<p><img alt="안드로이드 에뮬레이터에서 실제로 받은 알림" src="../assets/screens/30-notification.png" />
+<img alt="‘지금 시작’을 누르면 그 루틴이 열린다" src="../assets/screens/36-android-sheet.png" /></p>
+<p>에뮬레이터(안드로이드 13)에서 확인한 결과입니다: 정한 시각 정각에 도착했고, 버튼을 누르면 앱이 열리며 저녁 노래 시트가 떴습니다.</p>
+<p>불꽃·종·달·별과 단계 아이콘은 Recraft AI로 만든 클레이 질감 아이콘이라 디자이너 캐릭터와 어울립니다. 큰 그림은 빌드할 때 <code>plugins/withNotificationArt.js</code>가 앱에 넣고, 알림마다 다른 그림을 고르는 부분은 <code>patches/expo-notifications+*.patch</code>로 넣었습니다. Expo는 모듈을 미리 컴파일된 파일로 가져다 쓰기 때문에, <code>package.json</code>의 <code>expo.autolinking.android.buildFromSource</code>에 <code>expo-notifications</code>를 적어 이 모듈만 소스에서 빌드하게 했습니다(안 그러면 패치가 빌드에 들어가지 않습니다).</p>
+<h2 id="4-mvp">4. 지원서의 MVP 기능 점검</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>지원서 MVP</th>
+<th>상태</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아동: 오늘의 영상 듣기</td>
+<td>있음</td>
+<td>번호 길, 루틴 시트</td>
+</tr>
+<tr>
+<td>아동: 단어 듣고 따라 말하기</td>
+<td>있음 → 강화</td>
+<td>색깔 마법 (단어 → 문장)</td>
+</tr>
+<tr>
+<td>아동: 스티커·연속학습 기록</td>
+<td>있음</td>
+<td>스티커 판, 연속일</td>
+</tr>
+<tr>
+<td>아동: 간단 진단</td>
+<td>설계</td>
+<td>아래 5장</td>
+</tr>
+<tr>
+<td>보호자: 출석·완료율 확인</td>
+<td>있음</td>
+<td>오늘·주간·월간, 이번 주 한눈에</td>
+</tr>
+<tr>
+<td>보호자: <strong>어려운 항목 확인</strong></td>
+<td><strong>이번에 추가</strong></td>
+<td>부모 탭 ‘어려워한 말’: 맞추기에서 틀렸거나 말하기에서 끝내 못 한 말을 많이 놓친 순서로 3개</td>
+</tr>
+<tr>
+<td>보호자: <strong>주 1회 대화 가이드</strong></td>
+<td><strong>이번에 추가</strong></td>
+<td>부모 탭 ‘이번 주 대화’: 언제 · 묻는 말 · 대답 (예: 신호등 앞에서 “What color is it?” — “It’s green!”)</td>
+</tr>
+<tr>
+<td>운영자: 콘텐츠 점검·배정</td>
+<td>설계</td>
+<td>아래 5장</td>
+</tr>
+<tr>
+<td>접근성: 쉬운 한국어, 그림 안내</td>
+<td>있음</td>
+<td>–</td>
+</tr>
+<tr>
+<td>접근성: <strong>저용량 모드</strong></td>
+<td><strong>이번에 추가</strong></td>
+<td>설정 › 데이터 아끼기</td>
+</tr>
+<tr>
+<td>접근성: 웹앱(PWA) 우선</td>
+<td>있음</td>
+<td>GitHub Pages, 홈 화면에 추가</td>
+</tr>
+<tr>
+<td>안드로이드 앱</td>
+<td><strong>이번에 추가</strong></td>
+<td>아래 6장</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="5">5. 아직 만들지 않은 것의 설계</h2>
+<h3 id="_6">간단 진단</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>설계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>언제</td>
+<td>아이 등록 직후 한 번. 건너뛸 수 있다</td>
+</tr>
+<tr>
+<td>무엇을</td>
+<td>그림 고르기 4문제(이번 주 단어 2 + 다음 단계 단어 2). 기존 문제 엔진 <code>buildQuiz</code>를 그대로 쓴다</td>
+</tr>
+<tr>
+<td>결과</td>
+<td>점수가 아니라 <strong>시작 난이도</strong>: 보기 수(2 · 3 · 4)와 글자 표시 여부. 지금은 연령이 이 값을 정한다</td>
+</tr>
+<tr>
+<td>저장</td>
+<td><code>children.level</code>(easy · normal) 한 칸. 부모가 설정에서 바꿀 수 있다</td>
+</tr>
+<tr>
+<td>원칙</td>
+<td>아이에게 결과를 보여 주지 않는다. “준비됐어요!”만</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_7">다언어 안내</h3>
+<p>화면 문구는 모두 <code>shared/i18n/strings.ko.ts</code> 한 파일에 있습니다. <code>strings.&lt;언어&gt;.ts</code>를 같은 모양으로 더하고 설정에 ‘안내 언어’를 두면 됩니다. 우선 순위는 보호자 화면(가입·설정·부모 탭)입니다. 아이 화면은 글이 거의 없어 그림과 소리로 통합니다.</p>
+<h3 id="_8">운영자 도구</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>기능</th>
+<th>설계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>링크 점검</td>
+<td>매일 <code>week_routines.video_id</code>를 유튜브 oEmbed로 확인해 막힌 영상을 표시</td>
+</tr>
+<tr>
+<td>대체 영상</td>
+<td><code>week_routines</code>에 <code>fallback_video_id</code> 칸을 두고, 막히면 자동으로 바꾼다</td>
+</tr>
+<tr>
+<td>과정 배정</td>
+<td><code>children.run</code>, <code>weeks</code>로 이미 표현된다. 기관 단위 배정은 <code>groups</code> 테이블 추가</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_9">교사용 여러 아이 보기</h3>
+<p><code>users</code> 아래에 아이가 여러 명 달릴 수 있게 이미 되어 있습니다(<code>children.user_id</code>). 교사 계정에 아이들을 연결하고, 리포트 API(<code>/children/{id}/report</code>)를 아이 수만큼 불러 표로 보여 주면 됩니다.</p>
+<h2 id="6-10-5g">6. 안드로이드 앱 (갤럭시 노트 10+ 5G)</h2>
+<p>같은 코드에서 안드로이드 앱(APK)을 만듭니다. 웹과 달리 앱에서는 <strong>알림이 앱을 닫아도 오고</strong>, 음성 인식이 기기 기능으로 동작합니다.</p>
+<pre><code class="language-bash">cd apps/mobile
+npx expo prebuild -p android --clean        # 안드로이드 프로젝트 생성 (android/ 는 저장소에 올리지 않는다)
+cd android
+set JAVA_HOME=C:\Program Files\Android\Android Studio\jbr
+gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a
+# 결과: android/app/build/outputs/apk/release/app-release.apk
+</code></pre>
+<blockquote>
+<p>윈도우에서 <code>subst</code> 같은 가상 드라이브로 경로를 줄여 빌드하면 안 됩니다. 자동 링크가 실제 경로를 쓰기 때문에 경로가 둘로 갈려 실패합니다.</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>패키지</td>
+<td><code>kr.or.rta.soundsfun</code></td>
+</tr>
+<tr>
+<td>대상</td>
+<td>arm64 (노트 10+ 5G), 안드로이드 7 이상</td>
+</tr>
+<tr>
+<td>권한</td>
+<td>알림, 정확한 알람, 재부팅 뒤 복원, 진동, 마이크(말하기 게임), 사진(선택)</td>
+</tr>
+<tr>
+<td>서명</td>
+<td>시험용 키. 스토어에 올릴 때는 정식 키로 다시 서명</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_10">폰에 넣는 법</h3>
+<ol>
+<li><code>app-release.apk</code>를 폰으로 보낸다(카카오톡 나에게 보내기, USB, 드라이브).</li>
+<li>폰에서 파일을 누른다 → “출처를 알 수 없는 앱 설치”를 허용한다.</li>
+<li>앱을 열고 가입 → 아이 등록 → 알림 허용.</li>
+<li>설정 › 알림 시간 › <strong>알림 시험해 보기</strong>로 알림이 오는지 확인한다.</li>
+<li>삼성 폰은 배터리 최적화가 알림을 늦출 수 있다: 설정 › 애플리케이션 › SoundsFun › 배터리 › <strong>제한 없음</strong>.</li>
+</ol>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "base" });
+</script>
+</body>
+</html>

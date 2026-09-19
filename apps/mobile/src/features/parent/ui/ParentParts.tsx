@@ -6,7 +6,8 @@ import type { CharacterKey, RoutineDef } from '@/entities/content/types';
 import type { DateKey } from '@/entities/course/calendar';
 import type { CellStatus } from '@/entities/progress/model/types';
 import { strings } from '@/shared/i18n/strings.ko';
-import { WEEKDAY_LABELS_MON_FIRST } from '@/shared/lib/format';
+import { AssetImage } from '@/entities/content/ui/AssetImage';
+import { fmt, WEEKDAY_LABELS_MON_FIRST } from '@/shared/lib/format';
 import { AppText } from '@/shared/ui/AppText';
 import { Character } from '@/shared/ui/Character';
 import { Icon } from '@/shared/ui/icons';
@@ -184,6 +185,49 @@ export function GlanceBars({ items }: { items: { routine: RoutineDef; done: numb
   );
 }
 
+/** 어려워한 말: 그림 · 영어 · 우리말 · 놓친 횟수 */
+export function HardWordList({ items }: { items: { id: string; ko: string; image: string; misses: number }[] }) {
+  return (
+    <View style={styles.hardList}>
+      {items.map((item) => (
+        <View key={item.id} style={styles.hardRow}>
+          <View style={styles.hardImage}>
+            <AssetImage name={item.image} size={30} />
+          </View>
+          <AppText variant="label" color={colors.parentInk} style={styles.flex}>
+            {item.id}
+            <AppText variant="small" color={colors.parentSoft}>{`  ${item.ko}`}</AppText>
+          </AppText>
+          <AppText variant="microSoft" color={colors.parentSoft}>
+            {fmt(strings.parent.hardCount, { n: item.misses })}
+          </AppText>
+        </View>
+      ))}
+    </View>
+  );
+}
+
+/** 이번 주 대화: 언제 · 묻는 말 · 대답 */
+export function TalkTips({ tips }: { tips: { when: string; ask: string; answer: string }[] }) {
+  return (
+    <View style={styles.talkList}>
+      {tips.map((tip) => (
+        <View key={tip.when} style={styles.talkRow}>
+          <AppText variant="microSoft" color={colors.parentSoft}>
+            {tip.when}
+          </AppText>
+          <AppText variant="label" color={colors.parentInk}>
+            {tip.ask}
+          </AppText>
+          <AppText variant="label" color={colors.calendarDone}>
+            {tip.answer}
+          </AppText>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 /** 모은 스티커: 끝낸 루틴의 캐릭터가 붙고, 빈 자리는 점선 */
 export function StickerBoard({ earned, slots }: { earned: { id: string; character: CharacterKey }[]; slots: number }) {
   const cells = Array.from({ length: slots }, (_, i) => earned[i]);
@@ -235,6 +279,11 @@ const styles = StyleSheet.create({
   glanceTrack: { width: 235, maxWidth: '72%', height: 8, marginLeft: 10, borderRadius: 4, backgroundColor: colors.parentSunken, overflow: 'hidden' },
   glanceFill: { height: '100%', borderRadius: 4 },
   glanceCount: { flex: 1, textAlign: 'right', marginRight: 9 },
+  hardList: { marginTop: 10, gap: 8 },
+  hardRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  hardImage: { width: 38, height: 38, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.parentSunken },
+  talkList: { marginTop: 10, gap: 10 },
+  talkRow: { gap: 2, padding: 12, borderRadius: 16, backgroundColor: colors.parentSunken },
   stickers: { flexDirection: 'row', flexWrap: 'wrap', width: STICKER_CELL * config.stickerColumns, marginTop: 9, marginLeft: 2, marginBottom: -2 },
   stickerCell: { width: STICKER_CELL, height: 44, alignItems: 'flex-start', justifyContent: 'center' },
   stickerEmpty: { width: 33, height: 33, borderRadius: 17, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.parentLine },

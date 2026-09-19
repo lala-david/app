@@ -202,9 +202,9 @@ CREATE TABLE events (
 	FOREIGN KEY(child_id) REFERENCES children (id) ON DELETE SET NULL
 );
 
-CREATE INDEX ix_events_user_id ON events (user_id);
-
 CREATE INDEX ix_events_name ON events (name);
+
+CREATE INDEX ix_events_user_id ON events (user_id);
 
 CREATE TABLE quiz_answers (
 	id INTEGER NOT NULL, 
@@ -229,11 +229,13 @@ CREATE TABLE speak_attempts (
 	id INTEGER NOT NULL, 
 	activity_id VARCHAR(36) NOT NULL, 
 	word_id VARCHAR(32) NOT NULL, 
+	mode VARCHAR(8) NOT NULL, 
 	heard VARCHAR(64) NOT NULL, 
 	score FLOAT NOT NULL, 
 	result VARCHAR(16) NOT NULL, 
 	PRIMARY KEY (id), 
-	CONSTRAINT uq_speak_attempts_word UNIQUE (activity_id, word_id), 
+	CONSTRAINT uq_speak_attempts_word_mode UNIQUE (activity_id, word_id, mode), 
+	CONSTRAINT ck_speak_attempts_mode CHECK (mode IN ('word', 'sentence')), 
 	CONSTRAINT ck_speak_attempts_result CHECK (result IN ('pass', 'passAfterRetry', 'passByParent', 'given', 'skipped')), 
 	CONSTRAINT ck_speak_attempts_score CHECK (score BETWEEN 0 AND 1), 
 	FOREIGN KEY(activity_id) REFERENCES activity_records (id) ON DELETE CASCADE, 

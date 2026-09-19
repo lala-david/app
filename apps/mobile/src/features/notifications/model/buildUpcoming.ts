@@ -1,14 +1,16 @@
 import type { ChildProfile } from '@/entities/child/model/types';
 import { config } from '@/entities/content/content';
+import type { RoutineDef } from '@/entities/content/types';
 import type { WeekDef } from '@/entities/content/types';
 import { addDays, fromDateKey, toDateKey, type DateKey } from '@/entities/course/calendar';
 import { isCourseDay, routinesForDate } from '@/entities/course/course';
-import { isDone } from '@/entities/progress/lib/progress';
+import { isDone, streakDays } from '@/entities/progress/lib/progress';
 import { routineRecordKey, type RoutineRecord } from '@/entities/progress/model/types';
 import { parseTime } from '@/entities/schedule/schedule';
 import { strings } from '@/shared/i18n/strings.ko';
 import { fmt } from '@/shared/lib/format';
 import type { UpcomingNotification } from '@/shared/platform/notifications';
+import { tones } from '@/shared/theme/tokens';
 
 const LOOKAHEAD_DAYS = 7;
 
@@ -17,6 +19,18 @@ function dateAt(date: DateKey, time: string): Date {
   const at = fromDateKey(date);
   at.setHours(hour, minute, 0, 0);
   return at;
+}
+
+/** 캐릭터가 부르는 알림. 문구는 날짜에 따라 돌아가며 바뀐다 */
+function routineMessage(routine: RoutineDef, child: ChildProfile, dayIndex: number) {
+  const lines = strings.notifications.routineBodies;
+  const character = strings.child.characters[routine.character];
+  return {
+    title: fmt(strings.notifications.routineTitle, { routine: routine.title }),
+    body: fmt(lines[(dayIndex + routine.order) % lines.length], { name: child.nickname, character, n: routine.targetMinutes }),
+    color: tones[routine.tone].c,
+    art: routine.character,
+  };
 }
 
 interface Input {
@@ -31,6 +45,7 @@ interface Input {
 export function buildUpcoming({ week, child, routineMap, now, days = LOOKAHEAD_DAYS }: Input): UpcomingNotification[] {
   const today = toDateKey(now);
   const items: UpcomingNotification[] = [];
+  const streak = streakDays(Object.values(routineMap), today);
 
   for (let offset = 0; offset < days; offset++) {
     const date = addDays(today, offset);
@@ -47,15 +62,15 @@ export function buildUpcoming({ week, child, routineMap, now, days = LOOKAHEAD_D
       items.push({
         id: `routine:${date}:${routine.key}`,
         at,
-        title: fmt(strings.notifications.routineTitle, { routine: routine.title }),
-        body: fmt(strings.notifications.routineBody, { video: routine.video.title, n: routine.targetMinutes }),
+        ...routineMessage(routine, child, offset),
         url: `/today?open=${routine.key}`,
       });
     }
 
     const eveningAt = dateAt(date, config.eveningReminder.time);
     if (child.eveningReminder && remaining > 0 && eveningAt > now) {
-      items.push({ id: `routine:evening:${date}`, at: eveningAt, title: fmt(strings.notifications.eveningTitle, { n: remaining }), body: strings.notifications.eveningBody, url: '/today' });
+      const keepStreak = offset === 0 && streak > 0;
+      items.push({ id: `routine:evening:${date}`, at: eveningAt, art: keepStreak ? 'flame' : 'moon', color: keepStreak ? tones.dinner.c : tones.bedtime.c, title: fmt(strings.notifications.eveningTitle, { n: remaining }), body: keepStreak ? fmt(strings.notifications.eveningStreakBody, { n: streak }) : strings.notifications.eveningBody, url: '/today' });
     }
   }
   return items.sort((a, b) => a.at.getTime() - b.at.getTime());

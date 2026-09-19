@@ -9,6 +9,10 @@ export * from './types';
 
 const CHANNEL_ID = 'routines';
 const ROUTINE_KIND = 'routine';
+const CATEGORY_ID = 'routine';
+const DEFAULT_COLOR = '#35AD86';
+/** 빌드에 들어 있는 drawable 이름 (plugins/withNotificationArt) */
+const artResource = (art?: string) => (art ? `notif_${art}` : undefined);
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -24,7 +28,14 @@ async function ensureChannel() {
   await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
     name: strings.notifications.channelName,
     importance: Notifications.AndroidImportance.HIGH,
+    vibrationPattern: [0, 180, 120, 180],
+    lightColor: DEFAULT_COLOR,
+    lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+    enableVibrate: true,
+    showBadge: false,
   });
+  // 알림에 ‘지금 시작’ 버튼을 단다. 누르면 앱이 열리며 그 루틴 시트로 간다
+  await Notifications.setNotificationCategoryAsync(CATEGORY_ID, [{ identifier: 'start', buttonTitle: strings.notifications.actionStart, options: { opensAppToForeground: true } }]);
 }
 
 function mapStatus(status: Notifications.PermissionStatus): NotificationPermission {
@@ -61,7 +72,7 @@ export const notificationScheduler: NotificationScheduler = {
         .map((item) =>
           Notifications.scheduleNotificationAsync({
             identifier: item.id,
-            content: { title: item.title, body: item.body, data: { url: item.url, kind: ROUTINE_KIND } },
+            content: { title: item.title, body: item.body, color: item.color ?? DEFAULT_COLOR, categoryIdentifier: CATEGORY_ID, sound: true, data: { url: item.url, kind: ROUTINE_KIND, largeIcon: artResource(item.art) } },
             trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: item.at, channelId: CHANNEL_ID },
           }),
         ),
@@ -73,7 +84,7 @@ export const notificationScheduler: NotificationScheduler = {
     await Notifications.cancelScheduledNotificationAsync(id).catch(() => undefined);
     await Notifications.scheduleNotificationAsync({
       identifier: id,
-      content: { title: content.title, body: content.body, data: { url: content.url, kind: 'oneoff' } },
+      content: { title: content.title, body: content.body, color: content.color ?? DEFAULT_COLOR, sound: true, data: { url: content.url, kind: 'oneoff', largeIcon: artResource(content.art) } },
       trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds: Math.max(1, seconds), channelId: CHANNEL_ID },
     });
   },

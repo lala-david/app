@@ -108,13 +108,13 @@ def upsert_activity(child_id: str, week_no: int, day: date, body: ActivityIn, us
     activity.answers, activity.attempts = [], []
     db.flush()
     activity.answers =[QuizAnswer(question_id=a.question_id, question_type=a.type, word_id=a.word, correct=a.correct, response_ms=a.ms) for a in body.quiz]
-    activity.attempts = [SpeakAttempt(word_id=s.word, heard=s.heard, score=s.score, result=s.result) for s in body.speak]
+    activity.attempts = [SpeakAttempt(word_id=s.word, mode=s.mode, heard=s.heard, score=s.score, result=s.result) for s in body.speak]
     db.commit()
 
     return ActivityOut(
         week=week_no, date=day, stars=activity.stars, completed_at=activity.completed_at,
         quiz=[QuizAnswerIn(question_id=a.question_id, type=a.question_type, word=a.word_id, correct=a.correct, ms=a.response_ms) for a in activity.answers],
-        speak=[SpeakAttemptIn(word=s.word_id, heard=s.heard, score=s.score, result=s.result) for s in activity.attempts],
+        speak=[SpeakAttemptIn(word=s.word_id, mode=s.mode, heard=s.heard, score=s.score, result=s.result) for s in activity.attempts],
     )
 
 

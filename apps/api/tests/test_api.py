@@ -117,10 +117,12 @@ def test_activity_upsert_replaces_answers_and_validates_words(client):
     headers = auth(client)
     child = make_child(client, headers)
     url = f"{API}/children/{child['id']}/activities/1/{TODAY}"
-    body = {"quiz": [{"questionId": "q1", "type": "pickImage", "word": "red", "correct": True, "ms": 900}, {"questionId": "q4", "type": "match", "correct": False}], "speak": [{"word": "red", "heard": "red", "score": 1, "result": "pass"}], "stars": 2, "completedAt": 5}
+    body = {"quiz": [{"questionId": "q1", "type": "pickImage", "word": "red", "correct": True, "ms": 900}, {"questionId": "q4", "type": "match", "correct": False}], "speak": [{"word": "red", "heard": "red", "score": 1, "result": "pass"}, {"word": "red", "mode": "sentence", "heard": "it's red", "score": 1, "result": "pass"}], "stars": 3, "completedAt": 5}
     first = client.put(url, json=body, headers=headers)
     assert first.status_code == 200, first.text
-    assert len(client.put(url, json=body, headers=headers).json()["quiz"]) == 2
+    again = client.put(url, json=body, headers=headers).json()
+    assert len(again["quiz"]) == 2 and [s["mode"] for s in again["speak"]] == ["word", "sentence"]
+    assert client.put(url, json={"speak": [{"word": "red", "mode": "song", "result": "pass"}]}, headers=headers).status_code == 422
     with SessionLocal() as db:
         assert db.query(QuizAnswer).count() == 2
     assert client.put(url, json={"quiz": [{"questionId": "q1", "type": "pickImage", "word": "dragon", "correct": True}]}, headers=headers).status_code == 422

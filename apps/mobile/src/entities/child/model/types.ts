@@ -17,5 +17,7 @@ export interface ChildProfile {
   faithEnabled: boolean;
   notificationsEnabled: boolean;
   eveningReminder: boolean;
+  /** 저용량 모드: 시작 영상 대신 그림만 보여 준다 */
+  dataSaver?: boolean;
   onboardingDone: boolean;
 }

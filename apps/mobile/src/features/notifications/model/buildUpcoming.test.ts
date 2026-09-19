@@ -37,6 +37,10 @@ describe('buildUpcoming', () => {
     expect(items.map((i) => i.id)).toEqual(['routine:2026-09-18:bedtime']);
     expect(items[0].url).toBe('/today?open=bedtime');
     expect(items[0].title).toBe('잠자리 이야기 시간이에요');
+    expect(items[0].art).toBe('rabbit');
+    expect(items[0].body).toContain('토끼');
+    expect(items[0].body).toContain('20분');
+    expect(items[0].color).toBe('#B64FE0');
   });
 
   it('stops after the last course day', () => {

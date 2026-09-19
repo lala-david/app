@@ -3,33 +3,82 @@
   "currentWeek": 1,
   "dailyTargetMinutes": 90,
   "defaultSchedule": [
-    { "routine": "morning", "time": "07:30", "enabled": true },
-    { "routine": "theme", "time": "17:30", "enabled": true },
-    { "routine": "dinner", "time": "18:30", "enabled": true },
-    { "routine": "bedtime", "time": "20:30", "enabled": true },
-    { "routine": "faithSong", "time": "10:00", "enabled": true },
-    { "routine": "faithStory", "time": "20:00", "enabled": true }
+    {
+      "routine": "morning",
+      "time": "07:30",
+      "enabled": true
+    },
+    {
+      "routine": "theme",
+      "time": "17:30",
+      "enabled": true
+    },
+    {
+      "routine": "dinner",
+      "time": "18:30",
+      "enabled": true
+    },
+    {
+      "routine": "bedtime",
+      "time": "20:30",
+      "enabled": true
+    },
+    {
+      "routine": "faithSong",
+      "time": "10:00",
+      "enabled": true
+    },
+    {
+      "routine": "faithStory",
+      "time": "20:00",
+      "enabled": true
+    }
   ],
-  "eveningReminder": { "time": "20:00", "enabled": true },
+  "eveningReminder": {
+    "time": "20:00",
+    "enabled": true
+  },
   "startDateMaxOffsetDays": 7,
   "timeStepMinutes": 10,
   "nicknameMaxLength": 8,
   "passwordMinLength": 8,
-  "ageBands": ["6", "7", "8", "9-10"],
+  "ageBands": [
+    "6",
+    "7",
+    "8",
+    "9-10"
+  ],
   "defaultAgeBand": "7",
-  "characters": ["chick", "crocodile", "cat", "rabbit"],
+  "characters": [
+    "chick",
+    "crocodile",
+    "cat",
+    "rabbit"
+  ],
   "defaultCharacter": "chick",
   "stickerSlots": 18,
   "stickerColumns": 6,
   "pathPreviewDays": 3,
-  "speech": { "lang": "en-US", "passThreshold": 0.7, "maxTries": 2, "listenTimeoutMs": 6000 },
-  "stars": { "quizCorrect": 1, "speakPass": 1 },
+  "speech": {
+    "lang": "en-US",
+    "passThreshold": 0.7,
+    "maxTries": 2,
+    "listenTimeoutMs": 6000
+  },
+  "stars": {
+    "quizCorrect": 1,
+    "speakPass": 1
+  },
   "consentVersion": "2026-09-19",
-  "photo": { "size": 256, "quality": 0.85 },
+  "photo": {
+    "size": 256,
+    "quality": 0.85
+  },
   "links": {
     "youtubeWatch": "https://www.youtube.com/watch?v=",
     "youtubePlaylist": "https://www.youtube.com/playlist?list=",
     "contactEmail": "suny502@gmail.com",
     "privacyPolicy": "https://www.rta.or.kr"
-  }
+  },
+  "hardWordLimit": 3
 }
