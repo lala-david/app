@@ -24,6 +24,7 @@ interface Props {
   onError: () => void;
   onPlay: () => void;
   onOpenOutside: () => void;
+  onFullscreenDenied: () => void;
 }
 
 const COVER_TEXT: Record<Exclude<PlayerPhase, 'playing' | 'manual'>, string> = {
@@ -37,7 +38,7 @@ const COVER_TEXT: Record<Exclude<PlayerPhase, 'playing' | 'manual'>, string> = {
  * 시트 안의 영상 칸. 재생 중에만 유튜브 화면이 드러나고,
  * 멈추면 우리 덮개가 위를 가려서 유튜브의 추천 영상이 아이에게 보이지 않는다.
  */
-export function RoutinePlayer({ playerRef, routine, phase, wantPlay, onState, onError, onPlay, onOpenOutside }: Props) {
+export function RoutinePlayer({ playerRef, routine, phase, wantPlay, onState, onError, onPlay, onOpenOutside, onFullscreenDenied }: Props) {
   const tone = tones[routine.tone];
   const thumbnail = thumbnailUrl(routine.video);
   const blocked = phase === 'blocked';
@@ -47,7 +48,7 @@ export function RoutinePlayer({ playerRef, routine, phase, wantPlay, onState, on
 
   return (
     <Appear style={[styles.frame, { borderColor: tone.p }]}>
-      {blocked ? null : <YoutubePlayer ref={playerRef} source={routine.video} playing={wantPlay} onState={onState} onError={onError} />}
+      {blocked ? null : <YoutubePlayer ref={playerRef} source={routine.video} playing={wantPlay} onState={onState} onError={onError} onFullscreenDenied={onFullscreenDenied} />}
 
       {uncovered ? (
         phase === 'manual' ? (

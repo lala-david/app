@@ -93,6 +93,7 @@ export const strings = {
     watchOutside: '유튜브 앱에서 보기',
     tapVideo: '영상 가운데 재생 버튼을 눌러요',
     fullscreen: '전체 화면으로 보기',
+    fullscreenHint: '영상을 한 번 누르고, 영상 안 오른쪽의 화살표 버튼을 눌러요',
     reached: '{n}분을 다 들었어요!',
   },
   journey: {

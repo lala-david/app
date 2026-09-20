@@ -24,6 +24,7 @@ describe('youtubeEmbed', () => {
     expect(parseMessage('{"type":"state","code":1}')).toEqual({ type: 'state', state: 'playing' });
     expect(parseMessage('{"type":"error","code":150}')).toEqual({ type: 'error', code: 150 });
     expect(parseMessage('{"type":"state","code":-1}')).toBeNull();
+    expect(parseMessage('{"type":"fullscreenDenied"}')).toEqual({ type: 'fullscreenDenied' });
     expect(parseMessage('not json')).toBeNull();
   });
 

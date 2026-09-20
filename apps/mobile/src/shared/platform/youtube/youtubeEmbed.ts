@@ -9,7 +9,7 @@ export interface YoutubeSource {
 
 export type PlayerState = 'ready' | 'playing' | 'paused' | 'buffering' | 'ended';
 
-export type PlayerMessage = { type: 'state'; state: PlayerState } | { type: 'error'; code: number };
+export type PlayerMessage = { type: 'state'; state: PlayerState } | { type: 'error'; code: number } | { type: 'fullscreenDenied' };
 
 export interface YoutubePlayerHandle {
   enterFullscreen: () => void;
@@ -22,6 +22,8 @@ export interface YoutubePlayerProps {
   playing: boolean;
   onState: (state: PlayerState) => void;
   onError: (code: number) => void;
+  /** 기기가 바깥 버튼으로는 전체 화면을 허락하지 않았다 (안드로이드 앱) */
+  onFullscreenDenied?: () => void;
 }
 
 /** 유튜브는 어디에 끼워 넣었는지(출처)를 확인한다. 앱에는 주소가 없어서 배포한 웹 주소를 쓴다 */
@@ -47,6 +49,7 @@ export function parseMessage(raw: string): PlayerMessage | null {
   try {
     const data = JSON.parse(raw) as { type?: string; code?: number };
     if (data.type === 'ready') return { type: 'state', state: 'ready' };
+    if (data.type === 'fullscreenDenied') return { type: 'fullscreenDenied' };
     if (typeof data.code !== 'number') return null;
     if (data.type === 'error') return { type: 'error', code: data.code };
     const state = data.type === 'state' ? stateFromCode(data.code) : null;
@@ -70,7 +73,7 @@ export function playerHtml(source: YoutubeSource): string {
 <div id="player"></div>
 <script>
 var player;
-function enterFullscreen(){var f=document.querySelector('iframe')||document.getElementById('player');var go=f.requestFullscreen||f.webkitRequestFullscreen;if(go)go.call(f);}
+function enterFullscreen(){var f=document.querySelector('iframe')||document.getElementById('player');var go=f.requestFullscreen||f.webkitRequestFullscreen;var denied=function(){send({type:'fullscreenDenied'});};if(!go)return denied();var asked=go.call(f);if(asked&&asked.catch)asked.catch(denied);}
 window.onerror=function(m){send({type:'log',text:String(m)});};
 function send(message){window.ReactNativeWebView.postMessage(JSON.stringify(message));}
 function onYouTubeIframeAPIReady(){

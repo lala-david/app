@@ -58,8 +58,8 @@ export function useRoutinePlayback(station: Station, onClose: () => void): Routi
   const [playerReady, setPlayerReady] = useState(false);
   const outside = useRef(false);
 
-  const startClock = () => {
-    progressActions.startTimer(date, routine.key, clock.now());
+  const startClock = (away = false) => {
+    progressActions.startTimer(date, routine.key, clock.now(), away);
     void notificationScheduler.scheduleIn(timerNotificationId(station), Math.ceil((timer.target - timer.elapsed) / TIME_SCALE), {
       title: fmt(strings.notifications.timerTitle, { n: routine.targetMinutes }),
       body: strings.notifications.timerBody,
@@ -102,6 +102,13 @@ export function useRoutinePlayback(station: Station, onClose: () => void): Routi
     return () => clearTimeout(timeout);
   }, [watching, playerReady]);
 
+  // 시트를 열 때: 유튜브로 나가 있던 중이면 이어 가고, 앱이 꺼지며 남은 헛도는 시계는 버린다
+  useEffect(() => {
+    if (record?.runOutside) outside.current = true;
+    else progressActions.dropStaleRun(date, routine.key);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // 시트를 닫거나 앱을 내리면 화면 안 영상은 멈추므로 시간도 멈춘다
   useEffect(() => {
     const halt = () => {
@@ -117,7 +124,11 @@ export function useRoutinePlayback(station: Station, onClose: () => void): Routi
   }, []);
 
   const onPlayerState = (state: PlayerState) => {
-    if (state === 'buffering') return;
+    if (state === 'buffering') {
+      // 받아 오는 중이면 이미 재생이 시작된 것이다. 덮개와 안내를 걷는다
+      setPhase('playing');
+      return;
+    }
     if (state === 'ready') {
       // 준비가 끝났을 뿐이다. 시작을 눌러 둔 재생 명령은 그대로 둔다
       setPlayerReady(true);
@@ -155,7 +166,8 @@ export function useRoutinePlayback(station: Station, onClose: () => void): Routi
     if (!(await openExternal(youtubeUrl(routine.video)))) return toast(strings.sheet.openFailed);
     outside.current = true;
     setWantPlay(false);
-    startClock();
+    stopClock();
+    startClock(true);
   };
 
   const completeNow = () => {

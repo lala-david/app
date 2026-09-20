@@ -9,7 +9,7 @@ export type { YoutubePlayerHandle } from './youtubeEmbed';
 const command = (playing: boolean) => `player && player.${playing ? 'playVideo' : 'pauseVideo'}(); true;`;
 
 /** 앱에서는 WebView 안에 유튜브 플레이어를 띄운다 (웹은 YoutubePlayer.web.tsx) */
-export function YoutubePlayer({ ref: handle, source, playing, onState, onError }: YoutubePlayerProps) {
+export function YoutubePlayer({ ref: handle, source, playing, onState, onError, onFullscreenDenied }: YoutubePlayerProps) {
   const ref = useRef<WebView>(null);
   useImperativeHandle(handle, () => ({ enterFullscreen: () => ref.current?.injectJavaScript('enterFullscreen(); true;') }), []);
   const [ready, setReady] = useState(false);
@@ -27,6 +27,7 @@ export function YoutubePlayer({ ref: handle, source, playing, onState, onError }
       return;
     }
     if (message.type === 'error') return onError(message.code);
+    if (message.type === 'fullscreenDenied') return onFullscreenDenied?.();
     if (message.state === 'ready') setReady(true);
     onState(message.state);
   };

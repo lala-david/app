@@ -10,6 +10,8 @@ export interface RoutineRecord {
   routine: RoutineKey;
   /** 타이머가 도는 중이면 시작 시각(ms), 멈춰 있으면 null */
   runningSince: number | null;
+  /** 유튜브로 나가서 보는 중. 이때만 앱이 꺼져 있어도 시간이 흐른다 */
+  runOutside?: boolean;
   /** 멈추기 전까지 쌓인 초 */
   accumulatedSec: number;
   listenedMin: number;

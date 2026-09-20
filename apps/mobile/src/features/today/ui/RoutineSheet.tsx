@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { strings } from '@/shared/i18n/strings.ko';
@@ -19,6 +19,8 @@ interface Props {
   onClose: () => void;
 }
 
+const HINT_MS = 4500;
+
 function SheetBody({ station, onClose }: { station: Station; onClose: () => void }) {
   const { routine } = station;
   const tone = tones[routine.tone];
@@ -27,6 +29,14 @@ function SheetBody({ station, onClose }: { station: Station; onClose: () => void
   const active = playback.wantPlay || timer.running;
   const showPlayer = watching && !done;
   const player = useRef<YoutubePlayerHandle>(null);
+
+  // 시트는 모달이라 앱의 토스트가 가려진다. 전체 화면 안내는 시트 안에 잠깐 보여 준다
+  const [hint, setHint] = useState(false);
+  useEffect(() => {
+    if (!hint) return;
+    const timeout = setTimeout(() => setHint(false), HINT_MS);
+    return () => clearTimeout(timeout);
+  }, [hint]);
 
   return (
     <View>
@@ -41,6 +51,7 @@ function SheetBody({ station, onClose }: { station: Station; onClose: () => void
             onError={playback.onPlayerError}
             onPlay={playback.toggle}
             onOpenOutside={playback.openOutside}
+            onFullscreenDenied={() => setHint(true)}
           />
           <WatchingHead routine={routine} onFullscreen={() => player.current?.enterFullscreen()} />
         </>
@@ -55,7 +66,11 @@ function SheetBody({ station, onClose }: { station: Station; onClose: () => void
         <TimerBar timer={timer} done={done} color={tone.c} />
       </View>
 
-      {showPlayer && playback.phase !== 'blocked' ? (
+      {showPlayer && hint ? (
+        <AppText variant="caption" color={tone.c} align="center" style={styles.hint}>
+          {strings.sheet.fullscreenHint}
+        </AppText>
+      ) : showPlayer && playback.phase !== 'blocked' ? (
         <Pressy onPress={playback.openOutside} style={styles.outside}>
           <AppText variant="caption" color={colors.inkSoft} style={styles.underline}>
             {strings.sheet.watchOutside}
@@ -91,6 +106,7 @@ const styles = StyleSheet.create({
   sentenceWatching: { marginTop: 16 },
   timer: { marginTop: 23 },
   outside: { alignSelf: 'center', paddingVertical: 10 },
+  hint: { paddingVertical: 10 },
   underline: { textDecorationLine: 'underline' },
   actions: { marginTop: 29, gap: 11 },
   actionsWatching: { marginTop: 8, gap: 11 },

@@ -63,12 +63,17 @@ function withActivity(week: number, date: DateKey, update: (record: ActivityReco
 
 /** 기록을 바꾸는 동작은 모두 여기로 모은다 */
 export const progressActions = {
-  startTimer(date: DateKey, routine: RoutineKey, now: number) {
-    withRoutine(date, routine, (r) => (r.runningSince != null || r.completedAt ? r : { ...r, runningSince: now }));
+  startTimer(date: DateKey, routine: RoutineKey, now: number, outside = false) {
+    withRoutine(date, routine, (r) => (r.runningSince != null || r.completedAt ? r : { ...r, runningSince: now, runOutside: outside }));
+  },
+
+  /** 앱 안 영상을 보다가 앱이 꺼지면 시계만 돌고 있다. 그 구간은 들은 시간이 아니므로 버린다 */
+  dropStaleRun(date: DateKey, routine: RoutineKey) {
+    withRoutine(date, routine, (r) => (r.runningSince == null || r.runOutside ? r : { ...r, runningSince: null }));
   },
 
   pauseTimer(date: DateKey, routine: RoutineKey, now: number) {
-    withRoutine(date, routine, (r) => (r.runningSince == null ? r : { ...r, accumulatedSec: elapsedSec(r, now), runningSince: null }));
+    withRoutine(date, routine, (r) => (r.runningSince == null ? r : { ...r, accumulatedSec: elapsedSec(r, now), runningSince: null, runOutside: false }));
   },
 
   complete(date: DateKey, routine: RoutineKey, kind: CompletionKind, targetMinutes: number, now: number) {

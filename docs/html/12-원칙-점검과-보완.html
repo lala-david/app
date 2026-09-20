@@ -483,6 +483,47 @@ gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a
 </tbody>
 </table></div>
 <p>검증은 에뮬레이터를 노트와 같은 조건(1080×2280, 글자 크기 1.3배)으로 맞추고 가입부터 알림 시간까지 17개 화면을 돌며 확인했습니다. 홈 화면 위젯은 이번 범위에서 뺐습니다.</p>
+<h2 id="8">8. 앱 안에서 영상 보기</h2>
+<p>루틴 영상을 유튜브로 내보내지 않고 시트 안에서 재생합니다(결정 D-26).</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구성</td>
+<td><code>shared/platform/youtube</code>(웹은 IFrame API, 앱은 WebView) → <code>useRoutinePlayback</code>(재생·시간·알림) → <code>RoutinePlayer</code>(영상 칸) → <code>RoutineSheet</code>(조립)</td>
+</tr>
+<tr>
+<td>듣기 시간</td>
+<td>영상이 재생되는 동안만 흐른다. 시트를 닫거나 앱을 내리면 영상과 함께 멈춘다</td>
+</tr>
+<tr>
+<td>멈춤 덮개</td>
+<td>멈추면 미리보기 그림과 큰 재생 버튼이 영상을 덮어 유튜브 추천 영상을 가린다</td>
+</tr>
+<tr>
+<td>자동재생이 막힐 때</td>
+<td>1.8초 안에 시작되지 않거나 9초 안에 준비되지 않으면 덮개를 걷어 유튜브의 재생 버튼을 직접 누르게 한다</td>
+</tr>
+<tr>
+<td>전체 화면</td>
+<td>웹은 제목 줄의 버튼으로 바로. 앱은 영상 안의 전체 화면 버튼으로 들어가며 항상 가로로 돈다(<code>patches/react-native-webview</code>). 뒤로 가기로 나온다</td>
+</tr>
+<tr>
+<td>막힌 영상</td>
+<td>끼워 넣기를 허용하지 않는 영상은 “유튜브에서 열기”로 보내고 그동안만 시계로 시간을 잰다</td>
+</tr>
+<tr>
+<td>앱이 꺼졌을 때</td>
+<td>재생 중 앱이 꺼져 시계만 남아 돌던 구간은 다음에 열 때 버린다(<code>dropStaleRun</code>). 고치기 전에는 이 시간이 쌓여 루틴이 저절로 완료됐다</td>
+</tr>
+</tbody>
+</table></div>
+<p>1주차 영상 네 편(Super Simple Songs 두 편, CoComelon, Vooks)은 웹과 안드로이드 에뮬레이터에서 모두 앱 안 재생을 확인했습니다.</p>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
