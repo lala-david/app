@@ -69,6 +69,7 @@ export const colors = {
   completeInk: '#44615A',
   shade: 'rgba(37, 67, 61, 0.3)',
   videoDim: 'rgba(30, 44, 40, 0.42)',
+  videoChip: 'rgba(20, 30, 27, 0.62)',
   handle: '#DED7CE',
   splash: '#2D1B68',
   splashTop: '#412369',

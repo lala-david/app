@@ -1,6 +1,8 @@
+import { useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { strings } from '@/shared/i18n/strings.ko';
+import type { YoutubePlayerHandle } from '@/shared/platform/youtube/YoutubePlayer';
 import { AppText } from '@/shared/ui/AppText';
 import { PrimaryButton, SoftButton } from '@/shared/ui/Form';
 import { Pressy } from '@/shared/ui/Pressy';
@@ -24,12 +26,14 @@ function SheetBody({ station, onClose }: { station: Station; onClose: () => void
   const { timer, done, watching } = playback;
   const active = playback.wantPlay || timer.running;
   const showPlayer = watching && !done;
+  const player = useRef<YoutubePlayerHandle>(null);
 
   return (
     <View>
       {showPlayer ? (
         <>
           <RoutinePlayer
+            playerRef={player}
             routine={routine}
             phase={playback.phase}
             wantPlay={playback.wantPlay}
@@ -38,7 +42,7 @@ function SheetBody({ station, onClose }: { station: Station; onClose: () => void
             onPlay={playback.toggle}
             onOpenOutside={playback.openOutside}
           />
-          <WatchingHead routine={routine} />
+          <WatchingHead routine={routine} onFullscreen={() => player.current?.enterFullscreen()} />
         </>
       ) : (
         <RoutineHead routine={routine} float={timer.running} />

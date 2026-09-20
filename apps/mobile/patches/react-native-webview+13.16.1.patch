@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt
+index f83033b..b46e222 100644
+--- a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt
++++ b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt
+@@ -157,7 +157,7 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+                         }
+                         mVideoView = view
+                         mCustomViewCallback = callback
+-                        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
++                        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                         mVideoView.systemUiVisibility = FULLSCREEN_SYSTEM_UI_VISIBILITY
+                         activity.window.setFlags(
+                             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,

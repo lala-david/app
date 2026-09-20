@@ -91,6 +91,8 @@ export const strings = {
     blocked: '이 영상은 유튜브에서만 볼 수 있어요',
     openYoutube: '유튜브에서 열기',
     watchOutside: '유튜브 앱에서 보기',
+    tapVideo: '영상 가운데 재생 버튼을 눌러요',
+    fullscreen: '전체 화면으로 보기',
     reached: '{n}분을 다 들었어요!',
   },
   journey: {

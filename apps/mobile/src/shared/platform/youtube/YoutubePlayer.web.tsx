@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState, type CSSProperties } from 'react';
 
 import { playerVars, stateFromCode, type YoutubePlayerProps } from './youtubeEmbed';
+
+export type { YoutubePlayerHandle } from './youtubeEmbed';
 
 interface Player {
   playVideo(): void;
@@ -35,8 +37,9 @@ function loadApi(): Promise<YoutubeApi> {
 
 const fill: CSSProperties = { width: '100%', height: '100%', background: '#000' };
 
-export function YoutubePlayer({ source, playing, onState, onError }: YoutubePlayerProps) {
+export function YoutubePlayer({ ref: handle, source, playing, onState, onError }: YoutubePlayerProps) {
   const holder = useRef<HTMLDivElement>(null);
+  useImperativeHandle(handle, () => ({ enterFullscreen: () => void holder.current?.requestFullscreen?.().catch(() => undefined) }), []);
   const player = useRef<Player | null>(null);
   const [ready, setReady] = useState(false);
   const handlers = useRef({ onState, onError });

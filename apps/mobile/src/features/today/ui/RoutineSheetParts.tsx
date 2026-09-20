@@ -5,6 +5,8 @@ import { strings } from '@/shared/i18n/strings.ko';
 import { formatClock } from '@/shared/lib/format';
 import { AppText } from '@/shared/ui/AppText';
 import { Character } from '@/shared/ui/Character';
+import { Icon } from '@/shared/ui/icons';
+import { Pressy } from '@/shared/ui/Pressy';
 import { colors, sizes, tones } from '@/shared/theme/tokens';
 
 import type { RoutineTimer } from '../model/useRoutineTimer';
@@ -33,7 +35,7 @@ export function RoutineHead({ routine, float }: { routine: RoutineDef; float: bo
 }
 
 /** 보는 중 머리: 영상에 자리를 내주고 한 줄로 줄어든다 */
-export function WatchingHead({ routine }: { routine: RoutineDef }) {
+export function WatchingHead({ routine, onFullscreen }: { routine: RoutineDef; onFullscreen: () => void }) {
   const tone = tones[routine.tone];
   return (
     <View style={styles.watching}>
@@ -48,6 +50,9 @@ export function WatchingHead({ routine }: { routine: RoutineDef }) {
           {routine.title} · {routine.video.title}
         </AppText>
       </View>
+      <Pressy onPress={onFullscreen} style={[styles.fullscreen, { backgroundColor: tone.p }]} accessibilityLabel={strings.sheet.fullscreen}>
+        <Icon name="expand" size={20} color={colors.ink} strokeWidth={2.2} />
+      </Pressy>
     </View>
   );
 }
@@ -96,6 +101,7 @@ const styles = StyleSheet.create({
   watching: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 14 },
   watchTile: { width: sizes.watchTile, height: sizes.watchTile, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   watchText: { flex: 1, gap: 4 },
+  fullscreen: { width: sizes.watchTile, height: sizes.watchTile, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   sentence: { flexDirection: 'row', alignItems: 'flex-start', gap: 21, minHeight: 83, paddingTop: 12, paddingBottom: 12, paddingLeft: 17, paddingRight: 16, borderWidth: 1, borderColor: colors.lineSoft, borderRadius: 20, backgroundColor: colors.surface },
   dot: { width: 16, height: 16, borderRadius: 8, borderWidth: 2, alignItems: 'center', justifyContent: 'center', marginTop: 13 },
   dotCore: { width: 8, height: 8, borderRadius: 4 },

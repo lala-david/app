@@ -18,7 +18,13 @@ import type { Station } from './todayState';
 import { TIME_SCALE, useRoutineTimer, type RoutineTimer } from './useRoutineTimer';
 
 /** 화면 안 플레이어가 지금 보여 줄 모습 */
-export type PlayerPhase = 'loading' | 'playing' | 'paused' | 'ended' | 'blocked';
+export type PlayerPhase = 'loading' | 'manual' | 'playing' | 'paused' | 'ended' | 'blocked';
+
+/** 재생 명령 뒤 이만큼 기다려도 시작되지 않으면 자동재생이 막힌 것으로 본다 */
+const AUTOPLAY_WAIT_MS = 1800;
+
+/** 플레이어가 이만큼 지나도 준비되지 않으면 덮개를 걷어 안에서 무슨 일이 있는지 보이게 한다 */
+const READY_WAIT_MS = 9000;
 
 export interface RoutinePlayback {
   timer: RoutineTimer;
@@ -49,6 +55,7 @@ export function useRoutinePlayback(station: Station, onClose: () => void): Routi
   const [watching, setWatching] = useState(false);
   const [wantPlay, setWantPlay] = useState(false);
   const [phase, setPhase] = useState<PlayerPhase>('loading');
+  const [playerReady, setPlayerReady] = useState(false);
   const outside = useRef(false);
 
   const startClock = () => {
@@ -82,6 +89,19 @@ export function useRoutinePlayback(station: Station, onClose: () => void): Routi
     toast(fmt(strings.sheet.reached, { n: routine.targetMinutes }));
   }, [timer.reached, done, date, routine]);
 
+  // 브라우저와 휴대폰은 소리 나는 자동재생을 막곤 한다. 그때는 덮개를 걷어 유튜브의 재생 버튼을 직접 누르게 한다
+  useEffect(() => {
+    if (!playerReady || !wantPlay || phase === 'playing' || phase === 'blocked') return;
+    const timeout = setTimeout(() => setPhase('manual'), AUTOPLAY_WAIT_MS);
+    return () => clearTimeout(timeout);
+  }, [playerReady, wantPlay, phase]);
+
+  useEffect(() => {
+    if (!watching || playerReady) return;
+    const timeout = setTimeout(() => setPhase((current) => (current === 'loading' ? 'manual' : current)), READY_WAIT_MS);
+    return () => clearTimeout(timeout);
+  }, [watching, playerReady]);
+
   // 시트를 닫거나 앱을 내리면 화면 안 영상은 멈추므로 시간도 멈춘다
   useEffect(() => {
     const halt = () => {
@@ -100,6 +120,7 @@ export function useRoutinePlayback(station: Station, onClose: () => void): Routi
     if (state === 'buffering') return;
     if (state === 'ready') {
       // 준비가 끝났을 뿐이다. 시작을 눌러 둔 재생 명령은 그대로 둔다
+      setPlayerReady(true);
       if (!wantPlay) setPhase('paused');
       return;
     }

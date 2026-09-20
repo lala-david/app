@@ -1,3 +1,5 @@
+import type { Ref } from 'react';
+
 import appConfig from '@/content/app-config.json';
 
 export interface YoutubeSource {
@@ -9,7 +11,12 @@ export type PlayerState = 'ready' | 'playing' | 'paused' | 'buffering' | 'ended'
 
 export type PlayerMessage = { type: 'state'; state: PlayerState } | { type: 'error'; code: number };
 
+export interface YoutubePlayerHandle {
+  enterFullscreen: () => void;
+}
+
 export interface YoutubePlayerProps {
+  ref?: Ref<YoutubePlayerHandle>;
   source: YoutubeSource;
   /** 바깥에서 정하는 재생 여부. 플레이어 안에서 바뀐 것은 onState 로 알려 준다 */
   playing: boolean;
@@ -63,6 +70,8 @@ export function playerHtml(source: YoutubeSource): string {
 <div id="player"></div>
 <script>
 var player;
+function enterFullscreen(){var f=document.querySelector('iframe')||document.getElementById('player');var go=f.requestFullscreen||f.webkitRequestFullscreen;if(go)go.call(f);}
+window.onerror=function(m){send({type:'log',text:String(m)});};
 function send(message){window.ReactNativeWebView.postMessage(JSON.stringify(message));}
 function onYouTubeIframeAPIReady(){
   var options=${JSON.stringify(options)};
@@ -74,7 +83,7 @@ function onYouTubeIframeAPIReady(){
   player=new YT.Player('player',options);
 }
 </script>
-<script src="https://www.youtube.com/iframe_api"></script>
+<script src="https://www.youtube.com/iframe_api" onerror="send({type:'error',code:0})"></script>
 </body>
 </html>`;
 }

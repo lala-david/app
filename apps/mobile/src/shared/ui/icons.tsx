@@ -21,6 +21,7 @@ const ICONS = {
   logout: [{ d: 'M10 17l5-5-5-5M15 12H3M21 19V5a2 2 0 0 0-2-2h-6' }],
   trash: [{ d: 'M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 11v6M14 11v6' }],
   close: [{ d: 'M6 6l12 12M18 6 6 18' }],
+  expand: [{ d: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5' }],
   back: [{ d: 'M15 5l-7 7 7 7' }],
   chevronRight: [{ d: 'M9 5l7 7-7 7' }],
   chevronLeft: [{ d: 'M15 5l-7 7 7 7' }],
