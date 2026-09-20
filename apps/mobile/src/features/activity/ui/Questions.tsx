@@ -5,6 +5,7 @@ import { getWord } from '@/entities/content/content';
 import { AssetImage } from '@/entities/content/ui/AssetImage';
 import { playSentence, playSfx, playWord } from '@/entities/content/voice';
 import { createRng, seedFrom, shuffle, type Question } from '@/entities/quiz/buildQuiz';
+import { strings } from '@/shared/i18n/strings.ko';
 import { AppText } from '@/shared/ui/AppText';
 import { Icon } from '@/shared/ui/icons';
 import { colors, radius, tones } from '@/shared/theme/tokens';
@@ -145,7 +146,7 @@ function Match({ question, locked, onAnswer }: QuestionProps<Extract<Question, {
   );
 }
 
-export function QuestionView(props: QuestionProps) {
+function QuestionBody(props: QuestionProps) {
   const { question } = props;
   switch (question.type) {
     case 'pickImage':
@@ -159,7 +160,21 @@ export function QuestionView(props: QuestionProps) {
   }
 }
 
+/** 문제 위에 무엇을 하면 되는지 한 줄로 알려 준다 */
+export function QuestionView(props: QuestionProps) {
+  return (
+    <View style={styles.flex}>
+      <AppText variant="cardTitle" align="center" style={styles.hint}>
+        {strings.activity.hints[props.question.type]}
+      </AppText>
+      <QuestionBody {...props} />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
+  hint: { marginTop: 4 },
   root: { flex: 1, gap: 20, justifyContent: 'center' },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, justifyContent: 'center' },
   cell: { width: '47%', aspectRatio: 1.05 },

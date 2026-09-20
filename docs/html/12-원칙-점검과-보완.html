@@ -444,6 +444,45 @@ gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a
 <li>설정 › 알림 시간 › <strong>알림 시험해 보기</strong>로 알림이 오는지 확인한다.</li>
 <li>삼성 폰은 배터리 최적화가 알림을 늦출 수 있다: 설정 › 애플리케이션 › SoundsFun › 배터리 › <strong>제한 없음</strong>.</li>
 </ol>
+<h2 id="7">7. 실제 폰에서 고친 것</h2>
+<p>갤럭시 노트에 깔아 써 보니 웹에서는 보이지 않던 문제가 나왔습니다. 모두 공통 부품에서 한 번에 고쳤습니다.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>문제</th>
+<th>원인</th>
+<th>고친 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>글자가 커서 화면이 깨짐</td>
+<td>폰마다 화면 폭과 ‘글자 크기’ 설정이 다름</td>
+<td><strong>자동 맞춤</strong>: 모든 화면을 디자인 폭 390 기준으로 그린 뒤 화면 폭에 맞춰 통째로 확대·축소(<code>shared/ui/fit.tsx</code>). 시스템 글자 크기는 따르지 않음</td>
+</tr>
+<tr>
+<td>키보드가 입력 칸을 가림</td>
+<td>안드로이드 전체 화면 모드는 창 크기를 줄여 주지 않음</td>
+<td>키보드 높이를 직접 재서(<code>useKeyboardHeight</code>) 화면을 그만큼 올리고, 입력 중인 칸이 보이게 스크롤. 아래 버튼도 키보드 위로 올라옴</td>
+</tr>
+<tr>
+<td>“좋아요!”, “그만할까요?” 창이 날아다님</td>
+<td>Reanimated 4에서 스프링 기본값이 바뀌어 크게 출렁임</td>
+<td>스프링과 등장·퇴장 효과를 모두 없애고 <code>Appear</code> 하나로 통일: 살짝 떠오르며 서서히 나타남(0.24초), 사라질 때는 효과 없음</td>
+</tr>
+<tr>
+<td>시작 영상에서 눌러도 안 넘어감</td>
+<td>영상 표면이 터치를 가로챔</td>
+<td>영상 위에 화면 전체 터치 층을 따로 두고, 손가락이 닿는 순간 넘어감</td>
+</tr>
+<tr>
+<td>놀이 중 뒤로 가기</td>
+<td>바로 나가 버림</td>
+<td>닫기 버튼과 똑같이 “그만할까요?”를 물음</td>
+</tr>
+</tbody>
+</table></div>
+<p>검증은 에뮬레이터를 노트와 같은 조건(1080×2280, 글자 크기 1.3배)으로 맞추고 가입부터 알림 시간까지 17개 화면을 돌며 확인했습니다. 홈 화면 위젯은 이번 범위에서 뺐습니다.</p>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";

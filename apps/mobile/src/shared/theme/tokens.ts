@@ -47,6 +47,8 @@ export const colors = {
   doneCount: '#668078',
   sheetGuide: '#6E7A76',
   sheetTimer: '#687772',
+  feedbackGood: '#E0F3EA',
+  feedbackTry: '#FDE7E2',
   canvasWood: '#D9AE78',
   stageWall: '#F6E9D3',
   stageFloor: '#E9D3B4',
@@ -124,6 +126,8 @@ export const fonts = {
 } as const;
 
 export const sizes = {
+  /** 시안의 폭. 모든 치수의 기준이고, 실제 화면에는 FitRoot가 비율을 맞춰 그린다 */
+  designWidth: 390,
   appMaxWidth: 430,
   screenPaddingX: 20,
   parentPaddingX: 16,
@@ -148,7 +152,7 @@ export const shadows = {
   character: '0px 7px 5px rgba(115, 86, 31, 0.15)',
 } as const;
 
-export const motion = { fast: 160, base: 240, float: 3200 } as const;
+export const motion = { press: 90, fast: 160, base: 240, float: 3200 } as const;
 
 /** 시안(SF/*.svg)의 글자에서 역산한 위계. 화면 글자는 이 중 하나를 쓴다 */
 export const type = {

@@ -9,5 +9,5 @@ export interface AppTextProps extends TextProps {
 }
 
 export function AppText({ variant = 'body', color = colors.ink, align, style, ...rest }: AppTextProps) {
-  return <Text {...rest} style={[typeScale[variant] as TextStyle, { color, textAlign: align }, style]} />;
+  return <Text allowFontScaling={false} {...rest} style={[typeScale[variant] as TextStyle, { color, textAlign: align }, style]} />;
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Animated, { Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withSequence, withSpring, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withSequence, withTiming } from 'react-native-reanimated';
 
 import { getWord } from '@/entities/content/content';
 import { AssetImage } from '@/entities/content/ui/AssetImage';
@@ -77,14 +77,14 @@ export function MagicStage({ round, solved, prompt, answer, listening, onReplay 
       splash.value = withSequence(withTiming(1, { duration: 520 * quick, easing: Easing.out(Easing.quad) }), withTiming(0, { duration: 1 }));
       paint.value = withDelay(140 * quick, withTiming(1, { duration: 620 * quick }));
     } else {
-      stamp.value = withSpring(1, { damping: 9, stiffness: 160 });
+      stamp.value = withTiming(1, { duration: 320 * quick, easing: Easing.out(Easing.cubic) });
     }
-    pop.value = withSequence(withTiming(1.07, { duration: 160 * quick }), withSpring(1, { damping: 8 }));
+    pop.value = withSequence(withTiming(1.04, { duration: 140 * quick, easing: Easing.out(Easing.quad) }), withTiming(1, { duration: 220 * quick, easing: Easing.inOut(Easing.quad) }));
   }, [solved, isWord, reduceMotion, paint, splash, stamp, pop]);
 
   const colorStyle = useAnimatedStyle(() => ({ opacity: paint.value }));
   const splashStyle = useAnimatedStyle(() => ({ opacity: splash.value === 0 ? 0 : 0.95 * (1 - splash.value), transform: [{ scale: 0.35 + 1.5 * splash.value }] }));
-  const stampStyle = useAnimatedStyle(() => ({ opacity: Math.min(1, stamp.value * 2), transform: [{ scale: 2.2 - 1.2 * Math.min(1, stamp.value) }, { rotate: '-14deg' }] }));
+  const stampStyle = useAnimatedStyle(() => ({ opacity: Math.min(1, stamp.value * 2), transform: [{ scale: 1.35 - 0.35 * Math.min(1, stamp.value) }, { rotate: '-14deg' }] }));
   const canvasStyle = useAnimatedStyle(() => ({ transform: [{ scale: pop.value }] }));
 
   const sceneHeight = width * (16 / 9);

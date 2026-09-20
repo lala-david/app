@@ -116,6 +116,7 @@ export const strings = {
     helperBody: '아이가 따라 말하면 아래 버튼을 눌러 주세요',
     helperSaid: '말했어요',
     heard: '“{text}”',
+    hints: { pickImage: '잘 듣고 그림을 골라요', pickWord: '그림을 보고 말을 골라요', sentenceColor: '문장을 듣고 색을 골라요', match: '그림과 말을 짝지어요' },
     game: {
       start: '시작',
       levelWord: '단어',

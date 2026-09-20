@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { BackHandler, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useChild } from '@/entities/child/model/childStore';
@@ -65,6 +65,17 @@ export function ActivityScreen() {
     playSfx('fanfare');
     setPhase('finish');
   };
+
+  // 안드로이드의 뒤로 가기도 닫기 버튼과 똑같이 ‘그만할까요?’를 묻는다
+  const quitRef = useRef(quit);
+  quitRef.current = quit;
+  useEffect(() => {
+    const back = BackHandler.addEventListener('hardwareBackPress', () => {
+      void quitRef.current();
+      return true;
+    });
+    return () => back.remove();
+  }, []);
 
   const overall = phase === 'quiz' ? fraction / 2 : phase === 'speak' ? 0.5 + fraction / 2 : 1;
 

@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import Animated, { Easing, FadeOut, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withRepeat, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withRepeat, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useChild } from '@/entities/child/model/childStore';
@@ -42,17 +42,16 @@ function SplashContent() {
   const hintStyle = useAnimatedStyle(() => ({ opacity: 0.65 + 0.35 * hint.value, transform: [{ translateY: -3 * hint.value }] }));
 
   return (
-    <Animated.View
-      exiting={FadeOut.duration(260)}
+    <View
       style={styles.root}
       onLayout={({ nativeEvent: { layout } }) => setFit(layout.width / layout.height < VIDEO_ASPECT ? 'contain' : 'cover')}
     >
       {/* 영상의 위·아래 가장자리 색. 폭에 맞춰 넣었을 때 남는 자리가 영상과 이어져 보인다 */}
       <View style={styles.backdropTop} />
       <View style={styles.backdropBottom} />
-      <Pressable style={StyleSheet.absoluteFill} onPress={dismiss} accessibilityRole="button" accessibilityLabel={strings.splash.hint}>
-        {dataSaver ? <Image source={splashPoster} style={StyleSheet.absoluteFill} contentFit={fit} /> : <SplashVideo muted={muted} fit={fit} />}
-      </Pressable>
+      {dataSaver ? <Image source={splashPoster} style={StyleSheet.absoluteFill} contentFit={fit} /> : <SplashVideo muted={muted} fit={fit} />}
+      {/* 누르는 자리는 영상 위에 따로 깐다. 영상 뷰가 터치를 가져가는 기기가 있어서다 */}
+      <Pressable style={StyleSheet.absoluteFill} onPressIn={dismiss} onPress={dismiss} accessibilityRole="button" accessibilityLabel={strings.splash.hint} />
 
       {dataSaver ? null : (
         <Pressy onPress={() => setMuted(!muted)} style={[styles.sound, { top: insets.top + 14 }]} accessibilityLabel={muted ? strings.splash.soundOn : strings.splash.soundOff}>
@@ -68,7 +67,7 @@ function SplashContent() {
           </AppText>
         </Animated.View>
       </View>
-    </Animated.View>
+    </View>
   );
 }
 

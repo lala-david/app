@@ -26,6 +26,7 @@ export function TextField({ label, nativeID, error, secure = false, ...input }: 
       </AppText>
       <View style={[styles.inputWrap, focused && styles.inputFocused, !!error && styles.inputError]}>
         <TextInput
+          allowFontScaling={false}
           {...input}
           id={nativeID}
           accessibilityLabelledBy={`${nativeID}-label`}

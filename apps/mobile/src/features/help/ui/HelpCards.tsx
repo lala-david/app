@@ -6,7 +6,9 @@ import { persist } from 'zustand/middleware';
 import type { CharacterKey } from '@/entities/content/types';
 import { strings } from '@/shared/i18n/strings.ko';
 import { persistStorage, storageKey } from '@/shared/lib/storage';
+import { Appear } from '@/shared/ui/Appear';
 import { AppText } from '@/shared/ui/AppText';
+import { FitModalRoot } from '@/shared/ui/fit';
 import { Character } from '@/shared/ui/Character';
 import { PrimaryButton } from '@/shared/ui/Form';
 import { colors, radius, sizes } from '@/shared/theme/tokens';
@@ -51,8 +53,9 @@ export function HelpCards({ enabled }: { enabled: boolean }) {
 
   return (
     <Modal visible transparent animationType="fade" onRequestClose={close} statusBarTranslucent>
+      <FitModalRoot>
       <View style={styles.backdrop}>
-        <View style={styles.card}>
+        <Appear style={styles.card}>
           <Character name={card.character as CharacterKey} size={132} float />
           <AppText variant="sectionTitle" align="center">
             {card.title}
@@ -66,15 +69,16 @@ export function HelpCards({ enabled }: { enabled: boolean }) {
             ))}
           </View>
           <PrimaryButton label={last ? strings.help.gotIt : strings.common.next} onPress={() => (last ? close() : setIndex(index + 1))} />
-        </View>
+        </Appear>
       </View>
+      </FitModalRoot>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: colors.shade, alignItems: 'center', justifyContent: 'center', padding: 24 },
-  card: { width: '100%', maxWidth: sizes.appMaxWidth - 48, backgroundColor: colors.ground, borderRadius: radius.sheet, padding: 24, gap: 10, alignItems: 'stretch' },
+  card: { width: '100%', backgroundColor: colors.ground, borderRadius: radius.sheet, padding: 24, gap: 10, alignItems: 'stretch' },
   body: { minHeight: 66 },
   dots: { flexDirection: 'row', justifyContent: 'center', gap: 6, marginVertical: 6 },
   dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.line },

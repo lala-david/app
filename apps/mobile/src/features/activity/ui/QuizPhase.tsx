@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Animated, { SlideInDown } from 'react-native-reanimated';
 
 import { getWord } from '@/entities/content/content';
 import { AssetImage } from '@/entities/content/ui/AssetImage';
@@ -10,6 +9,7 @@ import { questionWord, type Question } from '@/entities/quiz/buildQuiz';
 import { strings } from '@/shared/i18n/strings.ko';
 import { clock } from '@/shared/lib/clock';
 import { haptics } from '@/shared/platform/haptics';
+import { Appear } from '@/shared/ui/Appear';
 import { AppText } from '@/shared/ui/AppText';
 import { PrimaryButton } from '@/shared/ui/Form';
 import { Icon } from '@/shared/ui/icons';
@@ -65,7 +65,7 @@ export function QuizPhase({ questions, startIndex, onAnswer, onProgress, onDone 
         <QuestionView key={question.id} question={question} locked={result !== null} onAnswer={answer} />
       </View>
       {result !== null ? (
-        <Animated.View entering={SlideInDown.springify().damping(18)} style={[styles.feedback, { backgroundColor: result ? '#E0F3EA' : '#FDE7E2' }]}>
+        <Appear rise={14} style={[styles.feedback, { backgroundColor: result ? colors.feedbackGood : colors.feedbackTry }]}>
           <View style={styles.feedbackRow}>
             <View style={[styles.mark, { backgroundColor: result ? colors.brand : colors.danger }]}>
               <Icon name={result ? 'check' : 'heart'} size={20} color={colors.white} strokeWidth={3} />
@@ -81,7 +81,7 @@ export function QuizPhase({ questions, startIndex, onAnswer, onProgress, onDone 
             ) : null}
           </View>
           <PrimaryButton label={strings.activity.continue} onPress={next} color={result ? colors.brand : colors.danger} />
-        </Animated.View>
+        </Appear>
       ) : null}
     </View>
   );
