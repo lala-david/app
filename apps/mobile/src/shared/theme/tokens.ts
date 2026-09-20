@@ -68,6 +68,7 @@ export const colors = {
   completeBg: '#E5EFEB',
   completeInk: '#44615A',
   shade: 'rgba(37, 67, 61, 0.3)',
+  videoDim: 'rgba(30, 44, 40, 0.42)',
   handle: '#DED7CE',
   splash: '#2D1B68',
   splashTop: '#412369',
@@ -139,6 +140,8 @@ export const sizes = {
   weekHeight: 170,
   sheetHeight: 599,
   playerTile: 125,
+  watchTile: 48,
+  videoRadius: 20,
   /** 디자이너 원본 그림에는 둘레 여백이 있다. 상자 대비 캐릭터 크기 */
   characterFill: 0.88,
   button: 58,

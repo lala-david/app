@@ -85,6 +85,12 @@ export const strings = {
     complete: '✓ 오늘 완료했어요',
     completed: '✓ 오늘 완료!',
     openFailed: '유튜브를 열 수 없어요. 다시 눌러 주세요',
+    loading: '영상을 준비하고 있어요',
+    tapToPlay: '눌러서 이어 봐요',
+    ended: '끝까지 봤어요! 한 번 더 볼까요?',
+    blocked: '이 영상은 유튜브에서만 볼 수 있어요',
+    openYoutube: '유튜브에서 열기',
+    watchOutside: '유튜브 앱에서 보기',
     reached: '{n}분을 다 들었어요!',
   },
   journey: {

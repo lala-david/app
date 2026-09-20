@@ -25,7 +25,7 @@ const figures = [
     accent: '#F4BC16',
     phones: [
       { shot: 'today-path', title: '오늘의 루틴 길', note: '1 → 2 → 3 → 4 순서로' },
-      { shot: 'sheet-theme', title: '루틴 시트', note: '유튜브로 듣고 시간을 잰다' },
+      { shot: 'sheet-theme', title: '앱 안에서 영상 보기', note: '재생되는 동안만 듣기 시간이 흐른다' },
       { shot: 'quiz', title: '단어 맞추기', note: '들은 말을 그림에서 찾기' },
       { shot: 'game-painted', title: '말하기 게임 ‘색깔 마법’', note: '말하면 그림에 색이 입혀진다' },
     ],

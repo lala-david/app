@@ -77,6 +77,8 @@
   "links": {
     "youtubeWatch": "https://www.youtube.com/watch?v=",
     "youtubePlaylist": "https://www.youtube.com/playlist?list=",
+    "youtubeThumbnail": "https://i.ytimg.com/vi/{id}/hqdefault.jpg",
+    "embedOrigin": "https://lala-david.github.io",
     "contactEmail": "suny502@gmail.com",
     "privacyPolicy": "https://www.rta.or.kr"
   },
