@@ -14,8 +14,8 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "docs" / "assets"
-FIGURE_WIDTH = Cm(14.0)
-DIAGRAM_WIDTH = Cm(13.0)
+FIGURE_WIDTH = Cm(15.0)
+DIAGRAM_WIDTH = Cm(14.2)
 MAX_PIXELS = 2200
 CAPTION_COLOR = RGBColor(0x5B, 0x6B, 0x66)
 
@@ -23,12 +23,12 @@ CAPTION_COLOR = RGBColor(0x5B, 0x6B, 0x66)
 PLACEMENTS = [
     (33, "이에 사운즈펀 브릿지는", "application/fig-child.png",
      "<그림 1. SoundsFun Bridge 앱 시제품(1주차 ‘Colors’)의 아동 화면>", FIGURE_WIDTH),
-    (39, "기존 무료 콘텐츠는", "application/fig-journey.png",
+    (39, " 접근성", "application/fig-journey.png",
      "<그림 2. 48주 소리 여행과 이번 주 소리 활동>", FIGURE_WIDTH),
-    (39, " 접근성", "application/fig-parent.png",
-     "<그림 3. 보호자 화면: 학습 기록, 어려워한 말과 대화 가이드, 휴대폰 알림>", FIGURE_WIDTH),
     (39, None, "uml/usecase.png",
-     "<그림 4. MVP 유스케이스 다이어그램>", DIAGRAM_WIDTH),
+     "<그림 3. MVP 유스케이스 다이어그램>", DIAGRAM_WIDTH),
+    (39, None, "application/fig-parent.png",
+     "<그림 4. 보호자 화면: 학습 기록, 어려워한 말과 대화 가이드, 휴대폰 알림>", FIGURE_WIDTH),
 ]
 
 
