@@ -37,7 +37,8 @@ sol/
    ├─ assets/            다이어그램 PNG · UML · 실제 화면
    ├─ schema/            DDL (PostgreSQL · SQLite)
    ├─ week1-routine.txt  1주차 재생목록 정리
-   └─ build.py           src → html + docx
+   ├─ build.py           src → html + docx
+   └─ tools/             지원서 사본에 앱 화면 그림을 넣는 스크립트
 ```
 
 원본 지원서·가이드북·디자인 원본·`.env`는 저장소에 올리지 않습니다.
@@ -89,5 +90,6 @@ python -m venv .venv && .venv/Scripts/pip install -r requirements.txt
 ```bash
 python docs/build.py                                   # 전체 (다이어그램 PNG 포함)
 python docs/build.py 05                                # 05 데이터베이스 설계서만
+python docs/tools/insert_app_figures.py <지원서.docx> <새 파일.docx>   # 지원서 사본에 앱 화면 넣기 (원본은 그대로)
 node packages/content-tools/src/usecase-diagram.mjs    # 유즈케이스 다이어그램
 ```
